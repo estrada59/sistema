@@ -3539,7 +3539,7 @@ function cantidad_de_pacientes_por_mes($fecha_ini, $fecha_fin, $pagina, $estatus
     return $instituciones;     
 }
 // agregado el 03 de Diciembre de 2017 para sacar gráficas de estudios realizados anualmente
-function cantidad_de_estudios($fecha_ini, $fecha_fin, $pagina, $estatus, $institucion){
+function cantidad_de_estudios($fecha_ini, $fecha_fin, $pagina, $estatus){
 
     include_once "mysql.php";
     include_once "funciones_consultas.php";
@@ -3557,7 +3557,7 @@ function cantidad_de_estudios($fecha_ini, $fecha_fin, $pagina, $estatus, $instit
                                         FROM pacientes t1 INNER JOIN estudio t2
 
                                         WHERE (t1.fecha >= '$fecha_ini' AND  t1.fecha <= '$fecha_fin') 
-                                            /*and t1.institucion= '$institucion'  PARA OBTENER POR INSTITUCION*/   
+                                            /*and t1.institucion=   PARA OBTENER POR INSTITUCION*/   
                                             and t1.estatus = '$estatus'
                                             AND (t1.estudio_idgammagramas = t2.idgammagramas)
                                         group BY 

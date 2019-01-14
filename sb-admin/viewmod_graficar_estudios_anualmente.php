@@ -94,13 +94,14 @@
                                     $fecha_ini = first_year_day($fecha); 
                                     $datos = array();
                                     $estatus = 'ATENDIDO';
-                                    $institucion ='IMSS TUXTLA';  //hay que modificar funciones_consultas el 
+                                    //$institucion ='IMSS TUXTLA';  //hay que modificar funciones_consultas el 
                                                                  //método cantidad de estudios y habilitar la busqueda por institucion
-                                    $datos_atendido = cantidad_de_estudios($fecha_ini, $fecha_fin,$_POST['pagina'],$estatus,$institucion);
+                                    $datos_atendido = cantidad_de_estudios($fecha_ini, $fecha_fin,$_POST['pagina'],$estatus);
+                                    //$datos_atendido = cantidad_de_pacientes_por_mes($fecha_ini, $fecha_fin,$_POST['pagina'],$estatus );
 
-                                    //echo '<pre>';
-                                    //print_r($datos_atendido);
-                                    //echo '</pre>';
+                                    /*echo '<pre>';
+                                    print_r($datos_atendido);
+                                    echo '</pre>';*/
                                     $num = count($datos_atendido);
                
                 
@@ -115,12 +116,20 @@
                                         echo '  </tr>
                                             </thead>
                                             <tbody>';
-                                        for($i=0; $i < $num; $i++){
-                                            echo '<tr>';
-                                            echo        '<td>'.$datos_atendido[$i]['estudio'].'</td>';
-                                            echo        '<td>'.$datos_atendido[$i]['cantidad'].'</td>';
-                                            echo '</tr>';
-                                        }
+                                                $total_de_estudios=0;
+
+                                                for($i=0; $i < $num; $i++){
+                                                    echo '<tr>';
+                                                    echo        '<td>'.$datos_atendido[$i]['estudio'].'</td>';
+                                                    echo        '<td>'.$datos_atendido[$i]['cantidad'].'</td>';
+                                                    echo '</tr>';
+                                                    $total_de_estudios +=$datos_atendido[$i]['cantidad'];
+                                                }
+                                                    echo '<tr>';
+                                                    echo '      <td> Total de estudios atendidos (sumatoria): </td>';
+                                                    echo '      <td> '.$total_de_estudios.' </td>';
+                                                    echo '</tr>';
+
                                         echo '</tbody>
                                         </table>
                                     </div>';
@@ -154,10 +163,10 @@
                                     $fecha_ini = first_year_day($fecha); 
                                     $datos = array();
                                     $estatus = 'POR ATENDER';
-                                    $institucion ='IMSS TUXTLA';  //hay que modificar funciones_consultas el 
+                                    //$institucion ='IMSS TUXTLA';  //hay que modificar funciones_consultas el 
                                                                  //método cantidad de estudios y habilitar la busqueda por institucion
-                                    $datos_por_atender = cantidad_de_estudios($fecha_ini, $fecha_fin,$_POST['pagina'],$estatus,$institucion);
-
+                                    $datos_por_atender = cantidad_de_estudios($fecha_ini, $fecha_fin,$_POST['pagina'],$estatus);
+                                    //$datos_atendido = cantidad_de_pacientes_por_mes($fecha_ini, $fecha_fin,$_POST['pagina'],$estatus );    
                                     //echo '<pre>';
                                     //print_r($datos_atendido);
                                     //echo '</pre>';
@@ -175,12 +184,21 @@
                                         echo '  </tr>
                                             </thead>
                                             <tbody>';
-                                        for($i=0; $i < $num; $i++){
-                                            echo '<tr>';
-                                            echo        '<td>'.$datos_por_atender[$i]['estudio'].'</td>';
-                                            echo        '<td>'.$datos_por_atender[$i]['cantidad'].'</td>';
-                                            echo '</tr>';
-                                        }
+                                                $total_de_estudios_por_atender=0;
+                                                
+                                                for($i=0; $i < $num; $i++){
+                                                    echo '<tr>';
+                                                    echo        '<td>'.$datos_por_atender[$i]['estudio'].'</td>';
+                                                    echo        '<td>'.$datos_por_atender[$i]['cantidad'].'</td>';
+                                                    echo '</tr>';
+                                                    $total_de_estudios_por_atender +=$datos_por_atender[$i]['cantidad'];
+                                                }
+                                                    echo '<tr>';
+                                                    echo '      <td> Total de estudios por atender (sumatoria): </td>';
+                                                    echo '      <td> '.$total_de_estudios_por_atender.' </td>';
+                                                    echo '</tr>';
+
+
                                         echo '</tbody>
                                         </table>
                                     </div>';
@@ -219,10 +237,10 @@
                                     $fecha_ini = first_year_day($fecha); 
                                     $datos = array();
                                     $estatus = 'CANCELADO';
-                                    $institucion ='IMSS TUXTLA';  //hay que modificar funciones_consultas el 
+                                    //$institucion ='IMSS TUXTLA';  //hay que modificar funciones_consultas el 
                                                                  //método cantidad de estudios y habilitar la busqueda por institucion
-                                    $datos_cancelado = cantidad_de_estudios($fecha_ini, $fecha_fin,$_POST['pagina'],$estatus,$institucion);
-
+                                    $datos_cancelado = cantidad_de_estudios($fecha_ini, $fecha_fin,$_POST['pagina'],$estatus);
+                                    //$datos_atendido = cantidad_de_pacientes_por_mes($fecha_ini, $fecha_fin,$_POST['pagina'],$estatus );
                                     //echo '<pre>';
                                     //print_r($datos_atendido);
                                     //echo '</pre>';
@@ -238,12 +256,19 @@
                                         echo '  </tr>
                                             </thead>
                                             <tbody>';
-                                        for($i=0; $i < $num; $i++){
-                                            echo '<tr>';
-                                            echo        '<td>'.$datos_cancelado[$i]['estudio'].'</td>';
-                                            echo        '<td>'.$datos_cancelado[$i]['cantidad'].'</td>';
-                                            echo '</tr>';
-                                        }
+                                                $total_de_estudios_cancelados=0;
+
+                                                for($i=0; $i < $num; $i++){
+                                                    echo '<tr>';
+                                                    echo        '<td>'.$datos_cancelado[$i]['estudio'].'</td>';
+                                                    echo        '<td>'.$datos_cancelado[$i]['cantidad'].'</td>';
+                                                    echo '</tr>';
+                                                    $total_de_estudios_cancelados +=$datos_cancelado[$i]['cantidad'];
+                                                }
+                                                    echo '<tr>';
+                                                    echo '      <td> Total de estudios cancelados (sumatoria): </td>';
+                                                    echo '      <td> '.$total_de_estudios_cancelados.' </td>';
+                                                    echo '</tr>';
                                         echo '</tbody>
                                         </table>
                                     </div>';
