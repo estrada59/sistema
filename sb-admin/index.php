@@ -10,6 +10,12 @@
 			comprueba_url();
             //time_session();       
  	?>
+     <style>
+        img {
+            max-width: 100%;
+            height: auto;
+            }
+     </style>
 </head>
 
 <body>
