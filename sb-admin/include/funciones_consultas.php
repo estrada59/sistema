@@ -3538,7 +3538,7 @@ function cantidad_de_pacientes_por_mes($fecha_ini, $fecha_fin, $pagina, $estatus
             
     return $instituciones;     
 }
-// agregado el 03 de Diciembre de 2017 para sacar gráficas de estudios realizados anualmente
+// modificado  el 13 de Enero de 2019 para sacar gráficas de estudios realizados anualmente
 function cantidad_de_estudios($fecha_ini, $fecha_fin, $pagina, $estatus){
 
     include_once "mysql.php";

@@ -94,11 +94,9 @@
                                     $fecha_ini = first_year_day($fecha); 
                                     $datos = array();
                                     $estatus = 'ATENDIDO';
-                                    //$institucion ='IMSS TUXTLA';  //hay que modificar funciones_consultas el 
-                                                                 //método cantidad de estudios y habilitar la busqueda por institucion
+                                    
                                     $datos_atendido = cantidad_de_estudios($fecha_ini, $fecha_fin,$_POST['pagina'],$estatus);
-                                    //$datos_atendido = cantidad_de_pacientes_por_mes($fecha_ini, $fecha_fin,$_POST['pagina'],$estatus );
-
+                                    
                                     /*echo '<pre>';
                                     print_r($datos_atendido);
                                     echo '</pre>';*/
@@ -163,10 +161,9 @@
                                     $fecha_ini = first_year_day($fecha); 
                                     $datos = array();
                                     $estatus = 'POR ATENDER';
-                                    //$institucion ='IMSS TUXTLA';  //hay que modificar funciones_consultas el 
-                                                                 //método cantidad de estudios y habilitar la busqueda por institucion
+                                    
                                     $datos_por_atender = cantidad_de_estudios($fecha_ini, $fecha_fin,$_POST['pagina'],$estatus);
-                                    //$datos_atendido = cantidad_de_pacientes_por_mes($fecha_ini, $fecha_fin,$_POST['pagina'],$estatus );    
+                                    
                                     //echo '<pre>';
                                     //print_r($datos_atendido);
                                     //echo '</pre>';
@@ -237,10 +234,9 @@
                                     $fecha_ini = first_year_day($fecha); 
                                     $datos = array();
                                     $estatus = 'CANCELADO';
-                                    //$institucion ='IMSS TUXTLA';  //hay que modificar funciones_consultas el 
-                                                                 //método cantidad de estudios y habilitar la busqueda por institucion
+                                   
                                     $datos_cancelado = cantidad_de_estudios($fecha_ini, $fecha_fin,$_POST['pagina'],$estatus);
-                                    //$datos_atendido = cantidad_de_pacientes_por_mes($fecha_ini, $fecha_fin,$_POST['pagina'],$estatus );
+                                   
                                     //echo '<pre>';
                                     //print_r($datos_atendido);
                                     //echo '</pre>';
