@@ -1,10 +1,12 @@
 <?php
 // Include the main TCPDF library (search for installation path).
 require_once('include/tcpdf/tcpdf.php');
-//comprueba que halla datos
-	/*$_POST["pagina"]="imrpimir"; 
 
-	if(!isset($_POST['fecha'])){
+
+//comprueba que halla datos
+	$_POST["pagina"]="imrpimir"; 
+
+	/*if(!isset($_POST['fecha'])){
 		header("Location: index.php");
 	}*/
 	
@@ -43,7 +45,11 @@ class MYPDF extends TCPDF {
 	}
 	public function imprimir_lista() {
 		// set font
+		$this->SetFont('helvetica', '', 12);
+		
+
 		include_once 'include/funciones_consultas.php';
+		include_once "mysql.php";
 
 		$fecha =  $_POST['fecha'];
 		
@@ -55,74 +61,87 @@ class MYPDF extends TCPDF {
 		
 		$texto= 'Lista de estudios del semestre:'.$fecha_ini.' hasta '.$fecha_fin;
 		
-                        
-	/*	$datos = array();
-		$estatus = 'ATENDIDO';
+		$this->Textbox($texto, $x+8,45, 137, 10, 0, 'C',12,'');
+
+		//INICIO Preparando datos para consulta ////
 		
-		$datos_atendido = cantidad_de_estudios($fecha_ini, $fecha_fin,'gráfica',$estatus);
-		
+		$fecha_ini = date("Y-m-d",strtotime($fecha_ini));
+		$fecha_fin = date("Y-m-d",strtotime($fecha_fin));  
+		$estatus="ATENDIDO";
+
+		//FIN Preparando datos para consulta ////
+		$estadistica = new estadistica();
+		$total	=	$estadistica->total_de_estudios($fecha_ini, $fecha_fin,$estatus);
+
 		/*echo '<pre>';
-		print_r($datos_atendido);
-		echo '</pre>';
-		$num = count($datos_atendido);*/
-		$this->SetXY(0,45);
-		$html='<p>asdaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-		asddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddssd </p>';
+		print_r($total);
+		echo '</pre>';*/
+		$num = count($total);
+		//echo $num;
+		
+		$this->SetFont('helvetica', '', 9);
+		$this->SetXY(20,55);
+
+		
+		$html ="<style>
+		table, th, td {
+		  border: 1px solid black;
+		  border-collapse: collapse;
+		}
+		th, td {
+		  padding: 10px;
+		}
+		</style>";
 		$this->writeHTML($html, true, false, true, false, '');
 
-		/*$html = '<div class=" table-responsive">
-		<table class="table table-bordered table-hover table-striped" >
+		$html = '
+		<table  border="1" style="width:100%">
 			<thead>
 				<tr>
-					<th data-field="numero" width="15">Nombre de estudio</th>
-					<th data-field="estudio" width="70">Cantidad</th>';
-
-		$this->writeHTML($html, true, false, true, false, '');
-		
-		$html = '  </tr>
+					<th  >Nombre de estudio</th>
+					<th >Cantidad</th>
+			  	</tr>
 			</thead>
 			<tbody>';
-		$this->writeHTML($html, true, false, true, false, '');
 
 				$total_de_estudios=0;
+				$tam =0;
+
 
 				for($i=0; $i < $num; $i++){
-					$html= '<tr>';
-					$this->writeHTML($html, true, false, true, false, '');
+					if($tam<=20){
+						$html = $html.'<tr>';
+						$html=        $html.'<td >'.$total[$i]['estudio'].'</td>';
+						$html=        $html.'<td align="center">'.$total[$i]['cantidad'].'</td>';
+						$html= $html.'</tr>';
 
-					$html=        '<td>'.$datos_atendido[$i]['estudio'].'</td>';
-					$this->writeHTML($html, true, false, true, false, '');
-
-					$html=        '<td>'.$datos_atendido[$i]['cantidad'].'</td>';
-					$this->writeHTML($html, true, false, true, false, '');
+						$total_de_estudios +=$total[$i]['cantidad'];
+						$tam++;
+					}else{
+						$this->AddPage();
+						$tam=0;
+					}
 					
-					$html= '</tr>';
-					$this->writeHTML($html, true, false, true, false, '');
-
-					$total_de_estudios +=$datos_atendido[$i]['cantidad'];
 				}
-					$html= '<tr>';
-					$this->writeHTML($html, true, false, true, false, '');
 
-					$html= '      <td> Total de estudios atendidos (sumatoria): </td>';
-					$this->writeHTML($html, true, false, true, false, '');
+					$html= $html.'<tr>';
+					$html=       $html.'<td> Total de estudios atendidos (sumatoria): </td>';
+					$html=       $html.'<td> '.$total_de_estudios.' </td>';
+					$html= $html.'</tr>';
+					
 
-					$html= '      <td> '.$total_de_estudios.' </td>';
-					$this->writeHTML($html, true, false, true, false, '');
-
-					$html= '</tr>';
-					$this->writeHTML($html, true, false, true, false, '');
-
-		$html= '</tbody>
-		</table>
-	</div>';*/
+		$html= $html.'</tbody>
+		</table>';
 	
+		$this->writeHTML($html, true, false, true, false, '');
+		
 
-		$this->Ln();
+
+		/*$this->Ln();
 		$this->CreateTextBox($texto, 20,33, 80, 10, 13, 'B');		
 		$this->Ln();
-		$this->Ln();
-		$this->SetFont('helvetica', '', 8);
+		$this->Ln();*/
+		
 
 		
 
@@ -211,6 +230,46 @@ class MYPDF extends TCPDF {
 	$pdf->Output('Lista_de_precios_'.$_POST['fecha'].'.pdf', 'I');
 ?>
 <?php
+
+class estadistica  {
+	function total_de_estudios($fecha_ini, $fecha_fin, $estatus){
+		
+		include_once "include/mysql.php";
+		//echo $fecha_ini.' '.$fecha_fin.' '.$estatus;
+		$mysql = new mysql();
+		$link = $mysql->connect();
+		
+		$instituciones = array();
+
+   
+		$sqltest = $mysql->query($link,"SELECT 
+												CONCAT(t2.tipo,' ', t2.nombre) as nombre_estudio,
+												count(*) as cant_estudios
+		
+											FROM pacientes t1 INNER JOIN estudio t2
+
+											WHERE (t1.fecha >= '$fecha_ini' AND  t1.fecha <= '$fecha_fin') 
+												/*and t1.institucion=   PARA OBTENER POR INSTITUCION*/   
+												and t1.estatus = '$estatus'
+												AND (t1.estudio_idgammagramas = t2.idgammagramas)
+											group BY 
+												t2.idgammagramas;");
+    
+		$num_rows = $mysql->f_num($sqltest);
+		//echo $num_rows;
+		$cont =0 ;
+
+		while ($row = $mysql->f_obj($sqltest)) {
+			$instituciones[$cont]["estudio"]    =   $row->nombre_estudio;
+			$instituciones[$cont]["cantidad"]       =   $row->cant_estudios;
+			$cont++;
+		}
+		
+		$mysql->close();
+		
+		return $instituciones; 
+	}
+}
 class lista_precios{
 
 	function lista(){
