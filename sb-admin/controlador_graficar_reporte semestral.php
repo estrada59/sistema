@@ -47,7 +47,7 @@
 
                 <form role="form" id="ver_pacientes" method="post" action="viewmod_graficar_estudios_semestral.php">
                     <div class="form-group">
-                        <label for="fecha">Fecha inici de semestre</label>
+                        <label for="fecha">Fecha inicio de semestre</label>
                         <input type="date" class="form-control" form="ver_pacientes" name="fecha_estudios" id="fecha_estudios" placeholder="Fecha estudio" required>
                         
                     </div>

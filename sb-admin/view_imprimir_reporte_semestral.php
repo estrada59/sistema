@@ -61,7 +61,7 @@ class MYPDF extends TCPDF {
 		
 		$texto= 'Lista de estudios del semestre:'.$fecha_ini.' hasta '.$fecha_fin;
 		
-		$this->Textbox($texto, $x+8,45, 137, 10, 0, 'C',12,'');
+		$this->Textbox($texto, $x+8,30, 137, 10, 0, 'C',12,'');
 
 		//INICIO Preparando datos para consulta ////
 		
@@ -80,8 +80,9 @@ class MYPDF extends TCPDF {
 		//echo $num;
 		
 		$this->SetFont('helvetica', '', 9);
-		$this->SetXY(20,55);
+		$this->SetXY(20,40);
 
+	
 		
 		$html ="<style>
 		table, th, td {
@@ -109,7 +110,7 @@ class MYPDF extends TCPDF {
 
 
 				for($i=0; $i < $num; $i++){
-					if($tam<=20){
+					
 						$html = $html.'<tr>';
 						$html=        $html.'<td >'.$total[$i]['estudio'].'</td>';
 						$html=        $html.'<td align="center">'.$total[$i]['cantidad'].'</td>';
@@ -117,10 +118,7 @@ class MYPDF extends TCPDF {
 
 						$total_de_estudios +=$total[$i]['cantidad'];
 						$tam++;
-					}else{
-						$this->AddPage();
-						$tam=0;
-					}
+					
 					
 				}
 

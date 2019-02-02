@@ -3708,6 +3708,55 @@ function first_month_day($fecha) {
         return date('Y-m-d', mktime(0,0,0, $month, 1, $year));
 }
 
+//////////////////////////////////////////
+function primer_dia_semestre($fecha) {
+    date_default_timezone_set('America/Mexico_City');
+    $fecha = explode("-", $fecha);
+    /*$month = date('m');
+    $year = date('Y');*/
+    $year = $fecha[0];
+    
+    return date('Y-m-d', mktime(0,0,0, 1, 1, $year));
+}
+
+function ultimo_dia_semestre($fecha) { 
+    date_default_timezone_set('America/Mexico_City');
+    $fecha = explode("-", $fecha);
+    /*$month = date('m');
+    $year = date('Y');*/
+    $year = $fecha[0];
+    //$month= $fecha[1];
+    $day = date("d", mktime(0,0,0, 6, 0, $year));
+
+    return date('Y-m-d', (mktime(0,0,0,6+1,1,$year)-1) );
+};
+
+function primer_dia_segundo_semestre($fecha) {
+    date_default_timezone_set('America/Mexico_City');
+    $fecha = explode("-", $fecha);
+    /*$month = date('m');
+    $year = date('Y');*/
+    $year = $fecha[0];
+    
+    return date('Y-m-d', mktime(0,0,0, 7, 1, $year));
+}
+
+function ultimo_dia_segundo_semestre($fecha) { 
+    date_default_timezone_set('America/Mexico_City');
+    $fecha = explode("-", $fecha);
+    /*$month = date('m');
+    $year = date('Y');*/
+    $year = $fecha[0];
+    //$month= $fecha[1];
+    $day = date("d", mktime(0,0,0, 12, 0, $year));
+
+    return date('Y-m-d', (mktime(0,0,0,12+1,1,$year)-1) );
+};
+
+
+
+//////////////////////////////////////////
+
 // agregado el 28 de Noviembre de 2017 para las funciones de graficación
 function last_year_day($fecha) { 
         

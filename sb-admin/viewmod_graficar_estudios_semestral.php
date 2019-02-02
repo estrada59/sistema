@@ -20,7 +20,7 @@
             }*/
 
             if(!isset($_POST['fecha_estudios'])){
-                header('Location: controlador_graficar_por_estudios_por_año.php');
+                header('Location: controlador_graficar_reporte_semestral.php');
             }
     ?>
 </head>
@@ -50,17 +50,22 @@
                                 $fecha_ini = date("d-m-Y",strtotime($fecha_ini));
                                 $fecha_fin = date("d-m-Y",strtotime($fecha_fin));                                    
                                 
-                                $mes =obtener_mes($fecha);
-                                $mes = pasarMayusculas($mes);
-                                echo 'Graficar estudios realizados en el año';
+                                
+                                $fecha = explode("-", $fecha);
+                                $year = $fecha[0];
+
+                                $año = 'GRÁFICAS DE LOS DOS SEMESTRES DEL: '.$year;
+                                
+                                
+                                echo $año;
                                 ?>
                         </h1>
-                        <ol class="breadcrumb">
+                       <!-- <ol class="breadcrumb">
                             <li class="active">
                                 <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
-                                Lista de estudios del semestre <?php echo '<small> del '.$fecha_ini.' al '.$fecha_fin.'</small>'; ?>
+                                Lista de estudios del semestre <?php //echo '<small> del '.$fecha_ini.' al '.$fecha_fin.'</small>'; ?>
                             </li>
-                        </ol>
+                        </ol>-->
                     </div>
                 </div>
                 <!-- /.row -->
@@ -71,32 +76,39 @@
                 ?>
                 <div class="row">
                 
-                        <form role="form" id="imprimir_reporte" method="post" action="view_imprimir_reporte_semestral.php" target="_blank">
-                            <input type="hidden" form="imprimir_reporte" name="fecha" value="<?php echo $fecha; ?>"/>
-                            <!--<input type="hidden" form="imprimir_reporte" name="institucion" value="'.$institucion.'"/>-->
-                        </form>
+                     <!-- <form role="form" id="imprimir_reporte" method="post" action="view_imprimir_reporte_semestral.php" target="_blank">
+                            <input type="hidden" form="imprimir_reporte" name="fecha" value="<?php //echo $fecha; ?>"/>
+                           <input type="hidden" form="imprimir_reporte" name="institucion" value="'.$institucion.'"/>-->
+                        <!--</form>-->
 
-                        <button type="submit" class="btn btn-primary btn-lg btn-block"  aria-label="Left Align" form="imprimir_reporte">
-                                <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
-                                IMPRIMIR REPORTE
+                        <button type="submit" class="btn btn-success btn-lg btn-block"  aria-label="Left Align" form="imprimir_reporte" >
+                               <!-- <span class="glyphicon glyphicon-print" aria-hidden="true"></span>-->
+                                <?php 
+                                    $año= 'GRÁFICAS DEL PRIMER SEMESTRE DEL '.$year;
+                                    echo $año; ?>
+                                
                         </button>
                         <br>
                         
                 </div>
                 <div class="row">
                     <div class="col-md-12 col-lg-12">
-                        <!--        1er columnoa de captura  LUNES       -->
+                        
+                        <!--    **********************  1ER SEMESTRE **********************-->
+
+
+
+                        <!--    **********************  INICIO TIPOS DE ESTUDIOS **********************-->
                         <div class="panel panel-success">
                             <div class="panel-heading">
-                                <h3 class="panel-title">Lista de estudios realizados y ATENDIDOS SEMESTRE: <?php echo ' del '.$fecha_ini.' al '.$fecha_fin; ?></h3>
+                                <h3 class="panel-title">LISTA DE ESTUDIOS REALIZADOS Y ATENDIDOS SEMESTRE: <?php echo ' del '.$fecha_ini.' al '.$fecha_fin; ?></h3>
                             </div>  <!--    fin panel heading   -->
 
                             <div class="panel-body">
-                            
-                            <!-- CHART Aquí se invoca   -->
-                            <!--<div id="piechart_3d_por_atender" style="width: 900px; height: 900px;"></div>-->
-                            <div  id="bar_2d_atendido" style="width: 1000px; height: 500px;"></div>
-                            <!-- Fin CHART   -->
+                        
+                                <!-- CHART Aquí se invoca   -->
+                                <div  id="bar_2d_atendido" style="width: 1000px; height: 500px;"></div>
+                                <!-- Fin CHART   -->
 
                                 <?php
                                     include_once 'include/funciones_consultas.php';
@@ -105,7 +117,7 @@
         
                                     $fecha_fin = ultimo_dia_semestre($fecha);
                                     $fecha_ini = primer_dia_semestre($fecha); 
-                                    $datos = array();
+                                    //$datos = array();
                                     $estatus = 'ATENDIDO';
                                     
                                     $datos_atendido = cantidad_de_estudios($fecha_ini, $fecha_fin,$_POST['pagina'],$estatus);
@@ -137,8 +149,8 @@
                                                     $total_de_estudios +=$datos_atendido[$i]['cantidad'];
                                                 }
                                                     echo '<tr>';
-                                                    echo '      <td> Total de estudios atendidos (sumatoria): </td>';
-                                                    echo '      <td> '.$total_de_estudios.' </td>';
+                                                    echo '      <td> <strong>Total de estudios atendidos (sumatoria):</strong> </td>';
+                                                    echo '      <td> <strong>'.$total_de_estudios.' </strong></td>';
                                                     echo '</tr>';
 
                                         echo '</tbody>
@@ -149,38 +161,43 @@
                             <!--<div class="panel-footer">
                             </div>-->
                         </div><!-- /. fin panel primary -->
+                        <!--    **********************  FIN TIPOS DE ESTUDIOS **********************-->
 
-                        <div class="panel panel-warning">
+
+
+                        <!--    **********************  INICIO PACIENTES POR INSTITUCION **********************-->
+                        <div class="panel panel-success">
                             <div class="panel-heading">
-                                <?php   
-                                        $fecha_ini = date("d-m-Y",strtotime($fecha_ini));
-                                        $fecha_fin = date("d-m-Y",strtotime($fecha_fin)); 
+                                <?php    
+                                    $fecha_ini = date("d-m-Y",strtotime($fecha_ini));
+                                    $fecha_fin = date("d-m-Y",strtotime($fecha_fin)); 
                                 ?>
-                                <h3 class="panel-title">Lista de estudios POR ATENDER <?php echo ' del '.$fecha_ini.' al '.$fecha_fin; ?></h3>
+                                <h3 class="panel-title">PACIENTES ATENDIDOS <?php echo ' del '.$fecha_ini.' al '.$fecha_fin; ?></h3>
                             </div>  <!--    fin panel heading   -->
 
                             <div class="panel-body">
                             
                             <!-- CHART Aquí se invoca   -->
-                            <div id="bar_2d_por_atender" style="width: 900px; height: 500px;"></div>
+                            <div id="primer_semestre" style="width: 900px; height: 500px;"></div>
                             <!-- Fin CHART   -->
 
                                 <?php
                                     include_once 'include/funciones_consultas.php';
                     
+                                    
                                     $fecha = $_POST['fecha_estudios'];
-
+        
                                     $fecha_fin = ultimo_dia_semestre($fecha);
-                                    $fecha_ini = primer_dia_semestre($fecha);  
-                                    $datos = array();
-                                    $estatus = 'POR ATENDER';
+                                    $fecha_ini = primer_dia_semestre($fecha); 
+                                    //$datos = array();
+                                    $estatus = 'ATENDIDO';
                                     
-                                    $datos_por_atender = cantidad_de_estudios($fecha_ini, $fecha_fin,$_POST['pagina'],$estatus);
+                                    $datos_atendido_institucion_1 = cantidad_de_pacientes_por_mes($fecha_ini, $fecha_fin,$_POST['pagina'],$estatus );
                                     
-                                    //echo '<pre>';
-                                    //print_r($datos_atendido);
-                                    //echo '</pre>';
-                                    $num = count($datos_por_atender);
+                                    /*echo '<pre>';
+                                    print_r($datos_atendido);
+                                    echo '</pre>';*/
+                                    $num = count($datos_atendido_institucion_1);
                
                 
 
@@ -194,67 +211,91 @@
                                         echo '  </tr>
                                             </thead>
                                             <tbody>';
-                                                $total_de_estudios_por_atender=0;
-                                                
+                                                $total_de_estudios=0;
+
                                                 for($i=0; $i < $num; $i++){
                                                     echo '<tr>';
-                                                    echo        '<td>'.$datos_por_atender[$i]['estudio'].'</td>';
-                                                    echo        '<td>'.$datos_por_atender[$i]['cantidad'].'</td>';
+                                                    echo        '<td>'.$datos_atendido_institucion_1[$i]['institucion'].'</td>';
+                                                    echo        '<td>'.$datos_atendido_institucion_1[$i]['cantidad'].'</td>';
                                                     echo '</tr>';
-                                                    $total_de_estudios_por_atender +=$datos_por_atender[$i]['cantidad'];
+                                                    $total_de_estudios +=$datos_atendido_institucion_1[$i]['cantidad'];
                                                 }
                                                     echo '<tr>';
-                                                    echo '      <td> Total de estudios por atender (sumatoria): </td>';
-                                                    echo '      <td> '.$total_de_estudios_por_atender.' </td>';
+                                                    echo '      <td> <strong>Total de estudios atendidos (sumatoria):</strong> </td>';
+                                                    echo '      <td> <strong>'.$total_de_estudios.'</strong> </td>';
                                                     echo '</tr>';
-
 
                                         echo '</tbody>
                                         </table>
                                     </div>';
-               
-                                    
-                                    //echo '<pre>';
-                                    //print_r($datos);
-                                    //echo '</pre>';
+                                 
+
+                                    /*echo '<pre>';
+                                    print_r($datos_atendido_institucion_1);
+                                    echo '</pre>';*/
                                 ?>                
                             </div><!-- /. fin panel body -->
                             <!--<div class="panel-footer">
                             </div>-->
                         </div><!-- /. fin panel primary -->
+                        <!--    **********************  FIN PACIENTES POR INSTITUCION **********************-->
 
-                        <div class="panel panel-danger">
+
+                        
+                        <!--    **********************  FIN 1ER SEMESTRE **********************-->
+ 
+
+                        <button type="submit" class="btn btn-success btn-lg btn-block"  aria-label="Left Align" form="imprimir_reporte" >
+                               <!-- <span class="glyphicon glyphicon-print" aria-hidden="true"></span>-->
+                                <?php 
+                                    $año= 'GRÁFICAS DEL SEGUNDO SEMESTRE DEL '.$year;
+                                    echo $año; ?>
+                                
+                        </button>
+                        <br/>
+
+                        <!--    **********************  2DO SEMESTRE **********************-->
+                        <?php
+                                $fecha = $_POST['fecha_estudios'];
+        
+                                $fecha_fin = ultimo_dia_segundo_semestre($fecha);
+                                $fecha_ini = primer_dia_segundo_semestre($fecha); 
+
+                                $fecha_ini = date("d-m-Y",strtotime($fecha_ini));
+                                $fecha_fin = date("d-m-Y",strtotime($fecha_fin)); 
+                        ?>
+
+                        <!--    **********************  INICIO TIPOS DE ESTUDIOS **********************-->
+                        <div class="panel panel-success">
                             <div class="panel-heading">
-                                <?php   
-                                        $fecha_ini = date("d-m-Y",strtotime($fecha_ini));
-                                        $fecha_fin = date("d-m-Y",strtotime($fecha_fin)); 
-                                ?>
-                                <h3 class="panel-title">Lista de estudios CANCELADOS <?php echo ' del '.$fecha_ini.' al '.$fecha_fin; ?></h3>
+                                <h3 class="panel-title">Lista de estudios realizados y ATENDIDOS SEMESTRE: <?php echo ' del '.$fecha_ini.' al '.$fecha_fin; ?></h3>
                             </div>  <!--    fin panel heading   -->
 
                             <div class="panel-body">
                             
                             <!-- CHART Aquí se invoca   -->
-                            <div id="bar_2d_cancelado" style="width: 900px; height: 500px;"></div>
+                            <!--<div id="piechart_3d_por_atender" style="width: 900px; height: 900px;"></div>-->
+                            <div  id="bar_2d_segundo_semestre" style="width: 1000px; height: 500px;"></div>
                             <!-- Fin CHART   -->
 
                                 <?php
                                     include_once 'include/funciones_consultas.php';
                     
-                                    $fecha = $_POST['fecha_estudios'];
-        
-                                    $fecha_fin = ultimo_dia_semestre($fecha);
-                                    $fecha_ini = primer_dia_semestre($fecha);  
-                                    $datos = array();
-                                    $estatus = 'CANCELADO';
-                                   
-                                    $datos_cancelado = cantidad_de_estudios($fecha_ini, $fecha_fin,$_POST['pagina'],$estatus);
-                                   
-                                    //echo '<pre>';
-                                    //print_r($datos_atendido);
-                                    //echo '</pre>';
-                                    $num = count($datos_cancelado);
+                                    $fecha_fin_segundo_semestre = ultimo_dia_segundo_semestre($fecha);
+                                    $fecha_ini_segundo_semestre = primer_dia_segundo_semestre($fecha); 
+                                                
+                                    //$datos = array();
+                                    $estatus = 'ATENDIDO';
+                                    
+                                    $datos_atendido_segundo_semestre = cantidad_de_estudios($fecha_ini_segundo_semestre, $fecha_fin_segundo_semestre,$_POST['pagina'],$estatus);
+                                    
+                                   /*echo '<pre>';
+                                    print_r($datos_atendido_segundo_semestre);
+                                    echo '</pre>';*/
+                                    $num = count($datos_atendido_segundo_semestre);
                
+                
+
                                 echo '<div class=" table-responsive">
                                         <table class="table table-bordered table-hover table-striped" >
                                             <thead>
@@ -265,31 +306,116 @@
                                         echo '  </tr>
                                             </thead>
                                             <tbody>';
-                                                $total_de_estudios_cancelados=0;
+                                                $total_de_estudios=0;
 
                                                 for($i=0; $i < $num; $i++){
                                                     echo '<tr>';
-                                                    echo        '<td>'.$datos_cancelado[$i]['estudio'].'</td>';
-                                                    echo        '<td>'.$datos_cancelado[$i]['cantidad'].'</td>';
+                                                    echo        '<td>'.$datos_atendido_segundo_semestre[$i]['estudio'].'</td>';
+                                                    echo        '<td>'.$datos_atendido_segundo_semestre[$i]['cantidad'].'</td>';
                                                     echo '</tr>';
-                                                    $total_de_estudios_cancelados +=$datos_cancelado[$i]['cantidad'];
+                                                    $total_de_estudios +=$datos_atendido_segundo_semestre[$i]['cantidad'];
                                                 }
                                                     echo '<tr>';
-                                                    echo '      <td> Total de estudios cancelados (sumatoria): </td>';
-                                                    echo '      <td> '.$total_de_estudios_cancelados.' </td>';
+                                                    echo '      <td><strong> Total de estudios atendidos (sumatoria):</strong> </td>';
+                                                    echo '      <td><strong> '.$total_de_estudios.' </strong></td>';
                                                     echo '</tr>';
+
                                         echo '</tbody>
                                         </table>
                                     </div>';
+                                ?>                
+                            </div><!-- /. fin panel body -->
+                            <!--<div class="panel-footer">
+                            </div>-->
+                        </div> <!--/. fin panel primary -->
+                        <!--    **********************  FIN TIPOS DE ESTUDIOS **********************-->
+
+
+
+
+                        <!--    **********************  INICIO PACIENTES POR INSTITUCION **********************-->
+                        <div class="panel panel-success">
+                            <div class="panel-heading">
+                                <?php    
+                                    $fecha_ini = date("d-m-Y",strtotime($fecha_ini));
+                                    $fecha_fin = date("d-m-Y",strtotime($fecha_fin)); 
+                                ?>
+                                <h3 class="panel-title">Lista de pacientes citados ATENDIDOS <?php echo ' del '.$fecha_ini.' al '.$fecha_fin; ?></h3>
+                            </div>  <!--    fin panel heading   -->
+
+                            <div class="panel-body">
+                            
+                            <!-- CHART Aquí se invoca   -->
+                            <div id="segundo_semestre" style="width: 900px; height: 500px;"></div>
+                            <!-- Fin CHART   -->
+
+                                <?php
+                                    include_once 'include/funciones_consultas.php';
+                    
+                                    
+                                    $fecha = $_POST['fecha_estudios'];
+        
+                                    $fecha_fin = ultimo_dia_segundo_semestre($fecha);
+                                    $fecha_ini = primer_dia_segundo_semestre($fecha); 
+                                    //$datos = array();
+                                    $estatus = 'ATENDIDO';
+                                    
+                                    $datos_atendido_institucion_2 = cantidad_de_pacientes_por_mes($fecha_ini, $fecha_fin,$_POST['pagina'],$estatus );
+                                    
+                                    /*echo '<pre>';
+                                    print_r($datos_atendido);
+                                    echo '</pre>';*/
+                                    $num = count($datos_atendido_institucion_2);
                
-                                    //echo '<pre>';
-                                    //print_r($datos);
-                                    //echo '</pre>';
+                
+
+                                echo '<div class=" table-responsive">
+                                        <table class="table table-bordered table-hover table-striped" >
+                                            <thead>
+                                                <tr>
+                                                    <th data-field="numero" width="15">Nombre de estudio</th>
+                                                    <th data-field="estudio" width="70">Cantidad</th>';
+                                        
+                                        echo '  </tr>
+                                            </thead>
+                                            <tbody>';
+                                                $total_de_estudios=0;
+
+                                                for($i=0; $i < $num; $i++){
+                                                    echo '<tr>';
+                                                    echo        '<td>'.$datos_atendido_institucion_2[$i]['institucion'].'</td>';
+                                                    echo        '<td>'.$datos_atendido_institucion_2[$i]['cantidad'].'</td>';
+                                                    echo '</tr>';
+                                                    $total_de_estudios +=$datos_atendido_institucion_2[$i]['cantidad'];
+                                                }
+                                                    echo '<tr>';
+                                                    echo '      <td><strong> Total de estudios atendidos (sumatoria):</strong> </td>';
+                                                    echo '      <td><strong> '.$total_de_estudios.' </strong></td>';
+                                                    echo '</tr>';
+
+                                        echo '</tbody>
+                                        </table>
+                                    </div>';
+                                 
+
+                                    /*echo '<pre>';
+                                    print_r($datos_atendido_institucion_1);
+                                    echo '</pre>';*/
                                 ?>                
                             </div><!-- /. fin panel body -->
                             <!--<div class="panel-footer">
                             </div>-->
                         </div><!-- /. fin panel primary -->
+                        <!--    **********************  FIN PACIENTES POR INSTITUCION **********************-->
+
+
+                        <!--    ********************** FIN 2DO SEMESTRE **********************-->
+
+
+
+                        
+                                                
+                        
             </div>  <!--    fin col-lg-12   -->
             <!-- /.container-fluid -->
         </div>
@@ -337,11 +463,125 @@
         };  
     </script>
 
+    
+
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>
 
+    <script type="text/javascript">
+                           
+        google.charts.load("current", {packages:["corechart"]});
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+            var data_por_atender = google.visualization.arrayToDataTable([
+                <?php
+                    echo '["institucion", "cantidad de pacientes"],';
+                    $num = count($datos_atendido_institucion_2);
+
+                    for($i=0; $i < $num; $i++)
+                    {
+                        if($i == $num-1){
+                            echo '["'.$datos_atendido_institucion_2[$i]['institucion'].'",'.$datos_atendido_institucion_2[$i]['cantidad'].']';    
+                        }else{
+                            echo '["'.$datos_atendido_institucion_2[$i]['institucion'].'",'.$datos_atendido_institucion_2[$i]['cantidad'].'],';    
+                        }   
+                    }
+                    echo "]);";
+                ?>
+
+            var options_por_atender = {
+            title: 'PORCENTAJES DE PACIENTES ATENDIDOS',
+            is3D: true,
+            };
+
+            var chart_por_atender = new google.visualization.PieChart(document.getElementById('segundo_semestre'));
+            chart_por_atender.draw(data_por_atender, options_por_atender);
+        }
+    </script>
+
+    <script type="text/javascript">
+                           
+        google.charts.load("current", {packages:["corechart"]});
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+            var data_por_atender = google.visualization.arrayToDataTable([
+                <?php
+                    echo '["institucion", "cantidad de pacientes"],';
+                    $num = count($datos_atendido_institucion_1);
+
+                    for($i=0; $i < $num; $i++)
+                    {
+                        if($i == $num-1){
+                            echo '["'.$datos_atendido_institucion_1[$i]['institucion'].'",'.$datos_atendido_institucion_1[$i]['cantidad'].']';    
+                        }else{
+                            echo '["'.$datos_atendido_institucion_1[$i]['institucion'].'",'.$datos_atendido_institucion_1[$i]['cantidad'].'],';    
+                        }   
+                    }
+                    echo "]);";
+                ?>
+
+            var options_por_atender = {
+            title: 'PORCENTAJES DE PACIENTES ATENDIDOS',
+            is3D: true,
+            };
+
+            var chart_por_atender = new google.visualization.PieChart(document.getElementById('primer_semestre'));
+            chart_por_atender.draw(data_por_atender, options_por_atender);
+        }
+    </script>
+
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['bar']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+            <?php 
+                $num = count($datos_atendido_segundo_semestre);
+                $cad_encabezado ="['ESTUDIOS REALIZADOS EN EL SEMESTRE', ";
+                for($i=0; $i < $num; $i++)
+                {
+                    if($i == $num-1){
+                        $cad_encabezado = $cad_encabezado." '".$datos_atendido_segundo_semestre[$i]["estudio"]."', { role: 'annotation' } ],";
+                    }
+                    else{
+                        $cad_encabezado = $cad_encabezado." '".$datos_atendido_segundo_semestre[$i]["estudio"]."',";
+                    }
+                }
+                echo $cad_encabezado;
+
+                $cad_datos ="['ESTUDIOS POR ATENDER TODAS LAS INSTITUCIONES INCLUYENDO PARTICULARES', ";
+
+                for($i=0; $i < $num; $i++)
+                {
+                    if($i == $num-1){
+                        $cad_datos = $cad_datos." ".$datos_atendido_segundo_semestre[$i]["cantidad"].", '']";
+                    }
+                    else{
+                        $cad_datos = $cad_datos." ".$datos_atendido_segundo_semestre[$i]["cantidad"].",";
+                    }
+                }
+                echo $cad_datos;
+            ?>
+        ]);
+
+        var options = {
+            legend: { position: 'top', maxLines: 200 },
+            bar: { groupWidth: '80%' },
+            isStacked: false,
+            legend: { position: "none" },       
+        };
+
+        var chart = new google.charts.Bar(document.getElementById('bar_2d_segundo_semestre'));
+        chart.draw(data, google.charts.Bar.convertOptions(options));
+
+      }
+    </script>
+
     
-    <!-- GRÁFICAS DE BARRAS-->
+    
     <script type="text/javascript">
       google.charts.load('current', {'packages':['bar']});
       google.charts.setOnLoadCallback(drawChart);
@@ -350,7 +590,7 @@
         var data = google.visualization.arrayToDataTable([
             <?php 
                 $num = count($datos_atendido);
-                $cad_encabezado ="['ESTUDIOS REALIZADOS ANUALMENTE', ";
+                $cad_encabezado ="['ESTUDIOS REALIZADOSEN EL SEMESTRE', ";
                 for($i=0; $i < $num; $i++)
                 {
                     if($i == $num-1){
@@ -388,103 +628,8 @@
         chart.draw(data, google.charts.Bar.convertOptions(options));
 
       }
-    </script>
-
-    <script type="text/javascript">
-      google.charts.load('current', {'packages':['bar']});
-      google.charts.setOnLoadCallback(drawChart);
-
-      function drawChart() {
-        var data = google.visualization.arrayToDataTable([
-            <?php 
-                $num = count($datos_por_atender);
-                $cad_encabezado ="['ESTUDIOS REALIZADOS ANUALMENTE', ";
-                for($i=0; $i < $num; $i++)
-                {
-                    if($i == $num-1){
-                        $cad_encabezado = $cad_encabezado." '".$datos_por_atender[$i]["estudio"]."', { role: 'annotation' } ],";
-                    }
-                    else{
-                        $cad_encabezado = $cad_encabezado." '".$datos_por_atender[$i]["estudio"]."',";
-                    }
-                }
-                echo $cad_encabezado;
-
-                $cad_datos ="['ESTUDIOS POR ATENDER TODAS LAS INSTITUCIONES INCLUYENDO PARTICULARES', ";
-
-                for($i=0; $i < $num; $i++)
-                {
-                    if($i == $num-1){
-                        $cad_datos = $cad_datos." ".$datos_por_atender[$i]["cantidad"].", '']";
-                    }
-                    else{
-                        $cad_datos = $cad_datos." ".$datos_por_atender[$i]["cantidad"].",";
-                    }
-                }
-                echo $cad_datos;
-            ?>
-        ]);
-
-        var options = {
-            legend: { position: 'top', maxLines: 200 },
-            bar: { groupWidth: '80%' },
-            isStacked: false,
-            legend: { position: "none" },       
-        };
-
-        var chart = new google.charts.Bar(document.getElementById('bar_2d_por_atender'));
-        chart.draw(data, google.charts.Bar.convertOptions(options));
-
-      }
-    </script>
-
-
-    <script type="text/javascript">
-      google.charts.load('current', {'packages':['bar']});
-      google.charts.setOnLoadCallback(drawChart);
-
-      function drawChart() {
-        var data = google.visualization.arrayToDataTable([
-            <?php 
-                $num = count($datos_cancelado);
-                $cad_encabezado ="['ESTUDIOS REALIZADOS ANUALMENTE', ";
-                for($i=0; $i < $num; $i++)
-                {
-                    if($i == $num-1){
-                        $cad_encabezado = $cad_encabezado." '".$datos_cancelado[$i]["estudio"]."', { role: 'annotation' } ],";
-                    }
-                    else{
-                        $cad_encabezado = $cad_encabezado." '".$datos_cancelado[$i]["estudio"]."',";
-                    }
-                }
-                echo $cad_encabezado;
-
-                $cad_datos ="['ESTUDIOS CANCELADOS TODAS LAS INSTITUCIONES INCLUYENDO PARTICULARES', ";
-
-                for($i=0; $i < $num; $i++)
-                {
-                    if($i == $num-1){
-                        $cad_datos = $cad_datos." ".$datos_cancelado[$i]["cantidad"].", '']";
-                    }
-                    else{
-                        $cad_datos = $cad_datos." ".$datos_cancelado[$i]["cantidad"].",";
-                    }
-                }
-                echo $cad_datos;
-            ?>
-        ]);
-
-        var options = {
-            legend: { position: 'top', maxLines: 200 },
-            bar: { groupWidth: '80%' },
-            isStacked: false,
-            legend: { position: "none" },       
-        };
-
-        var chart = new google.charts.Bar(document.getElementById('bar_2d_cancelado'));
-        chart.draw(data, google.charts.Bar.convertOptions(options));
-
-      }
-    </script>
+    </script> 
+    
+    
 </body>
 </html>

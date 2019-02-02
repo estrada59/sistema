@@ -211,6 +211,9 @@ function menu($pag){
                         <li>
                             <a href="controlador_graficar_por_estudios_por_año.php">Graficas por estudios anual</a>
                         </li>
+                        <li>
+                            <a href="controlador_graficar_reporte semestral.php">Grafica Semestral</a>
+                        </li>
                     </ul> 
             </li>
             <li class ="'.$pedidos_material.'">

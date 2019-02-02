@@ -3,7 +3,7 @@ class mysql {
     
     var $server = "localhost";
 	var $user = "root";
-    var $pass = "admin";
+    var $pass = "";
     var $data_base = "mednuc";
     var $conexion;
     var $flag = false;
