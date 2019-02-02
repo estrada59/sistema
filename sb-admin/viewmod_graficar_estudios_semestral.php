@@ -205,7 +205,7 @@
                                         <table class="table table-bordered table-hover table-striped" >
                                             <thead>
                                                 <tr>
-                                                    <th data-field="numero" width="15">Nombre de estudio</th>
+                                                    <th data-field="numero" width="15">Institucion</th>
                                                     <th data-field="estudio" width="70">Cantidad</th>';
                                         
                                         echo '  </tr>
@@ -373,7 +373,7 @@
                                         <table class="table table-bordered table-hover table-striped" >
                                             <thead>
                                                 <tr>
-                                                    <th data-field="numero" width="15">Nombre de estudio</th>
+                                                    <th data-field="numero" width="15">Institución</th>
                                                     <th data-field="estudio" width="70">Cantidad</th>';
                                         
                                         echo '  </tr>
