@@ -179,14 +179,24 @@
                                 $mysql = new mysql();
                                 $link = $mysql->connect();
             
-                                $sql = $mysql->query($link, "SELECT observaciones 
+                                $sql = $mysql->query($link, "SELECT observaciones,
+                                                                    (select 
+	                                                                    concat(nombre,' ',ap_paterno,' ',ap_materno)as nombre 
+                                                                    from 
+                                                                        users
+                                                                    where idusuario = (select atendio from pacientes  where idpacientes=$idpaciente)) as nom
                                                                 FROM pacientes 
                                                                 WHERE idpacientes= $idpaciente");
                                 $obj = $mysql->f_obj($sql);
                                 $observaciones = $obj->observaciones;
+                                $persona_que_agenda = $obj->nom;
                                 $mysql->close();
                             ?>
                             <textarea type="text" class="form-control" rows="5" form="ver_lista3" name="motivos" id="motivos"  placeholder="<?php echo $observaciones;?>"></textarea>
+                             <br/>
+                            <p>Agendó: 
+                                <?php echo $persona_que_agenda; ?>
+                            </p>
                         </div>
                     </div>
                 </div>

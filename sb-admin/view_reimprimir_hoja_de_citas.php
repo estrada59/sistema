@@ -117,7 +117,7 @@
 		$this->Rect(5+$ax_x, 75+$ax_y, 4.5, 60,'DF');
 		$this->Rect(206+$ax_x, 10+$ax_y, 5, 66,'DF');
 
-					
+					$id_paciente 	= $row->idpacientes;
 					$nombre         = $row->nombre;
 					$edad = $row->edad;
 					$tipo_edad = $row->tipo_edad;
@@ -194,6 +194,30 @@
 
 					$style = array('width' => 0.5, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0));
 					$this->Line(124, 250, 200, 250, $style);
+
+					if(isset($id_paciente)){
+						
+						$mysql = new mysql();
+						$link = $mysql->connect(); 
+						$sql = $mysql->query($link,"SELECT concat(users.nombre,' ',users.ap_paterno,' ',users.ap_materno) as nombre 
+													FROM users 
+													WHERE users.idusuario = (SELECT pacientes.atendio FROM pacientes WHERE idpacientes=$id_paciente)");
+
+						$row = $mysql->f_obj($sql);
+						if(isset($row->nombre)){
+							//$this->CreateTextBox($row->nombre, 110+$eje_x,122+$eje_y, 80, 10, 10, '');
+							$this->CreateTextBox('Atendió:'.$row->nombre, 11,248, 80, 10, 10, '');	
+							$this->CreateTextBox('Firma paciente o familiar indicaciones recibidas', 108,248, 80, 10, 10, '');
+						}else{
+							$this->CreateTextBox(' ', 11,240, 80, 10, 10, '');	
+							$this->CreateTextBox('Firma paciente o familiar indicaciones recibidas', 108,248, 80, 10, 10, '');
+						}
+						
+
+					}else{
+						$this->CreateTextBox('', 11,240, 80, 10, 10, '');
+						$this->CreateTextBox('Firma paciente o familiar indicaciones recibidas', 108,248, 80, 10, 10, '');
+					}
 	}
 	public function Recibo_paciente_tratamiento($ax_x, $ax_y, $row) {
 
@@ -324,7 +348,7 @@
 					$style = array('width' => 0.5, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0));
 					$this->Line(124+$eje_x, 123+$eje_y, 200+$eje_x, 123+$eje_y, $style);
 					
-					if($this->cont == 0){ //update 2015_07_01
+					if($this->cont == 0){ //update 2019_04_08
 						if(isset($id_paciente)){
 							
 							$mysql = new mysql();
@@ -337,8 +361,10 @@
 							
 							if(!isset($row3)){
 								$this->CreateTextBox('', 110+$eje_x,122+$eje_y, 80, 10, 10, '');
+								
 							}else{
 								$this->CreateTextBox('Atendió:'.$row3->nombre, 110+$eje_x,122+$eje_y, 80, 10, 10, '');	
+								
 							}
 
 						}else{
@@ -346,6 +372,30 @@
 						}
 							
 						$this->cont++;
+					}else{
+						if(isset($id_paciente)){
+							
+							$mysql = new mysql();
+							$link = $mysql->connect(); 
+							$sql = $mysql->query($link,"SELECT concat(users.nombre,' ',users.ap_paterno,' ',users.ap_materno) as nombre 
+														FROM users 
+														WHERE users.idusuario = (SELECT pacientes.atendio FROM pacientes WHERE idpacientes=$id_paciente)");
+
+							$row3 = $mysql->f_obj($sql);
+							
+							if(!isset($row3)){
+								$this->CreateTextBox('', 110+$eje_x,122+$eje_y, 80, 10, 10, '');
+								$this->CreateTextBox('Firma paciente o familiar indicaciones recibidas', 110+$eje_x,120+$eje_y, 80, 10, 10, '');	
+							}else{
+								$this->CreateTextBox('Atendió:'.$row3->nombre, 11+$eje_x,122+$eje_y, 80, 10, 10, '');	
+								$this->CreateTextBox('Firma paciente o familiar indicaciones recibidas', 110+$eje_x,120+$eje_y, 80, 10, 10, '');	
+								
+							}
+
+						}else{
+							$this->CreateTextBox('', 110+$eje_x,122+$eje_y, 80, 10, 10, '');
+							$this->CreateTextBox('Firma paciente o familiar indicaciones recibidas', 110+$eje_x,120+$eje_y, 80, 10, 10, '');	
+						}
 					}
 	}
 
