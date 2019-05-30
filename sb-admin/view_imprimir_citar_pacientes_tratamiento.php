@@ -190,7 +190,20 @@ class MYPDF extends TCPDF {
 																WHERE idusuario = $id_usuario");        
         				$row4 = $mysql->f_obj($datos_usuario);
 
-						$this->CreateTextBox('Atendió:'.$row4->nombre, 110+$eje_x,122+$eje_y, 80, 10, 10, '');		
+						$this->CreateTextBox('Atendió:'.$row4->nombre, 110+$eje_x,122+$eje_y, 80, 10, 10, 'B');		
+						$this->cont++;
+
+						$mysql->close();
+					}else{
+						$id_usuario = $_SESSION['id'];
+						$mysql = new mysql();
+						$link = $mysql->connect(); 
+						$datos_usuario = $mysql->query($link,"SELECT concat(nombre,' ',ap_paterno,' ', ap_materno) as nombre
+																FROM users 
+																WHERE idusuario = $id_usuario");        
+        				$row4 = $mysql->f_obj($datos_usuario);
+
+						$this->CreateTextBox('Atendió:'.$row4->nombre, 0+$eje_x,122+$eje_y, 80, 10, 10, 'B');		
 						$this->cont++;
 
 						$mysql->close();

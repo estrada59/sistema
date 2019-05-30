@@ -240,6 +240,21 @@ class MYPDF extends TCPDF {
 
 					$style = array('width' => 0.5, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0));
 					$this->Line(124, 240, 200, 240, $style);
+
+					$this->CreateTextBox('Firma familiar o paciente recibí indicaciones', 105+$ax_x,110+$ax_y, 80, 10, 10, '');
+
+					$id_usuario = $_SESSION['id'];
+					$mysql = new mysql();
+        			$link = $mysql->connect(); 
+        			$datos_usuario = $mysql->query($link,"SELECT concat(nombre,' ',ap_paterno,' ', ap_materno) as nombre
+															FROM users 
+															WHERE idusuario=$id_usuario");        
+        			$row4 = $mysql->f_obj($datos_usuario);
+
+					$this->CreateTextBox('Atendió:'.$row4->nombre, 0+$ax_x,116+$ax_y, 80, 10, 10, 'B');	
+
+					$mysql->close();
+
 	}
 
 }

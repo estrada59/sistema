@@ -2,6 +2,7 @@
 <?php
  
 // Include the main TCPDF library (search for installation path).
+//error_reporting(0);
 require_once('include/tcpdf/tcpdf.php');
 include_once 'include/funciones_consultas.php';
 
@@ -75,26 +76,26 @@ class MYPDF extends TCPDF {
 
                     //test
                     //$this->CreateTextBox($anticipo, 0,0, 80, 10, 10, '');
-                    $this->CreateTextBox($anticipo, 145,25, 80, 10, 10, '');
+                    $this->CreateTextBox($anticipo, 145,28, 80, 10, 10, '');//corregido
                     $this->CreateTextBox($nombre, 35,35, 80, 10, 10, '');
 					//error_reporting(0);
 					include "include/num_to_letter.php";
 					
 					$V=ValorEnLetras($monto_anticipo, 'pesos');
 
-					$this->CreateTextBox($V, 35,45, 80, 10, 10, '');
+					$this->CreateTextBox($V, 35,44, 80, 10, 10, '');//corregido
 					$this->SetFont('helvetica', '', 10);
                     //$this->CreateTextBox($estudio, 35,65, 140, 10, 10, ''); update <-- this for next
-                    $this->MultiCell(140, 10, $estudio, 0, 'L', 0, 0, $x=55, $y=88, true);
+                    $this->MultiCell(140, 10, $estudio, 0, 'L', 0, 0, $x=55, $y=74, true);
                     
                     
                   	$fecha = explode('-', $fecha_anticipo);
                   	$año = str_split($fecha[2], 2); // divido en dos 2015 --->  [0]=20   [1]=15
 					
                   	
-                  	$this->CreateTextBox($fecha[1], 65,85, 80, 10, 10, '');
-                  	$this->CreateTextBox($fecha[0], 105,85, 80, 10, 10, '');
-                  	$this->CreateTextBox($año[1], 145,85, 80, 10, 10, '');
+                  	$this->CreateTextBox($fecha[1], 80,79, 80, 10, 10, '');
+                  	$this->CreateTextBox($fecha[0], 114,79, 80, 10, 10, '');
+                  	$this->CreateTextBox($año[1], 165,79, 80, 10, 10, '');
 
 
 					//$style = array('width' => 0.5, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0));
