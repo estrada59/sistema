@@ -157,6 +157,9 @@ class MYPDF extends TCPDF {
 		$fecha_ini = first_month_day($_POST['fecha_corte']);
         $fecha_fin = last_month_day($_POST['fecha_corte']);
 
+		$fecha_ini =$fecha_ini.' 00:00:00';
+		$fecha_fin = $fecha_fin.' 23:59:59';
+		
 		$mysql = new mysql();
 		$link = $mysql->connect(); 
 

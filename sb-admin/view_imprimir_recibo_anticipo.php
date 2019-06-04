@@ -108,8 +108,8 @@ class MYPDF extends TCPDF {
 															WHERE idusuario=$id_usuario");        
         			$row4 = $mysql->f_obj($datos_usuario);
 
-					$this->CreateTextBox($row4->nombre, 55,180, 80, 10, 10, '');		
-					echo $row4->nombre;
+					$this->CreateTextBox($row4->nombre, 55,100, 80, 10, 10, '');		
+					//echo $row4->nombre;
 					$mysql->close();
 	}
 }
