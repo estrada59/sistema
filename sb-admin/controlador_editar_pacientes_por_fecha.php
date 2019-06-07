@@ -4,7 +4,7 @@
 
 <head>
     <?php include "header.php"; 
-
+            date_default_timezone_set('America/Mexico_City');
             session_start(); 
             include "../include/sesion.php";
             comprueba_url();
@@ -114,7 +114,8 @@
                                     $ap_paterno = $row->ap_paterno;
                                     $ap_materno = $row->ap_materno;
                                     $nombre_estudio = $row->estudio;
-                                
+
+                                    
                                     $fecha_nacimiento= date("Y-m-d",strtotime($row->fecha_nacimiento));
                                     
                                     echo'
