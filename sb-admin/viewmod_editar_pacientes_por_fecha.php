@@ -6,29 +6,43 @@ include "include/mysql.php";
 function previsualizacion(){
 //datos anteriores   
 date_default_timezone_set('America/Mexico_City');
-
+/*echo'<pre>';
+print_r($_POST);
+echo'</pre>';*/
 //datos anteriores
-$fecha_ant          =   $_POST["fecha_ant"];    
-$fecha_ant          =   date('d-m-Y',strtotime($fecha_ant));
-
-$hora_ant           =   $_POST['hora_ant'];
-$hora_ant           =   date('g:i a',strtotime($hora_ant));
-
+$idpaciente         =   $_POST['idpaciente'];
 $nombre_ant         =   $_POST['nombre_ant'];
 $ap_paterno_ant     =   $_POST['ap_paterno_ant'];
 $ap_materno_ant     =   $_POST['ap_materno_ant'];
+$paciente_ant       =   $nombre_ant.' '.$ap_paterno_ant.' '.$ap_materno_ant; 
 $tel_local_ant      =   $_POST['tel_local_ant'];
 $tel_cel_ant        =   $_POST['tel_cel_ant'];
 $email_ant          =   $_POST['email_ant'];
-$paciente_ant       =   $nombre_ant.' '.$ap_paterno_ant.' '.$ap_materno_ant; 
-$indicaciones_tratamiento = $_POST['indicaciones_tratamiento'];  
+$edad_ant           =   $_POST['edad_ant'];
+$tipo_edad_ant      =   $_POST['tipo_edad_ant'];
+$fecha_nac_ant      =   $_POST['fecha_nac_ant'];
+$fecha_nac_ant      =   date('d-m-Y',strtotime($fecha_nac_ant));
 
+$fecha_estudio_ant          =   $_POST["fecha_estudio_ant"];    
+$fecha_estudio_ant          =   date('d-m-Y',strtotime($fecha_estudio_ant));
+$hora_estudio_ant               =   $_POST['hora_estudio_ant'];
+$hora_estudio_ant               =   date('g:i a',strtotime($hora_estudio_ant));
+$indicaciones_estudio_ant       = $_POST['indicaciones_estudio_ant'];
+$indicaciones_tratamiento_ant   = $_POST['indicaciones_trat_ant'];  
+
+$grado_ant          =   $_POST['grado_ant'];
 $nombre_med_ant     =   $_POST['nombre_med_ant'];
 $ap_paterno_med_ant =   $_POST['ap_paterno_med_ant'];
 $ap_materno_med_ant =   $_POST['ap_materno_med_ant'];
-$grado_ant          =   $_POST['grado_ant'];
-$especialidad_ant   =   $_POST['especialidad_ant'];
-$dr_ant = $grado_ant.' '.$nombre_med_ant.' '.$ap_paterno_med_ant.' '.$ap_materno_med_ant;
+
+if($grado_ant == 'DR.' || $grado_ant == 'DRA.' ){
+    $dr_ant = $grado_ant.' '.$nombre_med_ant.' '.$ap_paterno_med_ant.' '.$ap_materno_med_ant;
+}else{
+    $dr_ant = 'Aquien corresponda';
+}
+
+$especialidad_med_ant   =   $_POST['especialidad_med_ant'];
+
 
 //datos actuales
 
@@ -36,162 +50,275 @@ $dr_ant = $grado_ant.' '.$nombre_med_ant.' '.$ap_paterno_med_ant.' '.$ap_materno
 $nombre         =   pasarMayusculas($_POST['nombre']);
 $ap_paterno     =   pasarMayusculas($_POST['ap_paterno']);
 $ap_materno     =   pasarMayusculas($_POST['ap_materno']);
-
-$fecha          =   $_POST["fecha"];    
-$hora           =   $_POST['hora'];
-
+$paciente_nuevo =   $nombre.' '.$ap_paterno.' '.$ap_materno; 
 $tel_local      =   pasarMayusculas($_POST['tel_local']);
 $tel_cel        =   pasarMayusculas($_POST['tel_cel']);
 $email          =   pasarMayusculas($_POST['email']);
-$paciente       =   $nombre.' '.$ap_paterno.' '.$ap_materno;
-$nombre_estudio =   pasarMayusculas($_POST['nombre_estudio']);
+$edad           =   $_POST['edad'];
+$tipo_edad      =   $_POST['tipo_edad'];
+$fecha_nacimiento      =   $_POST['fecha_nacimiento'];
+$fecha_nacimiento     =   date('d-m-Y',strtotime($fecha_nacimiento));
 
+
+$nombre_estudio =   pasarMayusculas($_POST['nombre_estudio']);
+$fecha_estudio  =   $_POST["fecha_estudio"];    
+$fecha_estudio          =   date('d-m-Y',strtotime($fecha_estudio));
+$hora_estudio           =   $_POST['hora_estudio'];
+$hora_estudio           =   date('g:i a',strtotime($hora_estudio));
+$indicaciones_estudio = $_POST['indicaciones_estudio'];
+$indicaciones_tratamiento = $_POST['indicaciones_tratamiento'];
+
+$grado          =   pasarMayusculas($_POST['grado']);
 $nombre_med     =   pasarMayusculas($_POST['nombre_med']);
 $ap_paterno_med =   pasarMayusculas($_POST['ap_paterno_med']);
 $ap_materno_med =   pasarMayusculas($_POST['ap_materno_med']);
-$grado          =   pasarMayusculas($_POST['grado']);
-$especialidad   =   pasarMayusculas($_POST['especialidad']);
+$especialidad_med   =   pasarMayusculas($_POST['especialidad_med']);
 
 if($grado == 'SI'){
     $grado = 'A quien corresponda';}
 
 $dr = $grado.' '.$nombre_med.' '.$ap_paterno_med.' '.$ap_materno_med;
 
-$fecha          =   date('d-m-Y',strtotime($fecha));
-$hora           =   date('g:i a',strtotime($hora));
 
-$lista = array( "nombre"        =>  $nombre,
-                "ap_paterno"    =>  $ap_paterno,
-                "ap_materno"    =>  $ap_materno,
-                "tel_local"     =>  $tel_local,
-                "tel_cel"       =>  $tel_cel,
-                "email"         =>  $email,
-                "nombre_med"    =>  $nombre_med,
-                "ap_paterno_med"=>  $ap_paterno_med,
-                "ap_materno_med"=>  $ap_materno_med,
-                "grado"         =>  $grado,
-                "especialidad"  =>  $especialidad,
-                "indicaciones_tratamiento" => $indicaciones_tratamiento);
+$lista = array( "nombre"                    =>  $nombre,
+                "ap_paterno"                =>  $ap_paterno,
+                "ap_materno"                =>  $ap_materno,
+                "tel_local"                 =>  $tel_local,
+                "tel_cel"                   =>  $tel_cel,
+                "email"                     =>  $email,
+                "edad"                      =>  $edad,
+                "tipo_edad"                 =>  $tipo_edad,
+                "fecha_nacimiento"          =>  $fecha_nacimiento,
+                "fecha_estudio"             =>  $fecha_estudio,
+                "hora_estudio"              =>  $hora_estudio,
+                "indicaciones_estudio"      =>  $indicaciones_estudio,
+                "indicaciones_tratamiento"  =>  $indicaciones_tratamiento,
+                "nombre_med"                =>  $nombre_med,
+                "ap_paterno_med"            =>  $ap_paterno_med,
+                "ap_materno_med"            =>  $ap_materno_med,
+                "grado"                     =>  $grado,
+                "especialidad"              =>  $especialidad_med);
 
-echo' 
-<div class="col-md-12 col-lg-12">  
-    <div class="panel panel-primary">        
-        <div class = "panel-heading">
-            <h3 class="panel-title"> Se actualizaron los registros </h3>
-        </div>  <!--    fin panel heading   -->
-            
-        <div class="panel-body">
-';
-
-echo '      <p><strong>Estos datos se actualizaron</strong> </p>';
-echo '  
-            <div class="table-responsive">
-                <table class="table table-bordered table-hover table-striped">
-                    <thead>
-                        <tr>
-                            <th data-field="fecha">Fecha</th>
-                            <th data-field="hora">Hora</th>
-                            <th data-field="paciente">Paciente</th>
-                            <th data-field="estudio">Nombre del estudio</th>
-                            <th data-field="tel_local">Teléfono Local</th>
-                            <th data-field="tel_cel">Teléfono cel.</th>
-                            <th data-field="email">Correo</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th data-field="fecha">'.$fecha_ant.'</th>
-                            <th data-field="hora">'.$hora_ant.'</th>
-                            <th data-field="paciente">'.$paciente_ant.'</th>
-                            <th data-field="estudio">'.$nombre_estudio.'</th>
-                            <th data-field="tel_local">'.$tel_local_ant.'</th>
-                            <th data-field="tel_cel">'.$tel_cel_ant.'</th>
-                            <th data-field="email">'.$email_ant.'</th>
-                        </tr>
-                    <tbody>
-                </table>
-            </div>
-
-            <div class="table-responsive">    
-                <table class="table table-bordered table-hover table-striped">
-                    <thead>
-                        <tr>
-                            <th data-field="nombre_med">Nombre del médico</th>
-                            <th data-field="especialidad">Especialidad</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th data-field="fecha">'.$dr_ant.'</th>
-                            <th data-field="especialidad">'.$especialidad_ant.'</th>
-                        </tr>
-                    <tbody>
-                </table> 
-            </div>';
+/*echo'<pre>';
+echo print_r($lista);
+echo'</pre>';*/
 
 
-echo '      <hr>
-            <hr>
-            <p><strong>Por estos de acá</strong></p> '; 
-
-
-echo '      <div class="table-responsive">
-                <table class="table table-bordered table-hover table-striped">
-                    <thead>
-                        <tr>
-                            <th data-field="fecha">Fecha</th>
-                            <th data-field="hora">Hora</th>
-                            <th data-field="paciente">Paciente</th>
-                            <th data-field="estudio">Nombre del estudio</th>
-                            <th data-field="tel_local">Teléfono Local</th>
-                            <th data-field="tel_cel">Teléfono cel.</th>
-                            <th data-field="email">Correo</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th data-field="fecha">'.$fecha.'</th>
-                            <th data-field="hora">'.$hora.'</th>
-                            <th data-field="paciente">'.$paciente.'</th>
-                            <th data-field="estudio">'.$nombre_estudio.'</th>
-                            <th data-field="tel_local">'.$tel_local.'</th>
-                            <th data-field="tel_cel">'.$tel_cel.'</th>
-                            <th data-field="email">'.$email.'</th>
-                        </tr>
-                    <tbody>
-                </table>
-            </div>
-
-            <div class="table-responsive">
-                <table class="table table-bordered table-hover table-striped">
-                    <thead>
-                        <tr>
-                            <th data-field="nombre_med">Nombre del médico</th>
-                            <th data-field="especialidad">Especialidad</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th data-field="fecha">'.$dr.'</th>
-                            <th data-field="especialidad">'.$especialidad.'</th>
-                        </tr>
-                    <tbody>
-                </table>
-            </div>
+echo'   <div class="col-md-6 col-lg-6">  
+            <div class="panel panel-primary">        
+                <div class = "panel-heading">
+                    <h3 class="panel-title">Registros anteriores </h3>
+                </div>  <!--    fin panel heading   -->
+                    
+                <div class="panel-body">
+        ';
         
-        </div>    
+        echo '      <p><strong>DATOS DEL PACIENTE ANTERIOR</strong> </p>';
+        echo '  
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover table-striped">
+                            
+                            <tbody>
+                                
+                                <tr>
+                                    <th data-field="paciente">Nombre del paciente</th>
+                                    <th data-field="paciente">'.$paciente_ant.'</th>
+                                </tr>
+        
+                                <tr>
+                                    <th data-field="tel_local">Teléfono Local</th>
+                                    <th data-field="tel_local">'.$tel_local_ant.'</th>
+                                </tr>
+        
+                                <tr>
+                                    <th data-field="tel_cel">Teléfono cel.</th>
+                                    <th data-field="tel_cel">'.$tel_cel_ant.'</th>
+                                </tr>
+        
+                                <tr>
+                                    <th data-field="email">Correo</th>
+                                    <th data-field="email">'.$email_ant.'</th>
+                                </th>
+        
+                                <tr>
+                                    <th data-field="edad">Edad del paciente</th>
+                                    <th data-field="edad">'.$edad_ant.' '.$tipo_edad_ant.'</th>
+                                </th>
 
-        <div class="panel-footer">
-            
+                                <tr>
+                                    <th data-field="fecha_nacimiento">Fecha de nacimiento</th>
+                                    <th data-field="fecha_nacimiento">'.$fecha_nac_ant.'</th>
+                                </th>
+                                
+                            <tbody>
+                        </table>
+                    </div>
+
+                    </br>
+
+                    <p><strong>DATOS DEL ESTUDIO ANTERIOR</strong></p>
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover table-striped">
+                            <tbody>
+                                <tr>
+                                    <th data-field="fecha">Fecha del estudio</th>
+                                    <th data-field="fecha">'.$fecha_estudio_ant.'</th>
+                                </tr>
+                                <tr>
+                                    <th data-field="hora">Hora del estudio</th>
+                                    <th data-field="hora">'.$hora_estudio_ant.'</th>
+                                </tr>
+                                <tr>
+                                    <th data-field="estudio">Nombre del estudio</th>
+                                    <th data-field="estudio">'.$nombre_estudio.'</th>
+                                </tr>
+                                <tr>
+                                    <th data-field="indicaciones_estudio">Indicaciones del estudio</th>
+                                    <th data-field="indicaciones_estudio">'.$indicaciones_estudio_ant.'</th>
+                                </tr>
+                                <tr>
+                                    <th data-field="indicaciones_tratamiento">Indicaciones del tratamiento</th>
+                                    <th data-field="indicaciones_tratamiento">'.$indicaciones_tratamiento_ant.'</th>
+                                </tr> 
+                            <tbody>
+                        </table>
+                    </div>
+
+                    </br>
+
+                    <p><strong>DATOS DEL MÉDICO TRATANTE ANTERIOR</strong></p>
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover table-striped">
+                            <tbody>
+                                <tr>
+                                    <th data-field="medico">Nombre del médico</th>
+                                    <th data-field="medico">'.$dr_ant.'</th>
+                                </tr>
+                                <tr>
+                                    <th data-field="especialidad">Especialidad</th>
+                                    <th data-field="especialidad">'.$especialidad_med_ant.'</th>
+                                </tr>
+                                
+                            <tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>';
+
+
+echo'   <div class="col-md-6 col-lg-6">  
+        <div class="panel panel-primary">        
+            <div class = "panel-heading">
+                <h3 class="panel-title"> Registros nuevos </h3>
+            </div>  <!--    fin panel heading   -->
+                
+            <div class="panel-body">
+    ';
+    
+    echo '      <p><strong>DATOS DEL PACIENTE NUEVO</strong> </p>';
+    echo '  
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover table-striped">
+                        
+                        <tbody>
+                            
+                            <tr>
+                                <th data-field="paciente">Nombre del paciente</th>
+                                <th data-field="paciente">'.$paciente_nuevo.'</th>
+                            </tr>
+    
+                            <tr>
+                                <th data-field="tel_local">Teléfono Local</th>
+                                <th data-field="tel_local">'.$tel_local.'</th>
+                            </tr>
+    
+                            <tr>
+                                <th data-field="tel_cel">Teléfono cel.</th>
+                                <th data-field="tel_cel">'.$tel_cel.'</th>
+                            </tr>
+    
+                            <tr>
+                                <th data-field="email">Correo</th>
+                                <th data-field="email">'.$email.'</th>
+                            </th>
+    
+                            <tr>
+                                <th data-field="edad">Edad del paciente</th>
+                                <th data-field="edad">'.$edad.' '.$tipo_edad.'</th>
+                            </th>
+
+                            <tr>
+                                <th data-field="fecha_nacimiento">Fecha de nacimiento</th>
+                                <th data-field="fecha_nacimiento">'.$fecha_nacimiento.'</th>
+                            </th>
+                            
+                        <tbody>
+                    </table>
+                </div>
+
+                </br>
+
+                <p><strong>DATOS DEL ESTUDIO NUEVO</strong></p>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover table-striped">
+                        <tbody>
+                            <tr>
+                                <th data-field="fecha">Fecha del estudio</th>
+                                <th data-field="fecha">'.$fecha_estudio.'</th>
+                            </tr>
+                            <tr>
+                                <th data-field="hora">Hora del estudio</th>
+                                <th data-field="hora">'.$hora_estudio.'</th>
+                            </tr>
+                            <tr>
+                                <th data-field="estudio">Nombre del estudio</th>
+                                <th data-field="estudio">'.$nombre_estudio.'</th>
+                            </tr>
+                            <tr>
+                                <th data-field="indicaciones_estudio">Indicaciones del estudio</th>
+                                <th data-field="indicaciones_estudio">'.$indicaciones_estudio.'</th>
+                            </tr>
+                            <tr>
+                                <th data-field="indicaciones_tratamiento">Indicaciones del tratamiento</th>
+                                <th data-field="indicaciones_tratamiento">'.$indicaciones_tratamiento.'</th>
+                            </tr> 
+                        <tbody>
+                    </table>
+                </div>
+
+                </br>
+
+                <p><strong>DATOS DEL MÉDICO TRATANTE NUEVO</strong></p>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover table-striped">
+                        <tbody>
+                            <tr>
+                                <th data-field="medico">Nombre del médico</th>
+                                <th data-field="medico">'.$dr.'</th>
+                            </tr>
+                            <tr>
+                                <th data-field="especialidad">Especialidad</th>
+                                <th data-field="especialidad">'.$especialidad_med.'</th>
+                            </tr>
+                            
+                        <tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-            
-    </div>
-</div>';
+    </div>';      
 
+       
+        //echo $_POST['idpaciente'];
         update($lista);
 }
 ?>
-<?php
+<?php 
 function update($lista){
             
 
@@ -206,33 +333,42 @@ function update($lista){
             $mysqli = $mysql->connect();
 
             $idpaciente = $_POST['idpaciente'];
-            $fecha      = $_POST['fecha'];
-            $hora           =   $_POST['hora'];
-
+            
             $nombre     = $lista["nombre"];
             $ap_paterno = $lista['ap_paterno'];
             $ap_materno = $lista['ap_materno'];
             $tel_local  = $lista['tel_local'];
             $tel_cel    = $lista['tel_cel'];
             $email      = $lista['email'];
+            $edad       = $lista['edad'];
+            $tipo_edad  = $lista['tipo_edad'];
+            $fecha_nac  = $lista['fecha_nacimiento'];
+            $fecha_nac      =date('Y-m-d H:i:s',strtotime($fecha_nac));
+            $fecha_estudio  = $lista['fecha_estudio'];
+            $fecha_estudio  =date('Y-m-d',strtotime($fecha_estudio));
+            $hora_estudio   = $lista['hora_estudio'];
+            $indicaciones_estudio     = $lista['indicaciones_estudio'];
             $indicaciones_tratamiento = $lista['indicaciones_tratamiento'];
 
-            $sql = "UPDATE pacientes SET    fecha                   =   '$fecha',
-                                            hora                    =   '$hora',
+            $sql = "UPDATE pacientes SET    fecha                   =   '$fecha_estudio',
+                                            hora                    =   '$hora_estudio',
                                             nombre                  =   '$nombre',
                                             ap_paterno              =   '$ap_paterno',
                                             ap_materno              =   '$ap_materno',
                                             num_tel                 =   '$tel_local',
                                             num_tel2                =   '$tel_cel',
                                             email                   =   '$email',
-                                            indicaciones_tratamiento= '$indicaciones_tratamiento'
+                                            indicaciones            =   '$indicaciones_estudio',
+                                            indicaciones_tratamiento=   '$indicaciones_tratamiento',
+                                            edad                    =   '$edad',
+                                            fecha_nacimiento        =   '$fecha_nac'
                         WHERE idpacientes   = $idpaciente";
             
             $mysqli->query($sql);
 
             //printf("%s\n", mysqli_info($mysqli));
 
-            echo '<div class="hola">filas afectadas: (Se actualizó) '.$mysqli->affected_rows.' fila</div>';
+        //    echo '<div class="hola">filas afectadas: (Se actualizó) '.$mysqli->affected_rows.' fila</div>';
 
             $nombre_med     = $lista["nombre_med"];
             $ap_paterno_med = $lista['ap_paterno_med'];
@@ -254,7 +390,7 @@ function update($lista){
 
             //printf("%s\n", mysqli_info($mysqli));
 
-            echo '<div class="hola">filas afectadas: (Se actualizó) '.$mysqli->affected_rows.' fila</div>';
+        //    echo '<div class="hola">filas afectadas: (Se actualizó) '.$mysqli->affected_rows.' fila</div>';
           /*   $sql = "UPDATE pacientes_has_anticipos SET    fecha       =   '$fecha',
                                                             hora        =   '$hora',
                                                             num_tel     =   '$tel_local',
@@ -265,6 +401,16 @@ function update($lista){
 
     
             $mysql->close();*/
+            $sql1 = "SELECT id_edad 
+                        from tblc_edad
+                        where descripcion = '$tipo_edad'";
+            $res = $mysqli->query($sql1);
+            $fila = mysqli_fetch_object($res);
+
+            $sql = "UPDATE tbl_edad_paciente SET id_edad = $fila->id_edad WHERE idpacientes = $idpaciente";
+            $mysqli->query($sql);
+
+        //    echo '<div class="hola">filas afectadas: (Se actualizó) '.$mysqli->affected_rows.' fila</div>';
             $mysql->close();
 }
 
@@ -326,7 +472,7 @@ function pasarMayusculas($cadena) {
             ?>
             <form  role="form" id="editar_paciente" method="post" action="viewmod_ver_editar_pacientes_por_fecha.php">
                 <?php 
-                    $fecha_ant          =   $_POST["fecha_ant"]; 
+                    $fecha_ant          =   $_POST["fecha_estudio_ant"]; 
                     echo '<input type="hidden" form="editar_paciente" name="fecha_estudios" id="fecha_estudios" value="'.$fecha_ant.'"/>';
                 ?>
             </form>

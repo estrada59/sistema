@@ -28,7 +28,11 @@
 
         <div id="page-wrapper">
             <div class="container-fluid">
-
+                <?php
+                    /*echo'<pre>';
+                    print_r($_POST);
+                    echo '</pre>';*/
+                ?>
                 <!-- Page Heading -->
                 <div class="row">
                     <div class="col-lg-12">
@@ -57,179 +61,254 @@
                 </div>
                 <br>
                 <div class="row">
-                    <div class="col-md-12 col-lg-12">
-                        <!--        1er columnoa de captura         -->
-                        <div class="panel panel-danger">
+                       
+                    <!--        1er columnoa de captura         -->
+            
+                    <div class="col-md-4 col-lg-4">  
+                        <div class="panel panel-primary">        
+
+                            <div class="panel-heading">
+                                <h3 class="panel-title"> Datos del paciente </h3>
+                            </div>  <!--    fin panel heading   -->
+
+                            <div class="panel-body">
+                                <!-- datos de la primera columna-->
+                                <form role="form" id="editar_estudio" method="post" action="viewmod_editar_pacientes_por_fecha.php">
+                                <?php 
+                                    include_once "include/mysql.php";
+
+                                    $id = $_POST["idpaciente"];
+                                // echo 'este es id'.$id;
+                                    $mysql =new mysql();
+                                    $link = $mysql->connect(); 
+
+                                    $sql = $mysql->query($link,"SELECT    
+                                                                        t1.nombre,
+                                                                        t1.ap_paterno,
+                                                                        t1.ap_materno,
+                                                                        t1.num_tel,
+                                                                        t1.num_tel2,
+                                                                        t1.email,
+                                                                        t1.doctores_iddoctores,
+                                                                        t1.fecha_nacimiento,
+                                                                        t1.edad,
+
+                                                                        (select descripcion
+                                                                            from tblc_edad 
+                                                                            where id_edad = (select id_edad 
+                                                                                                from tbl_edad_paciente 
+                                                                                                where idpacientes= $id) ) as tipo_edad,
+
+                                                                        (SELECT concat(t2.tipo,' ',t2.nombre) AS gamm
+                                                                            FROM estudio t2 
+                                                                            WHERE idgammagramas= t1.estudio_idgammagramas) AS estudio
+                                                                FROM pacientes t1
+                                                                WHERE idpacientes= $id");
+
+                                    //echo 'filas afectadas: (Encontradas) '.$mysql->affect_row().'';
+                                    // echo '"SELECT * FROM estudio WHERE idgammagramas="'.$id.'""';
+                            
+                                    $row = $mysql->f_obj($sql);
+                            
+                                    $nombre_pac = $row->nombre;
+                                    $ap_paterno = $row->ap_paterno;
+                                    $ap_materno = $row->ap_materno;
+                                    $nombre_estudio = $row->estudio;
+                                
+                                    $fecha_nacimiento= date("Y-m-d",strtotime($row->fecha_nacimiento));
+                                    
+                                    echo'
+                                        <div class="form-group">
+                                            <label for="nombre">Nombre:</label>
+                                            <input type="text" class="form-control" form="editar_estudio" name="nombre" id="nombre" value="'.$row->nombre.'">
+                                        </div> 
+                                        <div class="form-group">
+                                            <label for="ap_paterno">Apellido paterno</label>
+                                            <input type="text" class="form-control" form="editar_estudio" name="ap_paterno" id="ap_paterno" value="'.$row->ap_paterno.'">
+                                        </div> 
+                                        <div class="form-group">
+                                            <label for="ap_materno">Apellido materno</label>
+                                            <input type="text" class="form-control" form="editar_estudio" name="ap_materno" id="ap_materno" value="'.$row->ap_materno.'">
+                                        </div> 
+                                        
+                                        <div class="form-group">
+                                            <label for="tel_local">Teléfono local o celular</label>
+                                            <input type="text" class="form-control" form="editar_estudio" name="tel_local" id="tel_local"   value="'.$row->num_tel.'">
+                                        </div>  
+
+                                        <div class="form-group">
+                                            <label for="tel_cel">Teléfono celular</label>
+                                            <input type="text" class="form-control" form="editar_estudio" name="tel_cel" id="tel_cel"     value="'.$row->num_tel2.'">
+                                        </div> 
+
+                                        <div class="form-group">
+                                            <label for="email">E-mail</label>
+                                            <input type="email" class="form-control" form="editar_estudio" name="email" id="email"        value="'.$row->email.'">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="fecha_nacimiento">Fecha de nacimiento:</label>
+                                            <input type="date" class="form-control"  form="editar_estudio" name="fecha_nacimiento" id="fecha_nacimiento" value="'.$fecha_nacimiento.'" required>
+                                            </br>
+                                            <label for="edad">Edad:</label>
+                                        </div>';
+                                ?>
+
+                                <?php
+                                    
+                                    if(isset($row->edad)){
+                                        echo '<div class="row">  ';
+                                            
+                                            echo '<div class="col-md-6 col-lg-6">  ';
+                                                echo '  <input type="number" max="100" min="1" class="form-control" form="editar_estudio" name="edad" id="edad" placeholder="Edad del paciente" value="'.$row->edad.'">';        
+                                            echo ' </div>'; 
+
+                                            
+                                            include_once "include/mysql.php";
+
+                                            $mysql = new mysql();
+                                            $link = $mysql->connect(); 
+
+                                            $sql = $mysql->query($link,"SELECT descripcion
+                                                                            FROM tblc_edad
+                                                                            WHERE activo = 1;");  
+                                            
+                                            echo '<div class="col-md-6 col-lg-6">  ';
+                                                echo'<select class="form-control" form="editar_estudio" name="tipo_edad" id="tipo_edad">';
+                                                    echo'   <option value ="'.$row->tipo_edad.'">'.$row->tipo_edad.'</option>';
+                                                while($row3 = $mysql->f_obj($sql)){
+
+                                                    echo '<option value ="'.$row3->descripcion.'">'.$row3->descripcion.'</option>';
+                                                    
+                                                }
+                                                    
+
+                                                $mysql->close();
+
+                                                echo '</select>';
+                                            
+                                            echo ' </div>';
+                                        echo ' </div>';
+                                    }
+                                    else{
+                                        echo '<div class="row">  ';
+                                            echo '<div class="col-md-6 col-lg-6">  ';
+                                                echo '  <input type="number" max="100" min="1" class="form-control" name="edad" id="edad" placeholder="Edad del paciente" >';        
+                                            echo ' </div>'; 
+
+                                            include_once "include/mysql.php";
+
+                                            $mysql = new mysql();
+                                            $link = $mysql->connect(); 
+
+                                            $sql = $mysql->query($link,"SELECT descripcion
+                                                                            FROM tblc_edad
+                                                                            WHERE activo = 1;");  
+                                            
+                                            echo '<div class="col-md-6 col-lg-6">';
+                                            echo'<select class="form-control" form="hoja_cita" name="tipo_edad" id="tipo_edad">';
+
+                                            while($row3 = $mysql->f_obj($sql)){
+
+                                                echo '<option value ="'.$row3->descripcion.'">'.$row3->descripcion.'</option>';
+
+                                            }
+
+                                            $mysql->close();
+
+                                            echo '</select>';
+                                            
+                                            echo ' </div>';
+                                        echo ' </div>';
+                                    }
+                                ?>
+
+                                <?php
+                                    echo'
+                                        <div class="form-group">                                        
+                                            <input type="hidden" form="editar_estudio" name="nombre_ant"        value="'.$row->nombre.'"/>
+                                            <input type="hidden" form="editar_estudio" name="ap_paterno_ant"    value="'.$row->ap_paterno.'"/>
+                                            <input type="hidden" form="editar_estudio" name="ap_materno_ant"    value="'.$row->ap_materno.'"/>                                        
+                                            
+                                            <input type="hidden" form="editar_estudio" name="tel_local_ant"     value="'.$row->num_tel.'"/>
+                                            <input type="hidden" form="editar_estudio" name="tel_cel_ant"       value="'.$row->num_tel2.'"/>
+                                            <input type="hidden" form="editar_estudio" name="email_ant"         value="'.$row->email.'"/>
+
+                                            <input type="hidden" form="editar_estudio" name="fecha_nac_ant"     value="'.$fecha_nacimiento.'"/>
+                                            <input type="hidden" form="editar_estudio" name="edad_ant"          value="'.$row->edad.'"/>
+                                            <input type="hidden" form="editar_estudio" name="tipo_edad_ant"     value="'.$row->tipo_edad.'"/>
+
+                                            <input type="hidden" form="editar_estudio" name="idpaciente" id="idpaciente"            value="'.$id.'"/>
+                                            <input type="hidden" form="editar_estudio" name="nombre_estudio" id="nombre_estudio"    value="'.$nombre_estudio.'"/>
+                                    
+                                        </div>
+                                        ';
+                                ?>
+                                </form>
+                                
+                                <!-- fin datos de la primera columna-->
+                            </div><!--fin panel body-->
+
+                            <div class="panel-footer">
+                            </div>  <!--    fin panel footer    -->
+
+                        </div>
+                    </div>
+            
+                    <!--        2da columnoa de captura         -->
+            
+                    <div class="col-md-4 col-lg-4">  
+                        <div class="panel panel-primary"> 
+
                             <div class="panel-heading">
                                 <h3 class="panel-title"> Datos del estudio </h3>
                             </div>  <!--    fin panel heading   -->
 
                             <div class="panel-body">
-                                <div class="row">
-                                    <div class="col-md-6 col-lg-6">
+                                <!--datos de la columna 3-->
+                            
+                                <form role="form" id="editar_estudio" method="post">
+                                <?php
 
-                                        <form role="form" id="editar_estudio" method="post" action="viewmod_editar_pacientes_por_fecha.php">
-                                        <?php 
-                                            include_once "include/mysql.php";
+                                    $id = $_POST["idpaciente"];
+                                    // echo 'este es id'.$id;
+                                    $mysql =new mysql();
+                                    $link = $mysql->connect(); 
 
-                                            $id = $_POST["idpaciente"];
-                                           // echo 'este es id'.$id;
-                                            $mysql =new mysql();
-                                            $link = $mysql->connect(); 
-
-                                            $sql = $mysql->query($link,"SELECT  t1.fecha,
-                                                                                t1.hora,
-                                                                                t1.nombre,
-                                                                                t1.ap_paterno,
-                                                                                t1.ap_materno,
-                                                                                t1.num_tel,
-                                                                                t1.num_tel2,
-                                                                                t1.email,
-                                                                                t1.doctores_iddoctores,
-                                                                                t1.indicaciones_tratamiento,
-
-                                                                                (SELECT concat(t2.tipo,' ',t2.nombre) AS gamm
-                                                                                    FROM estudio t2 
-                                                                                    WHERE idgammagramas= t1.estudio_idgammagramas) AS estudio
-                                                                        FROM pacientes t1
-                                                                        WHERE idpacientes= $id");
- 
-                                            //echo 'filas afectadas: (Encontradas) '.$mysql->affect_row().'';
-                                            // echo '"SELECT * FROM estudio WHERE idgammagramas="'.$id.'""';
+                                    $sql = $mysql->query($link,"SELECT  
+                                                                        (SELECT concat(t2.tipo,' ',t2.nombre) AS gamm
+                                                                            FROM estudio t2 
+                                                                            WHERE idgammagramas= t1.estudio_idgammagramas) AS estudio,
+                                                                        t1.fecha,
+                                                                        t1.hora,
+                                                                        t1.indicaciones,
+                                                                        t1.indicaciones_tratamiento
+                                                                FROM pacientes t1
+                                                                WHERE idpacientes= $id");
                                     
-                                            $row = $mysql->f_obj($sql);
-                                    
-                                            $nombre_pac = $row->nombre;
-                                            $ap_paterno = $row->ap_paterno;
-                                            $ap_materno = $row->ap_materno;
-                                            $indicaciones_tratamiento = $row->indicaciones_tratamiento;
-                                            $nombre_estudio = $row->estudio;
-                                            
-                                            echo '<p> <strong>Estudio: </strong> '.$nombre_estudio.'</p><br>';                                    
-                                            
-                                            echo'
-                                                <div class="form-group">
-                                                    <label for="nombre">Nombre:</label>
-                                                    <input type="text" class="form-control" form="editar_estudio" name="nombre" id="nombre" value="'.$row->nombre.'">
-                                                </div> 
-                                                <div class="form-group">
-                                                    <label for="ap_paterno">Apellido paterno</label>
-                                                    <input type="text" class="form-control" form="editar_estudio" name="ap_paterno" id="ap_paterno" value="'.$row->ap_paterno.'">
-                                                </div> 
-                                                <div class="form-group">
-                                                    <label for="ap_materno">Apellido materno</label>
-                                                    <input type="text" class="form-control" form="editar_estudio" name="ap_materno" id="ap_materno" value="'.$row->ap_materno.'">
-                                                </div> 
-                                                <div class="form-group">
-                                                    <label for="fecha">Fecha del estudio</label>
-                                                    <input type="date" class="form-control" form="editar_estudio" name="fecha" id="fecha"           value="'.$row->fecha.'">
-                                                </div> 
+                                    $row = $mysql->f_obj($sql);
+                            
+                                    $nombre_estudio = $row->estudio;
 
-                                                <div class="form-group">
-                                                    <label for="hora">Hora del estudio</label>
-                                                    <input type="time" class="form-control" form="editar_estudio" name="hora" id="hora"             value="'.$row->hora.'">
-                                                </div>  
-                                                <div class="form-group">
-                                                    <label for="tel_local">Teléfono local o celular</label>
-                                                    <input type="text" class="form-control" form="editar_estudio" name="tel_local" id="tel_local"   value="'.$row->num_tel.'">
-                                                </div>  
+                                    echo '<p> <strong>Estudio: </strong> '.$nombre_estudio.'</p><br>';                                    
+                        
+                                    echo '
+                                        <div class="form-group">
+                                            <label for="fecha">Fecha del estudio</label>
+                                            <input type="date" class="form-control" form="editar_estudio" name="fecha_estudio" value="'.$row->fecha.'" required>
+                                        </div> 
 
-                                                <div class="form-group">
-                                                    <label for="tel_cel">Teléfono celular</label>
-                                                    <input type="text" class="form-control" form="editar_estudio" name="tel_cel" id="tel_cel"     value="'.$row->num_tel2.'">
-                                                </div> 
-
-                                                <div class="form-group">
-                                                    <label for="email">E-mail</label>
-                                                    <input type="email" class="form-control" form="editar_estudio" name="email" id="email"        value="'.$row->email.'">
-                                                </div>
-                                                <div class="form-group">                                        
-                                                    <input type="hidden" form="editar_estudio" name="nombre_ant"        value="'.$row->nombre.'"/>
-                                                    <input type="hidden" form="editar_estudio" name="ap_paterno_ant"    value="'.$row->ap_paterno.'"/>
-                                                    <input type="hidden" form="editar_estudio" name="ap_materno_ant"    value="'.$row->ap_materno.'"/>                                        
-                                                    <input type="hidden" form="editar_estudio" name="fecha_ant"         value="'.$row->fecha.'"/>
-                                                    <input type="hidden" form="editar_estudio" name="hora_ant"          value="'.$row->hora.'"/>
-                                                    <input type="hidden" form="editar_estudio" name="tel_local_ant"     value="'.$row->num_tel.'"/>
-                                                    <input type="hidden" form="editar_estudio" name="tel_cel_ant"       value="'.$row->num_tel2.'"/>
-                                                    <input type="hidden" form="editar_estudio" name="email_ant"         value="'.$row->email.'"/>
-
-                                                    <input type="hidden" form="editar_estudio" name="idpaciente" id="idpaciente" value="'.$id.'"/>
-                                                    <input type="hidden" form="editar_estudio" name="nombre_estudio" id="nombre_estudio" value="'.$nombre_estudio.'"/>
-                                            
-                                                </div>
-                                                ';
-                                        ?>
-                                        </form>
-                                    </div>
-                                    <div class="col-md-6 col-lg-6">
-                                        <form role="form" id="editar_estudio" method="post">
-                                        <?php
-
-                                            $id = $_POST["idpaciente"];
-                                           // echo 'este es id'.$id;
-                                            $mysql =new mysql();
-                                            $link = $mysql->connect(); 
-
-                                            $sql = $mysql->query($link,"SELECT  t3.grado,
-                                                                                t3.nombre as nombre_med,
-                                                                                t3.ap_paterno as ap_paterno_med,
-                                                                                t3.ap_materno as ap_materno_med,
-                                                                                t3.especialidad,
-                                                                                t3.aquiencorresponda
-                                                                            FROM doctores t3 
-                                                                            WHERE idpaciente = $id");
-                                            $row = $mysql->f_obj($sql);
-
-                                            echo'
-                                                <div class="form-group">';
-
-                                                    if($row->grado == 'DR.'){
-                                                        echo'<input type="radio" form="editar_estudio" name="grado" value="'.$row->grado.'" checked>'.$row->grado.' <br> ';
-                                                        echo'<input type="radio" form="editar_estudio" name="grado" value="DRA."> DRA. <br>';
-                                                        echo'<input type="radio" form="editar_estudio" name="grado" value="SI"> A quien corresponda';
-                                                    }
-                                                    if($row->grado == 'DRA.'){
-                                                        echo'<input type="radio" form="editar_estudio" name="grado" value="DR."> DR. <br>';
-                                                        echo'<input type="radio" form="editar_estudio" name="grado" value="'.$row->grado.'" checked>'.$row->grado.'<br> ';
-                                                        echo'<input type="radio" form="editar_estudio" name="grado" value="SI"> A quien corresponda';
-                                                    }
-                                                    if($row->aquiencorresponda == 'SI'){
-                                                        echo'<input type="radio" form="editar_estudio" name="grado" value="DR." > DR. <br>';
-                                                        echo'<input type="radio" form="editar_estudio" name="grado" value="DRA."> DRA. <br>';
-                                                        echo'<input type="radio" form="editar_estudio" name="grado" value="'.$row->aquiencorresponda.'" checked> A quien corresponda';
-                                                    }
-                                                   
-                                            echo '
-                                                </div>';
-
-                                            echo '
-                                                <div class="form-group">
-                                                    <label for="nombre">Nombre:</label>
-                                                    <input type="text" class="form-control" form="editar_estudio"   name="nombre_med"       value="'.$row->nombre_med.'">
-                                                </div> 
-                                                <div class="form-group">
-                                                    <label for="ap_paterno">Apellido paterno</label>
-                                                    <input type="text" class="form-control" form="editar_estudio"   name="ap_paterno_med"   value="'.$row->ap_paterno_med.'">
-                                                </div> 
-                                                <div class="form-group">
-                                                    <label for="ap_materno">Apellido materno</label>
-                                                    <input type="text" class="form-control" form="editar_estudio"   name="ap_materno_med"   value="'.$row->ap_materno_med.'">
-                                                </div> 
-                                                <div class="form-group">
-                                                    <label for="especialidad">especialidad</label>
-                                                    <input type="text" class="form-control" form="editar_estudio"   name="especialidad"      value="'.$row->especialidad.'">
-                                                </div>  
-
-                                                <div class="form-group">                                        
-                                                    <input type="hidden" form="editar_estudio" name="nombre_med_ant"        value="'.$row->nombre_med.'"/>
-                                                    <input type="hidden" form="editar_estudio" name="ap_paterno_med_ant"    value="'.$row->ap_paterno_med.'"/>
-                                                    <input type="hidden" form="editar_estudio" name="ap_materno_med_ant"    value="'.$row->ap_materno_med.'"/>                                        
-                                                    <input type="hidden" form="editar_estudio" name="grado_ant"             value="'.$row->grado.'"/>
-                                                    <input type="hidden" form="editar_estudio" name="especialidad_ant"      value="'.$row->especialidad.'"/>
-                                                </div>';    
-                                        ?>
-                                        </form>
-
+                                        <div class="form-group">
+                                            <label for="hora">Hora del estudio</label>
+                                            <input type="time" class="form-control" form="editar_estudio" name="hora_estudio"  value="'.$row->hora.'" required>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="indicaciones">Indicaciones del estudio</label>
+                                            <textarea type="text" class="form-control" rows="5" form="editar_estudio" name="indicaciones_estudio" id="indicaciones">'.$row->indicaciones.'</textarea>
+                                        </div>';
+                                        
+                                ?> 
                                         <div class="panel panel-primary">
                                             <div class="panel-heading">
                                                 <h3 class="panel-title"><strong> Indicar cantidad de I-131 </strong>  (sólo en caso de tratamiento o rastreo)</h3>
@@ -240,28 +319,132 @@
                                                     <?php
                                                         echo'
                                                         <div class="form-group input-group">
-                                                            <input type="text" class="form-control" form="editar_estudio"   name="indicaciones_tratamiento"  id="indicaciones_tratamiento"      value="'.$indicaciones_tratamiento.'">
+                                                            <input type="text" class="form-control" form="editar_estudio"   name="indicaciones_tratamiento"  id="indicaciones_tratamiento"      value="'.$row->indicaciones_tratamiento.'">
                                                                 <span class="input-group-addon">mCi</span>
                                                         </div>';
                                                         ?>
                                                 </div> 
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
+                                <?php 
+                                    echo'      
+                                        <div class="form-group">
+                                            <input type="hidden" form="editar_estudio" name="fecha_estudio_ant"         value="'.$row->fecha.'"/>
+                                            <input type="hidden" form="editar_estudio" name="hora_estudio_ant"          value="'.$row->hora.'"/>
+                                            <input type="hidden" form="editar_estudio" name="indicaciones_estudio_ant"  value="'.$row->indicaciones.'"/>
+                                            <input type="hidden" form="editar_estudio" name="indicaciones_trat_ant"     value="'.$row->indicaciones_tratamiento.'"/>
+                                        </div>';    
+                                ?>
+                                </form>
 
-                            </div><!-- /. fin panel body -->
+                                
+                                
+                                <!--fin datos de la columna 3-->
+                            </div>
 
                             <div class="panel-footer">
-                                <!--<input id="submit" name="submit" class="btn btn-success btn-lg btn-block" form="editar_estudio" type="submit" value="Aceptar" class="btn btn-primary">-->
-
-                                <button id="submit" name="submit" class="btn btn-danger btn-lg btn-block" form="editar_estudio" type="submit" >
-                                    <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
-                                    ACEPTAR
-                                </button>
-                            </div>
-                        </div><!-- /. fin panel primary -->
+                            </div>  <!--    fin panel footer    -->
+                        </div>
                     </div>
+
+                    <!--        3ra columnoa de captura         -->
+            
+                    <div class="col-md-4 col-lg-4">  
+                        <div class="panel panel-primary"> 
+
+                            <div class="panel-heading">
+                                <h3 class="panel-title"> Datos del médico </h3>
+                            </div>  <!--    fin panel heading   -->
+
+                            <div class="panel-body">
+                                <!--datos de la columna 3-->
+                            
+                                <form role="form" id="editar_estudio" method="post">
+                                <?php
+
+                                    $id = $_POST["idpaciente"];
+                                // echo 'este es id'.$id;
+                                    $mysql =new mysql();
+                                    $link = $mysql->connect(); 
+
+                                    $sql = $mysql->query($link,"SELECT  t3.grado,
+                                                                        t3.nombre as nombre_med,
+                                                                        t3.ap_paterno as ap_paterno_med,
+                                                                        t3.ap_materno as ap_materno_med,
+                                                                        t3.especialidad,
+                                                                        t3.aquiencorresponda
+                                                                    FROM doctores t3 
+                                                                    WHERE idpaciente = $id");
+                                    $row = $mysql->f_obj($sql);
+                                    
+                                    echo'
+                                        <div class="form-group">';
+
+                                            if($row->grado == 'DR.'){
+                                                echo'<input type="radio" form="editar_estudio" name="grado" value="'.$row->grado.'" checked>'.$row->grado.' <br> ';
+                                                echo'<input type="radio" form="editar_estudio" name="grado" value="DRA."> DRA. <br>';
+                                                echo'<input type="radio" form="editar_estudio" name="grado" value="SI"> A quien corresponda';
+                                            }
+                                            if($row->grado == 'DRA.'){
+                                                echo'<input type="radio" form="editar_estudio" name="grado" value="DR."> DR. <br>';
+                                                echo'<input type="radio" form="editar_estudio" name="grado" value="'.$row->grado.'" checked>'.$row->grado.'<br> ';
+                                                echo'<input type="radio" form="editar_estudio" name="grado" value="SI"> A quien corresponda';
+                                            }
+                                            if($row->aquiencorresponda == 'SI'){
+                                                echo'<input type="radio" form="editar_estudio" name="grado" value="DR." > DR. <br>';
+                                                echo'<input type="radio" form="editar_estudio" name="grado" value="DRA."> DRA. <br>';
+                                                echo'<input type="radio" form="editar_estudio" name="grado" value="'.$row->aquiencorresponda.'" checked> A quien corresponda';
+                                            }
+                                        
+                                    echo '
+                                        </div>';
+
+                                    echo '
+                                        <div class="form-group">
+                                            <label for="nombre">Nombre:</label>
+                                            <input type="text" class="form-control" form="editar_estudio"   name="nombre_med"       value="'.$row->nombre_med.'">
+                                        </div> 
+                                        <div class="form-group">
+                                            <label for="ap_paterno">Apellido paterno</label>
+                                            <input type="text" class="form-control" form="editar_estudio"   name="ap_paterno_med"   value="'.$row->ap_paterno_med.'">
+                                        </div> 
+                                        <div class="form-group">
+                                            <label for="ap_materno">Apellido materno</label>
+                                            <input type="text" class="form-control" form="editar_estudio"   name="ap_materno_med"   value="'.$row->ap_materno_med.'">
+                                        </div> 
+                                        <div class="form-group">
+                                            <label for="especialidad">Especialidad</label>
+                                            <input type="text" class="form-control" form="editar_estudio"   name="especialidad_med"      value="'.$row->especialidad.'">
+                                        </div> 
+
+                                        <div class="form-group">                                        
+                                            <input type="hidden" form="editar_estudio" name="grado_ant"             value="'.$row->grado.'"/>
+                                            <input type="hidden" form="editar_estudio" name="nombre_med_ant"        value="'.$row->nombre_med.'"/>
+                                            <input type="hidden" form="editar_estudio" name="ap_paterno_med_ant"    value="'.$row->ap_paterno_med.'"/>
+                                            <input type="hidden" form="editar_estudio" name="ap_materno_med_ant"    value="'.$row->ap_materno_med.'"/>                                        
+                                            <input type="hidden" form="editar_estudio" name="especialidad_med_ant"      value="'.$row->especialidad.'"/>
+                                        </div>';    
+                                ?>
+                                </form>
+
+                                
+                                
+                                <!--fin datos de la columna 3-->
+                            </div>
+
+                            <div class="panel-footer">
+                            </div>  <!--    fin panel footer    -->
+                        </div>
+                    </div>
+            
+                    <!--<input id="submit" name="submit" class="btn btn-success btn-lg btn-block" form="editar_estudio" type="submit" value="Aceptar" class="btn btn-primary">-->
+                    <button id="submit" name="submit" class="btn btn-danger btn-lg btn-block" form="editar_estudio" type="submit" >
+                        <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
+                        ACEPTAR
+                    </button>
+                            
+                        
+                </div>    
             </div> 
             <!-- /.container-fluid -->
         </div>
@@ -308,6 +491,11 @@
         f10.add( Validate.Numericality );
         f10.add( Validate.Numericality, { minimum: 1 } );
         f10.add( Validate.Length, { minimum: 0 }  );
+    </script> 
+    <script type="text/javascript">
+        var f11 = new LiveValidation('edad', { validMessage: 'OK!', wait: 500});
+        nombre.add(Validate.Presence, {failureMessage: "Es necesario llenar este campo"});
+        
     </script> 
     <script type="text/javascript">
         var f7 = new LiveValidation('fecha',{ validMessage: 'OK!', wait: 500});
