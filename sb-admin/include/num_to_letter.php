@@ -168,7 +168,7 @@ function Parte($x)
 {
     $Rtn='';
     $t='';
-    $i='';
+    $i=0;   //se actualizó $i='';
     $Void = "";
    $SP = " ";
    $Dot = ".";
