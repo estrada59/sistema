@@ -104,7 +104,7 @@ else{
                                 ?>
                             </form>
 
-                            <button type="submit" class="btn btn-success btn-lg btn-block" aria-label="Left Align" form="citar">
+                            <button type="submit" class="btn btn-success btn-lg btn-block" id="btn_atras" aria-label="Left Align" form="citar">
                                 <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
                                 Atrás 
                             </button> 
@@ -295,9 +295,9 @@ else{
                                 ?>
                                 </form>
 
-                                <form role="form" id="imprimir_trat" method="post" action="view_imprimir_citar_pacientes_tratamiento.php" target="_blank" onsubmit="myFunction()" accept-charset="UTF-8">
+                                <!--<form role="form" id="imprimir_trat" method="post" action="view_imprimir_citar_pacientes_tratamiento.php" target="_blank" onsubmit="myFunction()" accept-charset="UTF-8">
                                 <?php 
-                                    echo '<input type="hidden" name="nombre"               id="nombre"              form="imprimir_trat" value="'.$nombre.'">';
+                                    /*echo '<input type="hidden" name="nombre"               id="nombre"              form="imprimir_trat" value="'.$nombre.'">';
                                     echo '<input type="hidden" name="apepat"               id="apepat"              form="imprimir_trat" value="'.$apepat.'">';
                                     echo '<input type="hidden" name="apemat"               id="apemat"              form="imprimir_trat" value="'.$apemat.'">';
                                     echo '<input type="hidden" name="tel_local"            id="tel_local"           form="imprimir_trat" value="'.$tel_local.'">';
@@ -322,23 +322,25 @@ else{
                                     echo '<input type="hidden" name="apemat_med"    id="apemat_med" form="imprimir_trat" value="'.$apemat_med.'">';
                                     echo '<input type="hidden" name="especialidad_med" id="especialidad_med" form="imprimir_trat" value="'.$especialidad_med.'">';
                                     echo '<input type="hidden" name="aquien_corresponda" id="aquien_corresponda" form="imprimir_trat" value="'.$aquien_corresponda.'">';
+                                    */
 
                                 ?>
-                                </form>
-                                <div class="col-lg-6">
+                                </form>-->
+                                <div class="col-lg-12">
                                     <button type="submit" id="btn_gamm" class="btn btn-danger btn-lg btn-block" form="imprimir">
                                         <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
-                                        AGENDAR PACIENTE GAMMAGRAMA
+                                        AGENDAR PACIENTE 
                                     </button>  
                                 </div>
 
 
-                                <div class="col-lg-6">
+                                <!--<div class="col-lg-6">
                                     <button type="submit" id="btn_trat" class="btn btn-danger btn-lg btn-block" form="imprimir_trat">
                                         <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
                                         AGENDAR PACIENTE TRATAMIENTO
                                     </button>
                                 </div>
+                                -->
 
 
                                 <div class = "row">
@@ -363,8 +365,9 @@ else{
 
     <script >
     function myFunction() {
-       
+       //se puede comentar para debug
        document.getElementById("btn_gamm").disabled = true;
+       document.getElementById("btn_atras").disabled = true;
        document.getElementById("btn_trat").disabled = true;
     }
     </script>
