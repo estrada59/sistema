@@ -146,7 +146,13 @@ else{
                     }
 
                     $fecha_nacimiento   = $_POST['fecha_nacimiento'];
-                    $fecha_nacimiento2  = fecha_letras($fecha_nacimiento);
+                    
+                    if($fecha_nacimiento == ''){
+                        $fecha_nacimiento2='0000-00-00';    
+                    }else{
+                        date_default_timezone_set('America/Mexico_City');
+					    $fecha_nacimiento2 = DATE("d-m-Y", STRTOTIME($fecha_nacimiento));
+                    } 
                     
                     $cantidad_i131       = $_POST['cantidad_i131'];
                     $institucion    = $_POST['institucion'];
