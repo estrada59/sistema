@@ -96,6 +96,7 @@
 						if(isset($row->nombre)){
 							//$this->CreateTextBox($row->nombre, 110+$eje_x,122+$eje_y, 80, 10, 10, '');
 							$this->CreateTextBox('Atendió:'.$row->nombre, 110,125, 80, 10, 10, '');	
+
 						}else{
 							$this->CreateTextBox(' ', 110,125, 80, 10, 10, '');	
 						}
@@ -120,6 +121,9 @@
 					$id_paciente 	= $row->idpacientes;
 					$nombre         = $row->nombre;
 					$edad = $row->edad;
+					if(!$edad){
+						$edad='';
+					}
 					$tipo_edad = $row->tipo_edad;
 
 					if($tipo_edad=='AÑOS'){
@@ -133,9 +137,9 @@
 					date_default_timezone_set('America/Mexico_City');
 
 					if($fecha_nacimiento == '0000-00-00 00:00:00'){
-						$fecha_nacimiento2 = '00-00-0000';
+						$fecha_nacimiento2 = '';
 					}else{
-						$fecha_nacimiento2 = fecha_letras($fecha_nacimiento);
+						$fecha_nacimiento2 = DATE("d-m-Y", STRTOTIME($fecha_nacimiento));
 					}
 					
                    
@@ -150,8 +154,13 @@
                     $horas = DATE("g:i a", STRTOTIME($hora));
                     $indicaciones   = $row->indicaciones;
 
+					$aquien_corresponda = $row->aquiencorresponda;
                     
-                   	$medico = $row->nombre_medico;
+                    if($aquien_corresponda =='NO'){
+                    	$medico = $row->nombre_medico;
+                    }else{
+                    	$medico="A quien corresponda";
+                    }   
                  
                     
                     $nombre 		= pasarMayusculas($nombre);
@@ -193,7 +202,7 @@
 					$this->CreateTextBox($tel_cel, 20+$ax_x,105+$ax_y, 80, 10, 10, '');
 
 					$style = array('width' => 0.5, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0));
-					$this->Line(124, 250, 200, 250, $style);
+					$this->Line(124, 240, 200, 240, $style);
 
 					if(isset($id_paciente)){
 						
@@ -206,11 +215,13 @@
 						$row = $mysql->f_obj($sql);
 						if(isset($row->nombre)){
 							//$this->CreateTextBox($row->nombre, 110+$eje_x,122+$eje_y, 80, 10, 10, '');
-							$this->CreateTextBox('Atendió:'.$row->nombre, 11,248, 80, 10, 10, '');	
-							$this->CreateTextBox('Firma paciente o familiar indicaciones recibidas', 108,248, 80, 10, 10, '');
+							$this->CreateTextBox('Atendió:'.$row->nombre, 0+$ax_x,116+$ax_y, 80, 10, 10, 'B');	
+							$this->CreateTextBox('Firma familiar o paciente recibí indicaciones', 105+$ax_x,110+$ax_y, 80, 10, 10, '');
+							
+							
 						}else{
 							$this->CreateTextBox(' ', 11,240, 80, 10, 10, '');	
-							$this->CreateTextBox('Firma paciente o familiar indicaciones recibidas', 108,248, 80, 10, 10, '');
+							$this->CreateTextBox('Firma familiar o paciente recibí indicaciones', 105+$ax_x,110+$ax_y, 80, 10, 10, '');
 						}
 						
 
@@ -505,6 +516,10 @@ function gammagrama($idpaciente){
                                         (SELECT concat(t2.grado,' ',t2.nombre,' ',t2.ap_paterno,' ',t2.ap_materno) as nombre
                                         FROM doctores t2
                                         WHERE iddoctores =t1.doctores_iddoctores )as nombre_medico,
+
+										(SELECT t2.aquiencorresponda
+                                        FROM doctores t2
+                                        WHERE iddoctores =t1.doctores_iddoctores )as aquiencorresponda,
 
     									(select concat(t3.tipo,' ',t3.nombre) as nombre
                                         from estudio t3
