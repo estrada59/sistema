@@ -148,7 +148,6 @@ class MYPDF extends TCPDF {
 		$this->Rect(5+$ax_x, 75+$ax_y, 4.5, 60,'DF');
 		$this->Rect(206+$ax_x, 10+$ax_y, 5, 66,'DF');
 
-
 					$nombre         	= $_POST['nombre'];
                     $apepat         	= $_POST['apepat'];
                     $apemat         	= $_POST['apemat'];
@@ -165,10 +164,10 @@ class MYPDF extends TCPDF {
 
 					$fecha_estudio2 = fecha_letras($fecha_estudio);
 					
-					if(isset($fecha_nacimiento)){
-						
-						$fecha_nacimiento = $fecha_nacimiento;
-						$fecha_nacimiento2 = fecha_letras($fecha_nacimiento);
+					if($fecha_nacimiento != ''){
+						date_default_timezone_set('America/Mexico_City');
+						$fecha_nacimiento2 = DATE("d-m-Y", STRTOTIME($fecha_nacimiento));
+							
 					}else{
 						$fecha_nacimiento2='';
 					}
