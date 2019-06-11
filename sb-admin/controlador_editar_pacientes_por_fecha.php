@@ -115,8 +115,11 @@
                                     $ap_materno = $row->ap_materno;
                                     $nombre_estudio = $row->estudio;
 
-                                    
-                                    $fecha_nacimiento= date("Y-m-d",strtotime($row->fecha_nacimiento));
+                                    if($row->fecha_nacimiento == '0000-00-00 00:00:00'){
+                                        $fecha_nacimiento='';    
+                                    }else{
+                                        $fecha_nacimiento= date("Y-m-d",strtotime($row->fecha_nacimiento));
+                                    }
                                     
                                     echo'
                                         <div class="form-group">
@@ -149,7 +152,7 @@
 
                                         <div class="form-group">
                                             <label for="fecha_nacimiento">Fecha de nacimiento:</label>
-                                            <input type="date" class="form-control"  form="editar_estudio" name="fecha_nacimiento" id="fecha_nacimiento" value="'.$fecha_nacimiento.'" required>
+                                            <input type="date" class="form-control"  form="editar_estudio" name="fecha_nacimiento" id="fecha_nacimiento" value="'.$fecha_nacimiento.'" >
                                             </br>
                                             <label for="edad">Edad:</label>
                                         </div>';
