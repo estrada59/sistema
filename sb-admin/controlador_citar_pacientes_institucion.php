@@ -229,9 +229,9 @@
                                             <label for="fecha_nacimiento">Fecha de nacimiento:</label>
                                             <?php 
                                                 if(isset($_POST["fecha_nacimiento"])){
-                                                    echo '<input type="date" class="form-control"  name="fecha_nacimiento" id="fecha_nacimiento" placeholder="Fecha de nacimiento" required value ="'.$_POST['fecha_nacimiento'].'">';
+                                                    echo '<input type="date" class="form-control"  name="fecha_nacimiento" id="fecha_nacimiento" placeholder="Fecha de nacimiento" value ="'.$_POST['fecha_nacimiento'].'">';
                                                 }else{
-                                                    echo '<input type="date" class="form-control"  name="fecha_nacimiento" id="fecha_nacimiento" placeholder="Fecha de nacimiento" required>';       
+                                                    echo '<input type="date" class="form-control"  name="fecha_nacimiento" id="fecha_nacimiento" placeholder="Fecha de nacimiento">';       
                                                 }
                                             ?>
                                         </div>
