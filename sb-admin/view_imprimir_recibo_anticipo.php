@@ -3,6 +3,7 @@
 // Include the main TCPDF library (search for installation path).
 //error_reporting(0);
 require_once('include/tcpdf/tcpdf.php');
+include_once "include/mysql.php";
 session_start();
 //comprueba que halla datos
 $_POST["pagina"]="imrpimir"; 
@@ -52,11 +53,11 @@ class MYPDF extends TCPDF {
 		*/
  
 	}
-	public function Footer() {
+	public function Footer() {	
 		
 	}
 	public function CreateTextBox($textval, $x = 0, $y=0, $width = 0, $height = 10, $fontsize = 10, $fontstyle = '', $align = 'L') {
-		$this->SetXY($x+20, $y+20); // 20 = margin left
+		$this->SetXY($x+20, $y+13); // 20 = margin left
 		$this->SetFont(PDF_FONT_NAME_MAIN, $fontstyle, $fontsize);
 		$this->Cell($width, $height, $textval, 0, false, $align,'','',$strech=0);
 	}
@@ -140,8 +141,6 @@ $pdf->Output($nombre_pdf, 'I');
 <?php
 class anticipo{
 	function insertar_anticipo(){
-
-		include_once "include/mysql.php";
 		
 		$tipo_pago 		= $_POST['tipo_pago']; 		//dep_banamex, pago_santander, anticipo_efe, sr_pago
 		$monto_anticipo = $_POST['monto_anticipo'];
