@@ -93,10 +93,10 @@ class MYPDF extends TCPDF {
                   	$año = str_split($fecha[2], 2); // divido en dos 2015 --->  [0]=20   [1]=15
 					
                   	
-                  	$this->CreateTextBox($fecha[1], 80,79, 80, 10, 10, '');
-                  	$this->CreateTextBox($fecha[0], 114,79, 80, 10, 10, '');
-                  	$this->CreateTextBox($año[1], 165,79, 80, 10, 10, '');
-
+                  	$this->CreateTextBox($fecha[0], 80,79, 80, 10, 10, '');
+                  	$this->CreateTextBox($fecha[1], 114,79, 80, 10, 10, '');
+					  $this->CreateTextBox($año[1], 165,79, 80, 10, 10, '');
+					
 
 					//$style = array('width' => 0.5, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0));
 					//$this->Line(80, 125, 140, 125, $style);
