@@ -346,10 +346,10 @@ function update($lista){
             $fecha_nac      =date('Y-m-d H:i:s',strtotime($fecha_nac));
             $fecha_estudio  = $lista['fecha_estudio'];
             $fecha_estudio  =date('Y-m-d',strtotime($fecha_estudio));
-            $hora_estudio   = $lista['hora_estudio'];
+            $hora_estudio           =   date('H:i:s',strtotime($_POST['hora_estudio']));
             $indicaciones_estudio     = $lista['indicaciones_estudio'];
             $indicaciones_tratamiento = $lista['indicaciones_tratamiento'];
-
+            
             $sql = "UPDATE pacientes SET    fecha                   =   '$fecha_estudio',
                                             hora                    =   '$hora_estudio',
                                             nombre                  =   '$nombre',
