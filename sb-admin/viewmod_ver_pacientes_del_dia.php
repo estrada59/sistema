@@ -8,9 +8,6 @@
 			include "../include/sesion.php";
 			comprueba_url();
 
-            if(!isset($_POST['fecha_estudios'])){
-                header('Location: controlador_ver_pacientes_del_dia.php');
-            }
  	?>
 </head>
 
@@ -43,7 +40,9 @@
                             <?php 
                                 include 'include/funciones_consultas.php';
                                 
-                                $fecha_act = $_POST['fecha_estudios'];
+                                //$fecha_act = $_POST['fecha_estudios'];
+                                date_default_timezone_set('America/Mexico_City'); 
+                                $fecha_act = date('Y-m-d');
                                 $fecha_l = fecha_letras($fecha_act);
                                 echo $fecha_l;
                             ?>
@@ -60,8 +59,7 @@
                 <!-- /.row -->
                
                 <?php 
-            
-                    $fecha_act = $_POST['fecha_estudios'];
+                   
                     if($_SESSION['nivel_acceso'] <= 3 ){
                         ver_pacientes_del_dia($fecha_act,$_POST["pagina"]); //muestra con franjas de color
                     }
