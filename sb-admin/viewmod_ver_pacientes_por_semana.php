@@ -13,9 +13,9 @@
                 exit();
             }*/
 
-            if(!isset($_POST['fecha_estudios'])){
-                header('Location: controlador_ver_pacientes_por_semana.php');
-            }
+            // if(!isset($_POST['fecha_estudios'])){
+            //     header('Location: controlador_ver_pacientes_por_semana.php');
+            // }
     ?>
 </head>
 <body>
@@ -44,7 +44,9 @@
                                 <?php 
                                 
                                 include_once 'include/funciones_consultas.php';
-                                $fecha_estudio = $_POST['fecha_estudios'];
+                                // $fecha_estudio = $_POST['fecha_estudios'];
+                                date_default_timezone_set('America/Mexico_City'); 
+                                $fecha_estudio = date('Y-m-d');
                                 //echo($fecha_estudio);
 
                                 $arreglo = explode('-', $fecha_estudio);
