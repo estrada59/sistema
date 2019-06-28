@@ -1493,7 +1493,7 @@ function ver_listas_de_precios(){
         $sql = $mysql->query($link,"SELECT  nombre,
                                         tipo
                                     FROM instituciones 
-                                    WHERE tipo='PUBLICA' AND estatus='ACTIVO';");
+                                    WHERE tipo='PUBLICA' ;");
 
         while ($row = $mysql->f_row($sql)){
             $row[0] = str_replace("_", " ", $row[0]);
@@ -1583,6 +1583,81 @@ function eliminar_lista_precios(){
                             </button>
                         </form>
                     </th>
+                </tr>
+            ';
+        }
+       // print_r($row); 
+    }
+    echo '</tbody>
+    </table>';
+
+    $mysql->close(); 
+
+   // $sql = $mysql->query($link,"ALTER TABLE estudio ADD $nombre_institucion decimal(10,2);");
+    
+}
+
+function inhabilitar_lista_precios(){
+//---------------------------------------------------------------------
+// Elimina una lista de precios de la base de datos, nota: eliminación
+// total sin posibilidad de recuperarla.
+//---------------------------------------------------------------------
+    include_once "mysql.php";
+
+    $mysql = new mysql();
+    $link = $mysql->connect(); 
+    $sql = $mysql->query($link,"SELECT  nombre, estatus
+                                    FROM instituciones 
+                                    WHERE 1;");
+
+    echo '<div class="table-responsive">
+        <table class="table table-bordered table-hover table-striped table-responsive">
+            <thead>
+                <tr>
+                    <th data-field="institucion">Institución</th>
+                    <th data-field="estado">Estado</th>
+                    <th data-field="inhabilitar">Opciones</th>
+                    
+                </tr>
+            </thead>
+            <tbody>';
+
+    while ($row = $mysql->f_obj($sql)) {
+
+        if($row->nombre != 'particular' ){
+       echo'
+                <tr>
+                    <th data-field="institucion">'.pasarMayusculas($row->nombre).'</th>
+                    <th>'.$row->estatus.'</th>';
+
+                    if($row->estatus == 'ACTIVO')
+                    {
+                        echo'<th>
+                                <form role="form" id="edicion'.$row->nombre.'" method="post" action="viewmod_inhabilitar_lista_de_precios.php">
+                                    <input type="hidden" form="edicion'.$row->nombre.'" name="institucion" value="'.$row->nombre.'"/>
+                        
+                                    <button type="submit" form="edicion'.$row->nombre.'" name="editar" class="btn btn-danger btn-default btn-block" >
+                                        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                                        Inhabilitar
+                                    </button>
+                                </form>
+                            </th>';
+                    }
+                    else
+                    {
+                        echo'<th>
+                                <form role="form" id="habilitar'.$row->nombre.'" method="post" action="viewmod_habilitar_lista_de_precios.php">
+                                    <input type="hidden" form="habilitar'.$row->nombre.'" name="institucion" value="'.$row->nombre.'"/>
+                        
+                                    <button type="submit" form="habilitar'.$row->nombre.'" name="editar" class="btn btn-success btn-default btn-block" >
+                                        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                                        Habilitar
+                                    </button>
+                                </form>
+                            </th>';
+                    }
+                    
+            echo'        
                 </tr>
             ';
         }
