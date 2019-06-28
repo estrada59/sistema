@@ -55,14 +55,19 @@
                         if ($_SESSION['nivel_acceso']<=1) {
                             echo'
                                 <div class="row">
-                                    <div class="col-md-6 col-lg-6">
+                                    <div class="col-md-4 col-lg-4">
                                         <a href="controlador_agregar_nueva_lista_de_precios.php" class="btn btn-warning btn-lg btn-block" role="button">
                                             <span class="glyphicon glyphicon-plus"></span> Agregar nueva lista de precios</a>
                                     </div>
-                                    <div class="col-md-6 col-lg-6">
+
+                                    <div class="col-md-4 col-lg-4">
+                                        <a href="controlador_inhabilitar_lista_de_precios.php" class="btn btn-warning btn-lg btn-block" role="button">
+                                        <span class="glyphicon glyphicon-minus"></span> Inhabilitar lista de precios</a>
+                                    </div>
+                                    <!--<div class="col-md-4 col-lg-4">
                                         <a href="controlador_eliminar_lista_de_precios.php" class="btn btn-danger btn-lg btn-block" role="button">
                                         <span class="glyphicon glyphicon-minus"></span> Eliminar lista de precios</a>
-                                    </div>
+                                    </div>-->
                                 </div>';
                         }
                         ?>
