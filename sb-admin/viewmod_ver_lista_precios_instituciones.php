@@ -33,7 +33,7 @@
                              <?php
                                 include_once 'include/funciones_consultas.php';
                                 echo  pasarMayusculas($_POST['institucion']); ?> 
-                             <small></small>
+                             <small>con IVA</small>
                         </h1>
                         <ol class="breadcrumb">
                             <li class="active">
@@ -42,7 +42,7 @@
                                 <?php 
                                     
                                     echo  $_POST['institucion'];
-                                ?>
+                                ?> con IVA
                             </li>
                         </ol>
                     </div>
