@@ -15,16 +15,26 @@ ya pagaron el total)
                 <thead>
                     <tr>
                         <!--<th data-field="id">Fecha</th>-->
-                        <th data-field="name">Nombre de la paciente</th>
-                        <th data-field="price">Nombre del estudio</th>
-                        <th data-field="price">Hora</th>
-                        <th data-field="price">Institución</th>
-                        <th data-field="price">Médico tratante</th>
-                        <th data-field="price">Teléfono</th>
-                        <th data-field="price">Teléfono</th>
-                        <th data-field="estatus">Estatus</th>
-                        <!-- <th data-field="estatus">Editar</th>-->
-                    </tr>
+                        <th data-field="nombre_del_paciente">Nombre de la paciente</th>
+                        <th data-field="nombre_del_estudio">Nombre del estudio</th>
+                        <th data-field="hora">Hora</th>
+                        <th data-field="institucion">Institución</th>
+                        <th data-field="medico">Médico tratante</th>
+                        <th data-field="teléfono">Teléfono</th>
+                        <th data-field="teléfono">Teléfono</th>
+                        <th data-field="estatus">Estatus</th>';
+                        
+                        if( $_SESSION['nivel_acceso'] == 3)
+                        {
+                            echo'
+                            <th data-field="estatus">Editar</th>
+                            <!--<th data-field="re-agendar">Re-agendar</th>-->
+                            ';
+
+                        }
+
+                        
+        echo'       </tr>
                 </thead>
                 <tbody>
         ';
@@ -80,7 +90,12 @@ ya pagaron el total)
                             echo '<td>'.$row->num_tel.'</td>';
                             echo '<td>'.$row->num_tel2.'</td>';
                             mod_estatus_pac($row, $pagina);
-                            //editar_datos_pac($row);
+
+                            if( $_SESSION['nivel_acceso'] == 3 ){
+                                editar_datos_pac($row, $pagina);
+                                //reagendar_pac($row, $pagina);
+                            }
+                            
                             echo '</tr>';
                         }
                         else{
@@ -121,7 +136,13 @@ ya pagaron el total)
                                 echo '<td>'.$row->num_tel.'</td>';
                                 echo '<td>'.$row->num_tel2.'</td>';
                                 mod_estatus_pac($row, $pagina);
-                                //editar_datos_pac($row);
+
+                                if( $_SESSION['nivel_acceso'] == 3)
+                                {
+                                    editar_datos_pac($row, $pagina);
+                                    //reagendar_pac($row, $pagina);
+                                }
+
                                 echo '</tr>';
                             }
                             else{
@@ -143,7 +164,13 @@ ya pagaron el total)
                                 echo '<td>'.$row->num_tel.'</td>';
                                 echo '<td>'.$row->num_tel2.'</td>';
                                 mod_estatus_pac($row, $pagina);
-                                //editar_datos_pac($row);
+                                
+                                if( $_SESSION['nivel_acceso'] == 3)
+                                {
+                                    editar_datos_pac($row, $pagina);
+                                    //reagendar_pac($row, $pagina);
+                                }
+
                                 echo '</tr>';
                             }
                         }
@@ -163,16 +190,25 @@ function ver_pacientes_del_mes($fecha_ini, $fecha_fin, $pagina){
                 <thead>
                     <tr>
                         <th data-field="id">Fecha</th>
-                        <th data-field="name">Nombre de la paciente</th>
-                        <th data-field="price">Nombre del estudio</th>
-                        <th data-field="price">Hora</th>
-                        <th data-field="price">Institución</th>
-                        <th data-field="price">Médico tratante</th>
-                        <th data-field="price">Teléfono</th>
-                        <th data-field="price">Teléfono</th>
-                        <th data-field="estatus">Estatus</th>
-                        <!-- <th data-field="estatus">Editar</th>-->
-                    </tr>
+                        <th data-field="nombre_paciente">Nombre de la paciente</th>
+                        <th data-field="nombre_estudio">Nombre del estudio</th>
+                        <th data-field="hora">Hora</th>
+                        <th data-field="institucion">Institución</th>
+                        <th data-field="medico_tratante">Médico tratante</th>
+                        <th data-field="teléfono">Teléfono</th>
+                        <th data-field="teléfono">Teléfono</th>
+                        <th data-field="estatus">Estatus</th>';
+
+                        if( $_SESSION['nivel_acceso'] == 3)
+                        {
+                            echo'
+                            <th data-field="estatus">Editar</th>
+                            <!--<th data-field="re-agendar">Re-agendar</th>-->
+                            ';
+
+                        }
+                        
+       echo'        </tr>
                 </thead>
                 <tbody>
         ';
@@ -233,7 +269,13 @@ function ver_pacientes_del_mes($fecha_ini, $fecha_fin, $pagina){
                             echo '<td>'.$row->num_tel.'</td>';
                             echo '<td>'.$row->num_tel2.'</td>';
                             mod_estatus_pac($row, $pagina);
-                            //editar_datos_pac($row);
+                            
+                            if( $_SESSION['nivel_acceso'] == 3)
+                            {
+                                editar_datos_pac($row, $pagina);
+                                //reagendar_pac($row, $pagina);
+                            }
+
                             echo '</tr>';
                         }
                         else{
@@ -277,7 +319,13 @@ function ver_pacientes_del_mes($fecha_ini, $fecha_fin, $pagina){
                                 echo '<td>'.$row->num_tel.'</td>';
                                 echo '<td>'.$row->num_tel2.'</td>';
                                 mod_estatus_pac($row,$pagina);
-                                //editar_datos_pac($row);
+                                
+                                if( $_SESSION['nivel_acceso'] == 3)
+                                {
+                                    editar_datos_pac($row, $pagina);
+                                    //reagendar_pac($row, $pagina);
+                                }
+
                                 echo '</tr>';
                             }
                             else{
@@ -299,7 +347,13 @@ function ver_pacientes_del_mes($fecha_ini, $fecha_fin, $pagina){
                                 echo '<td>'.$row->num_tel.'</td>';
                                 echo '<td>'.$row->num_tel2.'</td>';
                                 mod_estatus_pac($row,$pagina);
-                                //editar_datos_pac($row);
+
+                                if( $_SESSION['nivel_acceso'] == 3)
+                                {
+                                    editar_datos_pac($row, $pagina);
+                                    //reagendar_pac($row, $pagina);
+                                }
+
                                 echo '</tr>';
                             }
                         }
@@ -554,6 +608,8 @@ apellido paterno y el apellido materno y nos devuelve una tabla con
 el resultado obtenido. Nota: el único inconveniente es que hay que 
 escribir bien su nombre completo.
 ---------------------------------------------------------------------*/
+    //echo $pagina;
+
     echo '
         <div class="table-responsive">
             <table class="table table-bordered table-hover table-striped">
@@ -563,8 +619,18 @@ escribir bien su nombre completo.
                         <th data-field="name">Nombre de la paciente</th>
                         <th data-field="price">Nombre del estudio</th>
                         <th data-field="price">Institución</th>
-                        <th data-field="estatus">Estatus</th>
-                    </tr>
+                        <th data-field="estatus">Estatus</th>';
+
+                        if( $_SESSION['nivel_acceso'] == 3)
+                        {
+                            echo'
+                            <th data-field="estatus">Editar</th>
+                            <!--<th data-field="re-agendar">Re-agendar</th>-->
+                            ';
+
+                        }
+
+    echo '          </tr>
                 </thead>
                 <tbody>
         ';
@@ -603,6 +669,14 @@ escribir bien su nombre completo.
                             echo '<td>'.$row->estudio.'</td>';    
                             echo '<td>'.$row->institucion.'</td>';
                             mod_estatus_pac($row,$pagina);
+
+                            if( $_SESSION['nivel_acceso'] == 3 ){
+                                editar_datos_pac_buscar($row, $nombre, $appat, $apmat, $pagina);
+                                //reagendar_pac($row, $pagina);
+                            }
+
+                            
+
                             echo '</tr>';
                         }
                         else{
@@ -613,7 +687,13 @@ escribir bien su nombre completo.
                                 echo '<td>'.$row->estudio.'</td>';    
                                 echo '<td>'.$row->institucion.'</td>';
                                 mod_estatus_pac($row,$pagina);
-                                //editar_datos_pac($row);
+
+                                if( $_SESSION['nivel_acceso'] == 3 )
+                                {
+                                    editar_datos_pac_buscar($row, $nombre, $appat, $apmat, $pagina);
+                                    //reagendar_pac($row, $pagina);
+                                }
+
                                 echo '</tr>';
                             }
                             else{
@@ -623,6 +703,12 @@ escribir bien su nombre completo.
                                 echo '<td>'.$row->estudio.'</td>';    
                                 echo '<td>'.$row->institucion.'</td>';
                                 mod_estatus_pac($row,$pagina);
+
+                                if( $_SESSION['nivel_acceso'] == 3 )
+                                {
+                                    editar_datos_pac_buscar($row, $nombre, $appat, $apmat, $pagina);
+                                    //reagendar_pac($row, $pagina);
+                                }
                                 
                                 echo '</tr>';
                             }
@@ -922,15 +1008,46 @@ deshabilita  para la edición de los datos
 }
 
 
-function editar_datos_pac($row){
+function editar_datos_pac($row, $pagina){
      echo'   <td>
                 <form role="form" id="edicion'.$row->idpacientes.'" method="post" action="controlador_editar_pacientes_por_fecha.php">
                     <input type="hidden" form="edicion'.$row->idpacientes.'" name="idpaciente" value="'.$row->idpacientes.'"/>
                     <input type="hidden" form="edicion'.$row->idpacientes.'" name="fecha_estudio" value="'.$row->fecha.'"/>
+                    <input type="hidden" form="edicion'.$row->idpacientes.'" name = "pagina_destino" value="'.$pagina.'"/>
                                         
                     <button type="submit" form="edicion'.$row->idpacientes.'" name="editar" class="btn btn-warning btn-default btn-block" >
                         <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-                        Editar
+                    </button>
+                </form>
+            </td>';
+}
+
+function editar_datos_pac_buscar($row, $nombre, $appat, $apmat, $pagina){
+     echo'   <td>
+                <form role="form" id="edicion'.$row->idpacientes.'" method="post" action="controlador_editar_pacientes_por_fecha.php">
+                    <input type="hidden" form="edicion'.$row->idpacientes.'" name="idpaciente" value="'.$row->idpacientes.'"/>
+                    <input type="hidden" form="edicion'.$row->idpacientes.'" name="fecha_estudio" value="'.$row->fecha.'"/>
+                    <input type="hidden" form="edicion'.$row->idpacientes.'" name = "pagina_destino" value="'.$pagina.'"/>
+                    <input type="hidden" form="edicion'.$row->idpacientes.'" name = "nombre" value="'.$nombre.'"/>
+                    <input type="hidden" form="edicion'.$row->idpacientes.'" name = "appat" value="'.$appat.'"/>
+                    <input type="hidden" form="edicion'.$row->idpacientes.'" name = "apmat" value="'.$apmat.'"/>
+                                        
+                    <button type="submit" form="edicion'.$row->idpacientes.'" name="editar" class="btn btn-warning btn-default btn-block" >
+                        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                    </button>
+                </form>
+            </td>';
+}
+
+function reagendar_pac($row, $pagina){
+     echo'   <td>
+                <form role="form" id="reagendar'.$row->idpacientes.'" method="post" action="controlador_reagendar_paciente.php">
+                    <input type="hidden" form="reagendar'.$row->idpacientes.'" name="idpaciente" value="'.$row->idpacientes.'"/>
+                    <input type="hidden" form="reagendar'.$row->idpacientes.'" name="fecha_estudio" value="'.$row->fecha.'"/>
+                    <input type="hidden" form="reagendar'.$row->idpacientes.'" name = "pagina_destino" value="'.$pagina.'"/>
+                                        
+                    <button type="submit" form="reagendar'.$row->idpacientes.'" name="editar" class="btn btn-warning btn-default btn-block" >
+                        <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>
                     </button>
                 </form>
             </td>';
