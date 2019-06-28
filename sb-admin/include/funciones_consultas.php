@@ -668,7 +668,7 @@ escribir bien su nombre completo.
                             echo '<td>'.$row->nombre.'</td>';
                             echo '<td>'.$row->estudio.'</td>';    
                             echo '<td>'.$row->institucion.'</td>';
-                            mod_estatus_pac($row,$pagina);
+                            mod_estatus_pac_buscar($row, $nombre, $appat, $apmat, $pagina);
 
                             if( $_SESSION['nivel_acceso'] == 3 ){
                                 editar_datos_pac_buscar($row, $nombre, $appat, $apmat, $pagina);
@@ -686,7 +686,7 @@ escribir bien su nombre completo.
                                 echo '<td>'.$row->nombre.'</td>';
                                 echo '<td>'.$row->estudio.'</td>';    
                                 echo '<td>'.$row->institucion.'</td>';
-                                mod_estatus_pac($row,$pagina);
+                                mod_estatus_pac_buscar($row, $nombre, $appat, $apmat, $pagina);
 
                                 if( $_SESSION['nivel_acceso'] == 3 )
                                 {
@@ -702,7 +702,7 @@ escribir bien su nombre completo.
                                 echo '<td>'.$row->nombre.'</td>';
                                 echo '<td>'.$row->estudio.'</td>';    
                                 echo '<td>'.$row->institucion.'</td>';
-                                mod_estatus_pac($row,$pagina);
+                                mod_estatus_pac_buscar($row, $nombre, $appat, $apmat, $pagina);
 
                                 if( $_SESSION['nivel_acceso'] == 3 )
                                 {
@@ -815,6 +815,62 @@ function mod_estatus_pac($row, $pagina){
                 
     echo'
                 <input type="hidden" form="estatus'.$row->idpacientes.'" name = "nombre" value="'.$row->nombre.'"/>
+                <input type="hidden" form="estatus'.$row->idpacientes.'" name = "estudio" value="'.$row->estudio.'"/>
+                <input type="hidden" form="estatus'.$row->idpacientes.'" name = "fecha" value="'.$row->fecha.'"/>';
+
+                
+                if($row->estatus == 'POR ATENDER'){
+                    echo '
+                        <button type="submit" form="estatus'.$row->idpacientes.'" name="editar" class="btn btn-warning btn-sm btn-block" >
+                            <span class="glyphicon " aria-hidden="true"></span>
+                            '.$row->estatus.'
+                        </button>';
+                }
+                if($row->estatus == 'ATENDIDO'){
+                    echo '
+                        <button type="submit" form="estatus'.$row->idpacientes.'" name="editar" class="btn btn-success btn-sm btn-block" >
+                            <span class="glyphicon " aria-hidden="true"></span>
+                            '.$row->estatus.'
+                        </button>';
+                }   
+                if($row->estatus == 'CANCELADO'){
+                    echo '
+                        <button type="submit" form="estatus'.$row->idpacientes.'" name="editar" class="btn btn-danger btn-sm btn-block" >
+                            <span class="glyphicon " aria-hidden="true"></span>
+                            '.$row->estatus.'
+                        </button>';
+                }             
+    echo '
+            </form>
+        </td>';
+}
+
+
+function mod_estatus_pac_buscar($row, $nombre, $appat, $apmat, $pagina){
+/*---------------------------------------------------------------------
+modifica el estatus del paciente y manda datos para redireccionar
+a la página de buscar pacientes
+
+---------------------------------------------------------------------*/
+    //echo $pagina;
+    echo'<td>
+            <form role="form" id="estatus'.$row->idpacientes.'" method="post" action="controlador_actualizar_estatus.php">
+                <input type="hidden" form="estatus'.$row->idpacientes.'" name = "idpaciente" value="'.$row->idpacientes.'"/>
+                <input type="hidden" form="estatus'.$row->idpacientes.'" name = "estatus" value="'.$row->estatus.'"/>
+                <input type="hidden" form="estatus'.$row->idpacientes.'" name = "pagina_destino" value="'.$pagina.'"/>';
+                
+                if(!isset($row->institucion)){
+                    echo '<input type="hidden" form="estatus'.$row->idpacientes.'" name = "institucion" value=" "/>';
+                }
+                else{
+                    echo '<input type="hidden" form="estatus'.$row->idpacientes.'" name = "institucion" value="'.$row->institucion.'"/>';
+                }
+                
+    echo'
+                <input type="hidden" form="estatus'.$row->idpacientes.'" name = "nombre_paciente" value="'.$row->nombre.'"/>
+                <input type="hidden" form="estatus'.$row->idpacientes.'" name = "nombre" value="'.$nombre.'"/>
+                <input type="hidden" form="estatus'.$row->idpacientes.'" name = "appat" value="'.$appat.'"/>
+                <input type="hidden" form="estatus'.$row->idpacientes.'" name = "apmat" value="'.$apmat.'"/>
                 <input type="hidden" form="estatus'.$row->idpacientes.'" name = "estudio" value="'.$row->estudio.'"/>
                 <input type="hidden" form="estatus'.$row->idpacientes.'" name = "fecha" value="'.$row->fecha.'"/>';
 
