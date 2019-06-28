@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<?php $_POST["pagina"]="form"; ?>
+<?php $_POST["pagina"]="form"; 
+      $pagina =  $_POST['pagina_destino']?>
 <html lang="en">
 
 <head>
@@ -29,9 +30,9 @@
         <div id="page-wrapper">
             <div class="container-fluid">
                 <?php
-                    /*echo'<pre>';
-                    print_r($_POST);
-                    echo '</pre>';*/
+                    // echo'<pre>';
+                    // print_r($_POST);
+                    // echo '</pre>';
                 ?>
                 <!-- Page Heading -->
                 <div class="row">
@@ -47,19 +48,86 @@
                     </div>
                 </div>
                 <!-- /.row -->
+                
                 <div class = "row">
                     <div class="col-lg-3">
-                        <form role="form" id="ver_lista" method="post" action="viewmod_ver_editar_pacientes_por_fecha.php" accept-charset="UTF-8">
-                              <?php $fecha = $_POST['fecha_estudio'];
-                              echo '<input type="hidden" form="ver_lista" name="fecha_estudios" value="'.$fecha.'"/>'; ?>
-                        </form>
-                        <button type="submit" class="btn btn-success btn-lg btn-block" aria-label="Left Align" form="ver_lista">
-                                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-                                Atrás
-                        </button>                            
+                        <?php
+                            $var = $_POST["pagina_destino"];
+                            
+                            $fecha = $_POST['fecha_estudio'];
+                            date_default_timezone_set('America/Mexico_City'); 
+                            $fecha = date('Y-m-d', strtotime($fecha));
+
+                            switch ($var) {
+                                case 'ver_pacientes_por_mes':
+                                    echo'
+                                     <form role="form" id="ver_lista1" method="post" action="viewmod_ver_pacientes_por_mes.php" accept-charset="UTF-8">
+                                        <input type="hidden" form="ver_lista1" name="fecha_estudios" value="'.$fecha.'"/>
+                                    </form>
+                                    <button type="submit" class="btn btn-success btn-lg btn-block" aria-label="Left Align" form="ver_lista1">
+                                        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                                        Atrás
+                                    </button> ';
+                                     break;
+                                case 'ver_pacientes_del_dia':
+                                    echo'
+                                     <form role="form" id="ver_lista" method="post" action="viewmod_ver_pacientes_del_dia.php" accept-charset="UTF-8">
+                                        <input type="hidden" form="ver_lista" name="fecha_estudios" value="'.$fecha.'"/>
+                                    </form>
+                                    <button type="submit" class="btn btn-success btn-lg btn-block" aria-label="Left Align" form="ver_lista">
+                                        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                                        Atrás
+                                    </button> ';
+                                     break;
+                                case 'ver_pacientes_por_semana':
+                                    echo'
+                                     <form role="form" id="ver_lista" method="post" action="viewmod_ver_pacientes_por_semana.php" accept-charset="UTF-8">
+                                        <input type="hidden" form="ver_lista" name="fecha_estudios" value="'.$fecha.'"/>
+                                    </form>
+                                    <button type="submit" class="btn btn-success btn-lg btn-block" aria-label="Left Align" form="ver_lista">
+                                        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                                        Atrás
+                                    </button> ';
+                                     break;
+                                case 'buscar_paciente':
+                                     echo'
+                                      <form role="form" id="ver_lista" method="post" action="viewmod_buscar_paciente.php" accept-charset="UTF-8">
+                                         <input type="hidden" form="ver_lista" name="fecha_estudios" value="'.$fecha.'"/>';
+                                         
+                                     echo'    
+                                         <input type="hidden" form="ver_lista" name="nombre" value="'.$_POST['nombre'].'"/>
+                                         <input type="hidden" form="ver_lista" name="appat" value="'.$_POST['appat'].'"/>
+                                         <input type="hidden" form="ver_lista" name="apmat" value="'.$_POST['apmat'].'"/>';
+
+                                    echo'
+                                     </form>
+                                     <button type="submit" class="btn btn-success btn-lg btn-block" aria-label="Left Align" form="ver_lista">
+                                         <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                                         Atrás
+                                     </button> ';
+                                      break;
+                                
+                                 
+                                default:
+                                    $fecha = $_POST['fecha_estudio'];
+                                    echo'
+                                     <form role="form" id="ver_lista" method="post" action="viewmod_ver_pacientes_por_semana.php" accept-charset="UTF-8">
+                              
+                                        <input type="hidden" form="ver_lista" name="fecha_estudios" value="'.$fecha.'"/> 
+                              
+                                    </form>
+                                    <button type="submit" class="btn btn-success btn-lg btn-block" aria-label="Left Align" form="ver_lista">
+                                        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                                        Atrás
+                                    </button>';
+                                    break;
+                             }
+                        ?>
+                                                    
                     </div>
                 </div>
                 <br>
+
                 <div class="row">
                        
                     <!--        1er columnoa de captura         -->
@@ -427,6 +495,7 @@
                                             <input type="hidden" form="editar_estudio" name="ap_paterno_med_ant"    value="'.$row->ap_paterno_med.'"/>
                                             <input type="hidden" form="editar_estudio" name="ap_materno_med_ant"    value="'.$row->ap_materno_med.'"/>                                        
                                             <input type="hidden" form="editar_estudio" name="especialidad_med_ant"      value="'.$row->especialidad.'"/>
+                                            
                                         </div>';    
                                 ?>
                                 </form>
@@ -442,15 +511,24 @@
                     </div>
             
                     <!--<input id="submit" name="submit" class="btn btn-success btn-lg btn-block" form="editar_estudio" type="submit" value="Aceptar" class="btn btn-primary">-->
-                    <button id="submit" name="submit" class="btn btn-danger btn-lg btn-block" form="editar_estudio" type="submit" >
-                        <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
-                        ACEPTAR
-                    </button>
-                            
+                    <?php 
                         
-                </div>    
+                    echo'<input type="hidden" form="editar_estudio" name = "pagina_destino" value="'.$pagina.'"/>';
+                    ?>
+       
+                </div>  
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <button id="submit" name="submit" class="btn btn-danger btn-lg btn-block" form="editar_estudio" type="submit" >
+                            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                            EDITAR DATOS
+                        </button>
+                    </div>  
+                </div>  
             </div> 
             <!-- /.container-fluid -->
+            
         </div>
         <!-- /#page-wrapper -->
     </div>
