@@ -8,7 +8,7 @@ function previsualizacion(){
 $idpaciente     =   $_POST["idpaciente"];    
 $fecha_estudios =   $_POST['fecha_estudios'];
 $estatus        =   $_POST['estatus'];
-$nombre         =   $_POST['nombre'];
+$nombre         =   $_POST['nombre_paciente'];
 $estudio        =   $_POST['estudio'];
 $fecha          =   $_POST['fecha'];
 
@@ -109,9 +109,9 @@ function update($idpaciente, $estatus, $motivos){
 
             $mysqli->query($sql);
 
-            printf("%s\n", mysqli_info($mysqli));
+            //printf("%s\n", mysqli_info($mysqli));
 
-            echo '<div class="hola">filas afectadas: (Se actualizó) '.$mysqli->affected_rows.' fila</div>';
+            //echo '<div class="hola">filas afectadas: (Se actualizó) '.$mysqli->affected_rows.' fila</div>';
 
 
     
@@ -201,6 +201,10 @@ function delay(){
                 $fecha   =   $_POST["fecha"];
                 date_default_timezone_set('America/Mexico_City');
                 $fecha   = date('Y-m-d',strtotime($fecha));
+
+                // echo'<pre>';
+                // print_r($_POST);
+                // echo '</pre>';
                 
                 switch ($var) {
                                 case 'ver_pacientes_por_mes':
@@ -264,6 +268,24 @@ function delay(){
                                         Aceptar
                                     </button> ';
                                      break;
+                                
+                                     case 'buscar_paciente':
+                                     echo'
+                                      <form role="form" id="ver_lista" method="post" action="viewmod_buscar_paciente.php" accept-charset="UTF-8">
+                                         <input type="hidden" form="ver_lista" name="fecha_estudios" value="'.$fecha.'"/>';
+                                         
+                                     echo'    
+                                         <input type="hidden" form="ver_lista" name="nombre" value="'.$_POST['nombre'].'"/>
+                                         <input type="hidden" form="ver_lista" name="appat" value="'.$_POST['appat'].'"/>
+                                         <input type="hidden" form="ver_lista" name="apmat" value="'.$_POST['apmat'].'"/>';
+
+                                    echo'
+                                     </form>
+                                     <button type="submit" class="btn btn-success btn-lg btn-block" aria-label="Left Align" form="ver_lista">
+                                         <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                                         Atrás
+                                     </button> ';
+                                      break;
                                  
                                  
                                 default:
