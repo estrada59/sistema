@@ -53,7 +53,7 @@
                 </div>
                 <!-- /.row -->
 
-                <form role="form" id="ver_pacientes" method="post" action="viewmod_ver_pacientes_por_semana.php">
+                <form role="form" id="ver_pacientes" method="post" action="viewmod_ver_pacientes_por_fecha.php">
                     <div class="form-group">
                         <label for="fecha">Fecha</label>
                         <input type="date" class="form-control" form="ver_pacientes" name="fecha_estudios" id="fecha_estudios" placeholder="Fecha estudio" required>
