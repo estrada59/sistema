@@ -2,6 +2,8 @@
 include "include/mysql.php";
 
 function previsualizacion(){
+//print_r($_POST);
+//[pag_retorno] => ver_pacientes_del_dia 
 
 $idpaciente     =   $_POST["idpaciente"];    
 $fecha_estudios =   $_POST['fecha_estudios'];
