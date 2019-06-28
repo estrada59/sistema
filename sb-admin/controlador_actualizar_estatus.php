@@ -85,10 +85,15 @@
                                      break;
                                 case 'buscar_paciente':
                                     echo'
-                                     <form role="form" id="ver_lista" method="post" action="viewmod_buscar_paciente.php" accept-charset="UTF-8">
-                                        <input type="hidden" form="ver_lista" name="fecha_estudios" value="'.$fecha.'"/>
+                                     <form role="form" id="buscar_paciente" method="post" action="viewmod_buscar_paciente.php" accept-charset="UTF-8">
+                                        <input type="hidden" form="buscar_paciente" name="fecha_estudios" value="'.$fecha.'"/>
                                     </form>
-                                    <button type="submit" class="btn btn-success btn-lg btn-block" aria-label="Left Align" form="ver_lista">
+
+                                    <input type="hidden" form="buscar_paciente" name="nombre" value="'.$_POST["nombre"].'"/>
+                                    <input type="hidden" form="buscar_paciente" name="appat" value="'.$_POST["appat"].'"/>
+                                    <input type="hidden" form="buscar_paciente" name="apmat" value="'.$_POST["apmat"].'"/>
+
+                                    <button type="submit" class="btn btn-success btn-lg btn-block" aria-label="Left Align" form="buscar_paciente">
                                         <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
                                         Atrás
                                     </button> ';
@@ -158,8 +163,9 @@
 
                 <div class="row">
                     <div class="col-lg-4">
-                        <p>Nombre del paciente: <?php 
-                            echo  $_POST['nombre']; ?>
+                        
+                        <p>Nombre del paciente: <?php //print_r($_POST);
+                            echo  $_POST['nombre_paciente']; ?>
                         </p>
                         <p>Estudio: <?php 
                             echo  $_POST['estudio']; ?>
@@ -213,7 +219,10 @@
                                     <input type="hidden" form="ver_lista4" name="fecha_estudios" value="'.$fecha.'"/>
                                     <input type="hidden" form="ver_lista4" name="estatus" value="POR ATENDER"/>
                                     <input type="hidden" form="ver_lista4" name="idpaciente" value="'.$_POST["idpaciente"].'"/> 
+                                    <input type="hidden" form="ver_lista4" name="nombre_paciente" value="'.$_POST["nombre_paciente"].'"/>
                                     <input type="hidden" form="ver_lista4" name="nombre" value="'.$_POST["nombre"].'"/>
+                                    <input type="hidden" form="ver_lista4" name="appat" value="'.$_POST["appat"].'"/>
+                                    <input type="hidden" form="ver_lista4" name="apmat" value="'.$_POST["apmat"].'"/>
                                     <input type="hidden" form="ver_lista4" name="estudio" value="'.$_POST["estudio"].'"/>
                                     <input type="hidden" form="ver_lista4" name="fecha" value="'.$fecha.'"/>
                                     <input type="hidden" form="ver_lista4" name="pag_retorno" value="'.$var.'"/>
@@ -229,7 +238,11 @@
                                     <input type="hidden" form="ver_lista2" name="fecha_estudios" value="'.$fecha.'"/>
                                     <input type="hidden" form="ver_lista2" name="estatus" value="ATENDIDO"/>
                                     <input type="hidden" form="ver_lista2" name="idpaciente" value="'.$_POST["idpaciente"].'"/>
-                                    <input type="hidden" form="ver_lista2" name="nombre" value="'.$_POST["nombre"].'"/> 
+
+                                    <input type="hidden" form="ver_lista2" name="nombre_paciente" value="'.$_POST["nombre_paciente"].'"/>
+                                    <input type="hidden" form="ver_lista2" name="nombre" value="'.$_POST["nombre"].'"/>
+                                    <input type="hidden" form="ver_lista2" name="appat" value="'.$_POST["appat"].'"/>
+                                    <input type="hidden" form="ver_lista2" name="apmat" value="'.$_POST["apmat"].'"/>
                                     <input type="hidden" form="ver_lista2" name="estudio" value="'.$_POST["estudio"].'"/>
                                     <input type="hidden" form="ver_lista2" name="fecha" value="'.$fecha.'"/>
                                     <input type="hidden" form="ver_lista2" name="pag_retorno" value="'.$var.'"/>
@@ -245,7 +258,10 @@
                                     <input type="hidden" form="ver_lista3" name="fecha_estudios" value="'.$fecha.'"/>
                                     <input type="hidden" form="ver_lista3" name="estatus" value="CANCELADO"/>
                                     <input type="hidden" form="ver_lista3" name="idpaciente" value="'.$_POST["idpaciente"].'"/>
+                                    <input type="hidden" form="ver_lista3" name="nombre_paciente" value="'.$_POST["nombre_paciente"].'"/>
                                     <input type="hidden" form="ver_lista3" name="nombre" value="'.$_POST["nombre"].'"/>
+                                    <input type="hidden" form="ver_lista3" name="appat" value="'.$_POST["appat"].'"/>
+                                    <input type="hidden" form="ver_lista3" name="apmat" value="'.$_POST["apmat"].'"/>
                                     <input type="hidden" form="ver_lista3" name="estudio" value="'.$_POST["estudio"].'"/>
                                     <input type="hidden" form="ver_lista3" name="fecha" value="'.$fecha.'"/>
                                     <input type="hidden" form="ver_lista3" name="pag_retorno" value="'.$var.'"/>
