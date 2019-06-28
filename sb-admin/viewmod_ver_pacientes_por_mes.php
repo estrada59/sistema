@@ -74,28 +74,19 @@
 
                 <div class="row">
                     <div class="col-md-12 col-lg-12">
-                        <!--        1er columnoa de captura  LUNES       -->
-                        <div class="panel panel-primary">
-                            <div class="panel-heading">
-                                <h3 class="panel-title">Pacientes por mes</h3>
-                            </div>  <!--    fin panel heading   -->
+                        
+                        <?php
+                            include_once 'include/funciones_consultas.php';
+            
+                            $fecha = $_POST['fecha_estudios'];
 
-                            <div class="panel-body">
-                                <?php
-                                    include_once 'include/funciones_consultas.php';
-                    
-                                    $fecha = $_POST['fecha_estudios'];
-        
-                                    $fecha_fin = last_month_day($fecha);
-                                    $fecha_ini = first_month_day($fecha); 
-                                    
-                                    ver_pacientes_del_mes($fecha_ini, $fecha_fin,$_POST['pagina']);
-                                ?>
-                            </div><!-- /. fin panel body -->
-
-                            <!--<div class="panel-footer">
-                            </div>-->
-                        </div><!-- /. fin panel primary -->
+                            $fecha_fin = last_month_day($fecha);
+                            $fecha_ini = first_month_day($fecha); 
+                            
+                            ver_pacientes_del_mes($fecha_ini, $fecha_fin,$_POST['pagina']);
+                        ?>
+                    </div>        
+                </div>
             </div>  <!--    fin col-lg-12   -->
             <!-- /.container-fluid -->
         </div>
