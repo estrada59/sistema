@@ -110,10 +110,10 @@ function menu($pag){
                 <a href="javascript:;" data-toggle="collapse" data-target="#demo"><i class="fa fa-fw fa-table"></i> Ver pacientes<i class="fa fa-fw fa-caret-down"></i></a>
                 <ul id="demo" class="collapse">
                     <li>
-                        <a href="controlador_ver_pacientes_del_dia.php"><i class="fa fa-fw fa-table"></i>Por día</a>
+                        <a href="viewmod_ver_pacientes_del_dia.php"><i class="fa fa-fw fa-table"></i>Por día</a>
                     </li>
                     <li>
-                        <a href="controlador_ver_pacientes_por_semana.php"><i class="fa fa-fw fa-table"></i>Por semana</a>
+                        <a href="viewmod_ver_pacientes_por_semana.php"><i class="fa fa-fw fa-table"></i>Por semana</a>
                     </li>
                     <li>
                         <a href="controlador_ver_pacientes_por_mes.php"><i class="fa fa-fw fa-table"></i>Por mes</a>
@@ -127,9 +127,9 @@ function menu($pag){
             <li class ="'.$editar_pacientes_por_fecha.' ">
                 <a href="javascript:;" data-toggle="collapse" data-target="#demo3"><span class="glyphicon glyphicon-pencil" ></span>  Editar  <i class="fa fa-fw fa-caret-down"></i></a>
                 <ul id="demo3" class="collapse">
-                    <li>
+                    <!--<li>
                         <a href="controlador_ver_editar_pacientes_por_fecha.php">Datos del paciente</a>
-                    </li>
+                    </li>-->
                     <li>
                         <a href="controlador_ver_editar_estudio_de_paciente.php">Cambiar estudio de paciente</a>
                     </li>
