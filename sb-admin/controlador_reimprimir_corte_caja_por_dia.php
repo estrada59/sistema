@@ -20,19 +20,10 @@
 
 <body>
     <div id="wrapper">
-       <!-- Navigation -->
-       <?php
-            if($_SESSION['nivel_acceso'] == 4){
-    			include "nav_op.php";	
-    		}  
-       		if($_SESSION['nivel_acceso'] == 3){
-    			include "nav.php";	
-    		}
-    		if($_SESSION['nivel_acceso'] == 1){
-                include "nav_priv.php"; }
-            if($_SESSION['nivel_acceso'] == 2){
-                include "nav_contador.php"; }
-       ?>
+        <!-- Navigation -->
+        <?php
+            include_once 'include/nav_session.php';
+        ?>
         <div id="page-wrapper">
             <div class="container-fluid">
 
@@ -53,7 +44,7 @@
                 </div>
                 <!-- /.row -->
 
-                <form role="form" id="ver_pacientes" method="post" action="viewmod_ver_corte_caja_por_dia.php">
+                <form role="form" id="ver_pacientes" method="post" action="viewmod_ver_corte_caja_por_fecha.php">
                     <div class="form-group">
                         <label for="fecha">Fecha</label>
                         <input type="date" class="form-control" form="ver_pacientes"  name="fecha_act" placeholder="Fecha estudio" required>

@@ -14,6 +14,9 @@ $sqlTot = $sqlRec = $where = "";
 $params = $_REQUEST;
 $limit = $params["rowCount"];
 
+//$params['current']=1;
+//$limit=10;
+
 if (isset($params["current"])) { $page  = $params["current"]; } else { $page=1; };  
 $start_from = ($page-1) * $limit;
 // check search value exist

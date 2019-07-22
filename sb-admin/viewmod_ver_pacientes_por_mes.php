@@ -84,7 +84,20 @@
                             $fecha_ini = first_month_day($fecha); 
                             
                             ver_pacientes_del_mes($fecha_ini, $fecha_fin,$_POST['pagina']);
+
                         ?>
+                            <script type="text/javascript">
+                                $(document).ready(function() {
+                                    $('#myClass').DataTable( {
+                                        language: {
+                                            url: 'js/dataTables_es.lang'
+                                        },
+                                        "paging":   false,
+                                        "ordering": true,
+                                        "info":     true
+                                        });
+                                } );
+                            </script>
                     </div>        
                 </div>
             </div>  <!--    fin col-lg-12   -->
@@ -96,7 +109,7 @@
 
     <!-- jQuery -->
     <!-- Esto es para subir archivo-->
-    <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <!--<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>--->
     <script type="text/javascript" src="js/bootstrap-fancyfile.min.js"></script>
     
 

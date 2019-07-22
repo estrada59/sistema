@@ -89,6 +89,9 @@
                                 <script type="text/javascript">
                                     $(document).ready(function() {
                                         $('#myclass').DataTable( {
+                                            language: {
+                                                url: 'js/dataTables_es.lang'
+                                            },
                                             "paging":   false,
                                             "ordering": true,
                                             "info":     false

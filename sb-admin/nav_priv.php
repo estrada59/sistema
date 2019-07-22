@@ -193,12 +193,21 @@ function menu($pag){
         </li>';
 
         echo '
-            
+
             <li class ="'.$instituciones.' ">
-                    <li>
-                        <a href="controlador_relacion_instituciones.php">Relaciones de instituciones</a>
-                    </li>
+                <a href="javascript:;" data-toggle="collapse" data-target="#instituciones"> Instituciones <i class="fa fa-fw fa-caret-down"></i></a>
+                    <ul id="instituciones" class="collapse">
+                        <li>
+                            <a href="controlador_monto_ejecutado.php">Contratos por instituciones</a>
+                        </li>
+                        <li>
+                            <a href="controlador_relacion_instituciones.php">Relaciones de instituciones</a>
+                        </li>
+                        
+                    </ul> 
             </li>
+
+
             <li class ="'.$grafica.' ">
                 <a href="javascript:;" data-toggle="collapse" data-target="#graficas"> Graficas <i class="fa fa-fw fa-caret-down"></i></a>
                     <ul id="graficas" class="collapse">

@@ -7,7 +7,16 @@ function ver_pacientes_del_dia($fecha_act, $pagina){
 //que pacientes hay citados, ademas de que esta rutina se emplea para
 //el área de recepción ya que le indica con franjas de colores que paciente
 //deben (franaja color rojo) y cuales no (franja color verde indica que 
-ya pagaron el total)
+// ya pagaron el total)
+
+// invoca: viewmod_ver_pacientes_del_dia.php
+//         viewmod_ver_pacientes_por_semana.php
+//         viewmod_ver_pacientes_por_fecha.php
+
+// Llama a otros procesos  funciones_consultas.php --> mod_estatus_pac($row, $pagina);
+//                         funciones_consultas.php --> editar_datos_pac($row, $pagina);
+
+// rev. 2019/07/12
 ---------------------------------------------------------------------*/
     echo '
         <div class ="table-responsive">
@@ -48,6 +57,11 @@ ya pagaron el total)
                                                             t1.fecha,
 
                                                             concat(t1.nombre,' ',t1.ap_paterno,' ',t1.ap_materno) as nombre,
+                                                            
+                                                            t1.nombre as nombre_pila,
+                                                            t1.ap_paterno as appat,
+                                                            t1.ap_materno as apmat,
+
                                                             (Select concat(t2.tipo,' ',t2.nombre) as estudio 
                                                                 from estudio t2 
                                                                 where idgammagramas = t1.estudio_idgammagramas) as estudio,
@@ -70,8 +84,13 @@ ya pagaron el total)
                                                     FROM pacientes t1 
                                                     WHERE fecha = '$fecha_act'  ORDER BY hora");
                     
-                    while ($row = $mysql->f_obj($sqltest)) {   
-                        if($row->debe > '0.00'){            //pacientes que deben
+                    while ($row = $mysql->f_obj($sqltest)) 
+                    {   
+                        // echo'<pre>';
+                        // print_r($row);
+                        // echo'</pre>';
+                        if($row->debe > '0.00')     //pacientes que deben
+                        {            
                             echo '<tr class ="danger">'; 
                             //echo '<td>'.$row->fecha.'</td>';
                             echo '<td>'.$row->nombre.'</td>';
@@ -89,6 +108,7 @@ ya pagaron el total)
                             echo '<td>'.$row->medico.'</td>';
                             echo '<td>'.$row->num_tel.'</td>';
                             echo '<td>'.$row->num_tel2.'</td>';
+
                             mod_estatus_pac($row, $pagina);
 
                             if( $_SESSION['nivel_acceso'] == 3 ){
@@ -98,23 +118,24 @@ ya pagaron el total)
                             
                             echo '</tr>';
                         }
-                        else{
+                        else
+                        {
                             // busca a que tipo de institución pertenece
                             //ayuda a marcar de verde si ya pago de lo contrario no lo 
                             //sombrea a la hora de hacer la búsqueda.
                             // ************************************************************
                             $institucion = mb_strtolower($row->institucion, "UTF-8" );
                             $institucion = str_replace(" ", "_", $institucion);
-                            //echo $institucion;
+                            //echo $institucion.'-----';
 
                             $link = $mysql->connect(); 
                             $sqltest2 = $mysql->query($link,"SELECT (t5.tipo )  as tipo
                                                                 FROM instituciones t5 
-                                                                WHERE t5.nombre = '$institucion' and estatus = 'ACTIVO'");
+                                                                WHERE t5.nombre = '$institucion' ");
      
                             $row2 = $mysql->f_obj($sqltest2);
 
-                            
+                            //print_r($row2->tipo);
                             // ************************************************************
                             if($row2->tipo == 'PARTICULAR' ){  //pacientes que ya no deben
                                 echo '<tr class ="success" >'; 
@@ -183,10 +204,26 @@ ya pagaron el total)
 }
 
 function ver_pacientes_del_mes($fecha_ini, $fecha_fin, $pagina){
-    
+
+/*---------------------------------------------------------------------
+//Permite ver a los pacientes que se tienen citados en el mes seleccionado
+//para eso sele pasa como parametro la fecha del mes en el que estemos interesados
+//y con ello veremos que pacientes hay citados, ademas de que esta rutina 
+//se emplea para el área de recepción ya que le indica con franjas de colores 
+//que paciente deben (franaja color rojo) y cuales no (franja color verde indica  
+// que ya pagaron el total)
+
+// invoca: viewmod_ver_pacientes_por_mes.php
+
+// Llama a otros procesos  funciones_consultas.php --> mod_estatus_pac($row, $pagina);
+//                         funciones_consultas.php --> editar_datos_pac($row, $pagina);
+
+// rev. 2019/07/12
+---------------------------------------------------------------------*/
+
     echo '
         <div class="table-responsive">
-            <table class="table table-bordered table-hover table-striped">
+            <table class="table table-bordered table-hover table-striped" id="myClass">
                 <thead>
                     <tr>
                         <th data-field="id">Fecha</th>
@@ -222,6 +259,11 @@ function ver_pacientes_del_mes($fecha_ini, $fecha_fin, $pagina){
                                                             t1.fecha,
                                                             t1.institucion,
                                                             concat(t1.nombre,' ',t1.ap_paterno,' ',t1.ap_materno) as nombre,
+
+                                                            t1.nombre as nombre_pila,
+                                                            t1.ap_paterno as appat,
+                                                            t1.ap_materno as apmat,
+
                                                             (Select concat(t2.tipo,' ',t2.nombre) as estudio 
                                                                 from estudio t2 
                                                                 where idgammagramas = t1.estudio_idgammagramas) as estudio,
@@ -361,7 +403,7 @@ function ver_pacientes_del_mes($fecha_ini, $fecha_fin, $pagina){
                     $mysql->close();
             echo'</tbody>
             </table>
-        </div>';    
+        </div>';  
 }
 
 function ver_pacientes_del_dia_operario($fecha_act, $pagina){
@@ -370,6 +412,11 @@ function ver_pacientes_del_dia_operario($fecha_act, $pagina){
 //para eso sele pasa como parametro la fecha en la que queremos saber
 //que pacientes hay citados, ademas de que esta rutina se emplea para
 //el área en donde está la técnico. Aquí no se indica si debe o no.
+
+//invoca:   viewmod_ver_pacientes_del_dia.php
+//          viewmod_ver_pacientes_por_semana.php
+
+// rev. 2019/07/12
 ---------------------------------------------------------------------*/
     
     echo '
@@ -399,6 +446,11 @@ function ver_pacientes_del_dia_operario($fecha_act, $pagina){
                     $sqltest = $mysql->query($link,"SELECT  t1.idpacientes,
                                                             t1.fecha,
                                                             concat(t1.nombre,' ',t1.ap_paterno,' ',t1.ap_materno) as nombre,
+
+                                                            t1.nombre as nombre_pila,
+                                                            t1.ap_paterno as appat,
+                                                            t1.ap_materno as apmat,
+
                                                             (Select concat(t2.tipo,' ',t2.nombre) as estudio 
                                                                 from estudio t2 
                                                                 where idgammagramas = t1.estudio_idgammagramas) as estudio,
@@ -443,8 +495,17 @@ function ver_pacientes_del_dia_operario($fecha_act, $pagina){
             </table>
         </div>';    
 }
+
 function reimprimir_hoja_de_citas($fecha_act, $pagina){
-    
+
+/*---------------------------------------------------------------------
+// Con esta funcion podemos reimprimir la hoja de citas de cualquier paciente
+// para ello sólo se requiere la fecha en la que fue citado el paciente
+
+invoca:  viewmod_ver_reimprimir_hoja_de_cita.php
+
+// rev. 2019/07/12
+---------------------------------------------------------------------*/
     echo '
     <div class="table-responsive">
         <table class="table table-bordered table-hover table-striped table-responsive">
@@ -524,7 +585,11 @@ function reimprimir_hoja_de_citas($fecha_act, $pagina){
 }
 
 function ver_resultados_pacientes($fecha_act){
-    
+/*---------------------------------------------------------------------
+// Ésta función actualemente no se usa
+
+// rev. 2019/07/12
+---------------------------------------------------------------------*/   
     echo '
         <div class="table-responsive">
             <table class="table table-bordered table-hover table-striped">
@@ -607,6 +672,12 @@ de datos para ello es necesario pasarle como paramtro el nombre el
 apellido paterno y el apellido materno y nos devuelve una tabla con
 el resultado obtenido. Nota: el único inconveniente es que hay que 
 escribir bien su nombre completo.
+
+invoca:                     viewmod_buscar_paciente.php
+llama a otros procesos:     funciones_consultas.php  --> mod_estatus_pac_buscar($row, $nombre, $appat, $apmat, $pagina);
+                            funciones_consultas.php  --> editar_datos_pac_buscar($row, $nombre, $appat, $apmat, $pagina);
+
+// rev. 2019/07/12
 ---------------------------------------------------------------------*/
     //echo $pagina;
 
@@ -722,7 +793,11 @@ escribir bien su nombre completo.
 }
 
 function view_images($row){
+/*---------------------------------------------------------------------
+// Ésta función actualmente no se usa
 
+// rev. 2019/07/12
+---------------------------------------------------------------------*/
     echo'<td width="26%">
             <form id="subir_archivo'.$row->idpacientes.'" action="view_resultados_subidos.php" method="POST" enctype="multipart/form-data">
                 <input type="hidden" form="subir_archivo'.$row->idpacientes.'" name = "idpaciente" value="'.$row->idpacientes.'"/>
@@ -740,7 +815,11 @@ function view_images($row){
 }
 
 function upload_images($row){
+/*---------------------------------------------------------------------
+// Ésta función actualmente no se usa
 
+// rev. 2019/07/12
+---------------------------------------------------------------------*/
     echo'<td width="26%">
             <form id="subir_archivo'.$row->idpacientes.'" action="controlador_subir_resultados.php" method="POST" enctype="multipart/form-data">
                 <!--<input type="file" form=subir_archivo'.$row->idpacientes.' name="imagen" id="imagen"  >-->
@@ -763,6 +842,12 @@ function upload_images($row){
 }
 
 function mod_estatus($row){
+/*---------------------------------------------------------------------
+// Está función se inhabilitara por que ya no se usa lo reemplaza
+// mod_estatus_pac($row,  $pagina)
+
+// rev. 2019/07/12
+---------------------------------------------------------------------*/
     echo'<td>
             <form role="form" id="estatus'.$row->idpacientes.'" method="post" action="controlador_actualizar_estatus.php">
                 <input type="hidden" form="estatus'.$row->idpacientes.'" name = "idpaciente" value="'.$row->idpacientes.'"/>
@@ -798,7 +883,19 @@ function mod_estatus($row){
         </td>';
 }
 
-function mod_estatus_pac($row, $pagina){
+function mod_estatus_pac($row,  $pagina){
+/*---------------------------------------------------------------------
+Aquí se encuentra el botón que aparece al ver pacientes por dia, semana
+o mes, y es el encargado de mostrar el estatus del paciente para despues
+poderlo modificar (ATENDIDO, POR ATENDER Y CANCELADO).
+
+// invoca: funciones_consultas.php --> ver_pacientes_del_dia();
+//         funciones_consultas.php --> ver_pacientes_del_mes();
+//         funciones_consultas.php --> editar_estudio_paciente();
+//         funciones_consultas.php --> ver_pacientes_del_dia_operario();
+
+// rev. 2019/07/12
+---------------------------------------------------------------------*/
     //echo $pagina;
     echo'<td>
             <form role="form" id="estatus'.$row->idpacientes.'" method="post" action="controlador_actualizar_estatus.php">
@@ -814,7 +911,12 @@ function mod_estatus_pac($row, $pagina){
                 }
                 
     echo'
-                <input type="hidden" form="estatus'.$row->idpacientes.'" name = "nombre" value="'.$row->nombre.'"/>
+                <input type="hidden" form="estatus'.$row->idpacientes.'" name = "nombre_paciente" value="'.$row->nombre.'"/>
+
+                <input type="hidden" form="estatus'.$row->idpacientes.'" name = "nombre" value="'.$row->nombre_pila.'"/>
+                <input type="hidden" form="estatus'.$row->idpacientes.'" name = "appat" value="'.$row->appat.'"/>
+                <input type="hidden" form="estatus'.$row->idpacientes.'" name = "apmat" value="'.$row->apmat.'"/>
+                
                 <input type="hidden" form="estatus'.$row->idpacientes.'" name = "estudio" value="'.$row->estudio.'"/>
                 <input type="hidden" form="estatus'.$row->idpacientes.'" name = "fecha" value="'.$row->fecha.'"/>';
 
@@ -848,9 +950,12 @@ function mod_estatus_pac($row, $pagina){
 
 function mod_estatus_pac_buscar($row, $nombre, $appat, $apmat, $pagina){
 /*---------------------------------------------------------------------
-modifica el estatus del paciente y manda datos para redireccionar
-a la página de buscar pacientes
+// Se emplea cuando despues de buscar al paciente es necesario mostrar
+// la opción modificar estatus.
 
+// invoca: funciones_consultas.php --> buscar_pacientes();
+
+// rev. 2019/07/12
 ---------------------------------------------------------------------*/
     //echo $pagina;
     echo'<td>
@@ -1065,6 +1170,16 @@ deshabilita  para la edición de los datos
 
 
 function editar_datos_pac($row, $pagina){
+
+/*---------------------------------------------------------------------
+// Se emplea cuando despues de ver pacientes se necesita editar datos
+// del paciente.
+
+// invoca:  funciones_consultas.php --> ver_pacientes_del_dia();
+//          funciones_consultas.php --> ver_pacientes_del_mes();
+
+// rev. 2019/07/12
+---------------------------------------------------------------------*/
      echo'   <td>
                 <form role="form" id="edicion'.$row->idpacientes.'" method="post" action="controlador_editar_pacientes_por_fecha.php">
                     <input type="hidden" form="edicion'.$row->idpacientes.'" name="idpaciente" value="'.$row->idpacientes.'"/>
@@ -1079,6 +1194,15 @@ function editar_datos_pac($row, $pagina){
 }
 
 function editar_datos_pac_buscar($row, $nombre, $appat, $apmat, $pagina){
+/*---------------------------------------------------------------------
+// Se emplea cuando despues de buscar al paciente es necesario mostrar
+// la opción modificar editar datos del paciente.
+
+// invoca: funciones_consultas.php --> buscar_pacientes();
+
+// rev. 2019/07/12
+---------------------------------------------------------------------*/
+
      echo'   <td>
                 <form role="form" id="edicion'.$row->idpacientes.'" method="post" action="controlador_editar_pacientes_por_fecha.php">
                     <input type="hidden" form="edicion'.$row->idpacientes.'" name="idpaciente" value="'.$row->idpacientes.'"/>
@@ -1188,12 +1312,19 @@ function editar_pacientes_del_dia($fecha_act, $pagina){
 }
 
 function editar_estudio_paciente($fecha_act,$pag){
-//---------------------------------------------------------------------
+/*---------------------------------------------------------------------
 //Despliega una lista de pacientes que estan agendados en la $fecha_act.    
 //posteriormente muestra datos del paciente y la opción editar para
 //cambiar el estudio tanto a pacientes de institucion Particular
 //como a los de institución Pública.
-//---------------------------------------------------------------------
+
+// invoca: viewmod_ver_editar_estudio_de_paciente.php
+
+//Llama a otros procesos: funciones_consultas.php --> mod_estatus_pac($row, $pag);
+
+// rev. 2019/07/12
+---------------------------------------------------------------------*/
+
     $fecha_act = $fecha_act;
     
     echo '
@@ -1226,6 +1357,10 @@ function editar_estudio_paciente($fecha_act,$pag){
                     $sqltest = $mysql->query($link,"SELECT  t1.idpacientes,
                                                             t1.fecha,
                                                             concat(t1.nombre,' ',t1.ap_paterno,' ',t1.ap_materno) as nombre,
+
+                                                            t1.nombre as nombre_pila,
+                                                            t1.ap_paterno as appat,
+                                                            t1.ap_materno as apmat,
                                                             
                                                             (Select concat(t2.tipo,' ',t2.nombre) as estudio 
                                                                 from estudio t2 
@@ -1273,12 +1408,16 @@ function editar_estudio_paciente($fecha_act,$pag){
 }
 
 function editar_institucion_a_particular($fecha_act){ 
-//---------------------------------------------------------------------
+/*---------------------------------------------------------------------
 //Si un paciente que tiene subrogado de cualquier institución requiere
 //pagar el  estudio por su propia cuenta y ya no hacer uso del subrogado 
 //que la institucion le emitio puede hacerlo solo hay que crearle una 
-//cuenta como paciente particular para poder cobrarle.    
-//---------------------------------------------------------------------
+//cuenta como paciente particular para poder cobrarle. 
+
+// invoca: viewmod_ver_editar_institucion_a_particular.php
+
+// rev. 2019/07/12
+---------------------------------------------------------------------*/
 
     $fecha_act = $fecha_act;
     
@@ -1347,8 +1486,6 @@ function editar_institucion_a_particular($fecha_act){
                                         </button>
                                     </form>
                                 </td>';
-
-                            //mod_estatus($row);
                         }
                         echo '</tr>';
                     }
@@ -1444,6 +1581,12 @@ function ver_listas_de_precios(){
 //---------------------------------------------------------------------
 // Despliega todas las listas de precios que se hayan creado y las 
 // muestra como botones.    
+
+// invoca: controlador_ver_lista_precios.php
+
+//Llama a procesos: funciones_consultas.php --> pasarMayusculas();
+
+// rev. 2019/07/12
 //---------------------------------------------------------------------
                                     
     $mysql =new mysql();
@@ -1712,7 +1855,15 @@ function aumentar_precio($institucion, $descuento){
 }
 
 function citar_pacientes(){
+/*---------------------------------------------------------------------
+Lista todas las instituciones en una tabla con forma de botones 
 
+// invoca: controlador_citar_pacientes.php
+
+//Llama a procesos:  pasarMayusculas();
+
+// rev. 2019/07/12
+---------------------------------------------------------------------*/
     include_once "mysql.php";
                                     
     $mysql =new mysql();
@@ -1752,12 +1903,16 @@ function citar_pacientes(){
 
 function anticipo_paciente($fecha_estudio){
 /*---------------------------------------------------------------------
-De acuerdo con la fecha de cita del paciente, se despliega una tabla
-de los pacientes que hay agendaddos en ese día y a un costado de acuedo
-al estatus del paciente que puede ser PAGADO o COBRAR, el operario
-puede cobrarle al paciente sólo en el caso de que aparesca la opcion 
-COBRAR, si aparece la opción pagado significa que el cliente ya pagó
-y  no hay nada mas que hacer :) XD...
+// De acuerdo con la fecha de cita del paciente, se despliega una tabla
+// de los pacientes que hay agendaddos en ese día y a un costado de acuedo
+// al estatus del paciente que puede ser PAGADO o COBRAR, el operario
+// puede cobrarle al paciente sólo en el caso de que aparesca la opcion 
+// COBRAR, si aparece la opción pagado significa que el cliente ya pagó
+// y  no hay nada mas que hacer :) XD...
+
+// invoca: viewmod_ver_anticipos_por_fecha.php
+
+// rev. 2019/07/12
 ---------------------------------------------------------------------*/
     $fecha_estudio = $fecha_estudio;
     
@@ -1898,8 +2053,12 @@ y  no hay nada mas que hacer :) XD...
 
 function corte_caja($fecha_estudio){
 /*---------------------------------------------------------------------
-Con ésta función se muestra el corte de caja por el día que se halla
-seleccionado.
+// Con ésta función se muestra el corte de caja por el día que se halla
+// seleccionado.
+
+invoca: viewmod_ver_corte_caja_por_dia.php
+
+// rev. 2019/07/12
 ---------------------------------------------------------------------*/
     $fecha_anticipo = $fecha_estudio;
   
@@ -2066,13 +2225,17 @@ seleccionado.
 }
 function corte_caja_mensual($fecha_estudio){
 /*---------------------------------------------------------------------
-Con ésta función se muestra el corte de caja mensual el operario puede 
-seleccionar cualquier día del mes que necesite y la rutina va hacer el 
-corte de todo el mes seleccionado.
+// Con ésta función se muestra el corte de caja mensual el operario puede 
+// seleccionar cualquier día del mes que necesite y la rutina va hacer el 
+// corte de todo el mes seleccionado.
+
+// invoca: viewmod_ver_corte_caja_por_mes.php
+
+// rev. 2019/07/12
 ---------------------------------------------------------------------*/ 
     echo '
     <div class="table-responsive">
-        <table class="table table-bordered table-hover table-striped table-responsive">
+        <table class="table table-bordered table-hover table-striped table-responsive" id="myClass">
             <thead>
                 <tr>
                     <th data-field="name">Fecha</th>                
@@ -2226,7 +2389,7 @@ corte de todo el mes seleccionado.
                                         <input type="hidden" form="edicion'.$row->idpaciente.'" name = "idanticipo" value="'.$row->idpaciente.'"/>
                                         <input type="hidden" form="edicion'.$row->idpaciente.'" name = "nombre_paciente" value="'.$row->nombre.'"/>
                                         <input type="hidden" form="edicion'.$row->idpaciente.'" name = "estudio" value="'.$row->estudio.'"/>
-                                        <input type="hidden" form="edicion'.$row->idpaciente.'" name = "precio" value="'.$precio.'"/>
+                                        <input type="hidden" form="edicion'.$row->idpaciente.'" name = "precio" value="'.$row->precio.'"/>
                                         <input type="hidden" form="edicion'.$row->idpaciente.'" name = "debe" value="'.$debe.'"/>
                                         
                                         <input type="hidden" form="edicion'.$row->idpaciente.'" name = "fecha_estudio" value="'.$fecha_estudio.'"/>
@@ -2261,8 +2424,15 @@ corte de todo el mes seleccionado.
 function reimprimir_recibos($fecha_estudio){
 //agregado el 2016_03_22
 /*---------------------------------------------------------------------
-Con ésta función se pueden reimprimir los recibos hechos anteriormente
-al haber realizado un cobro
+// Con ésta función se pueden reimprimir los recibos hechos anteriormente
+// al haber realizado un cobro
+
+// invoca: viewmod_reimprimir_recibo.php
+
+//Llama a procesos: funciones_consultas --> first_month_day($fecha_estudio);
+                    funciones_consultas --> last_month_day($fecha_estudio);
+
+// rev. 2019/07/12
 ---------------------------------------------------------------------*/
     
     echo '
@@ -2454,9 +2624,13 @@ al haber realizado un cobro
 
 function ver_anticipos_anteriores($idpaciente){
 /*---------------------------------------------------------------------
-La rutina permite obtener todos los anticipos que haya hecho el paciente
-y mostrarlos en una tabla (fecha_anticipo, forma de pago, monto pagado,
-y si requiere factura).
+// La rutina permite obtener todos los anticipos que haya hecho el paciente
+// y mostrarlos en una tabla (fecha_anticipo, forma de pago, monto pagado,
+// y si requiere factura).
+
+invoca: controlador_agregar_anticipos_por_fecha.php
+
+// rev. 2019/07/12
 ---------------------------------------------------------------------*/   
     include_once "include/mysql.php";
 
@@ -2541,13 +2715,17 @@ y si requiere factura).
 
 function ver_anticipos_anteriores_administrador($idpaciente){
 /*---------------------------------------------------------------------
-La rutina permite obtener todos los anticipos que haya hecho el paciente
-y mostrarlos en una tabla (fecha_anticipo, forma de pago, monto pagado,
-y si requiere factura).
-Se emplea la rutina en viewmod_ver_corte_caja_por_mes.php y nos permite
-visualizar el DETALLE de los pagos hecho de un paciente, no importando 
-si hizo un pago en agosto y otro en diciembre, la rutina mostrara todos
-los pagos realizados
+// La rutina permite obtener todos los anticipos que haya hecho el paciente
+// y mostrarlos en una tabla (fecha_anticipo, forma de pago, monto pagado,
+// y si requiere factura).
+// Se emplea la rutina en viewmod_ver_corte_caja_por_mes.php y nos permite
+// visualizar el DETALLE de los pagos hecho de un paciente, no importando 
+// si hizo un pago en agosto y otro en diciembre, la rutina mostrara todos
+// los pagos realizados
+
+// invoca: corte_caja_detalle_anticipos.php
+
+// rev. 2019/07/12
 ---------------------------------------------------------------------*/  
     include_once "include/mysql.php";
 
@@ -2644,6 +2822,14 @@ los pagos realizados
 }
 
 function sumatoria_de_anticipos($idpaciente){
+/*---------------------------------------------------------------------
+// Consulta todos los anticipos que tiene el paciente y los suma para 
+// después retornarlos.
+
+// invoca: viewmod_editar_estudio_de_paciente.php
+
+// rev. 2019/07/17
+---------------------------------------------------------------------*/
     
     include_once "mysql.php";
 
@@ -2666,31 +2852,38 @@ function sumatoria_de_anticipos($idpaciente){
                                             pago_cheque,
                                             transferencia,
                                             anticipo_efe,
+                                            sr_pago,
                                             no_recibo
                                     FROM anticipos
                                     WHERE idanticipos = $idanticipo");
                                                     
         $row = $mysql->f_obj($sql);
                                                         
-        if($row->dep_banamex == '0.00' && $row->pago_santander=='0.00' && $row->pago_cheque=='0.00' && $row->transferencia == '0.00'){
+        /*señor pago*/
+        if($row->dep_banamex == '0.00' && $row->pago_santander=='0.00' && $row->pago_cheque=='0.00' && $row->transferencia == '0.00' && $row->sr_pago == '0.00'){
             $colum_set = 'Efectivo';
             $monto_anticipo = $row->anticipo_efe;} //es efectivo
 
-        if($row->dep_banamex == '0.00' && $row->pago_santander=='0.00' && $row->pago_cheque=='0.00' && $row->anticipo_efe == '0.00'){
+        if($row->dep_banamex == '0.00' && $row->pago_santander=='0.00' && $row->pago_cheque=='0.00' && $row->anticipo_efe == '0.00' && $row->sr_pago == '0.00'){
             $colum_set = 'Transferencia';
             $monto_anticipo = $row->transferencia;} //transferencia
 
-        if($row->dep_banamex == '0.00' && $row->pago_santander=='0.00' && $row->transferencia=='0.00' && $row->anticipo_efe == '0.00'){
+        if($row->dep_banamex == '0.00' && $row->pago_santander=='0.00' && $row->transferencia=='0.00' && $row->anticipo_efe == '0.00' && $row->sr_pago == '0.00'){
             $colum_set = 'Pago con cheque';
             $monto_anticipo = $row->pago_cheque;} //pago cheque
 
-        if($row->dep_banamex == '0.00' && $row->pago_cheque=='0.00' && $row->transferencia=='0.00' && $row->anticipo_efe == '0.00'){
+        if($row->dep_banamex == '0.00' && $row->pago_cheque=='0.00' && $row->transferencia=='0.00' && $row->anticipo_efe == '0.00' && $row->sr_pago == '0.00'){
             $colum_set = 'Pago santander';
             $monto_anticipo = $row->pago_santander;} //pago santander
 
-        if($row->pago_santander == '0.00' && $row->pago_cheque=='0.00' && $row->transferencia=='0.00' && $row->anticipo_efe == '0.00'){
-            $colum_set = 'Pago banamex';        //pago banamex
-            $monto_anticipo = $row->dep_banamex;}
+        if($row->pago_santander == '0.00' && $row->pago_cheque=='0.00' && $row->transferencia=='0.00' && $row->anticipo_efe == '0.00'  && $row->sr_pago == '0.00'){
+            $colum_set = 'Pago banamex';
+            $monto_anticipo = $row->dep_banamex;} //pago banamex
+        
+        if($row->dep_banamex == '0.00' && $row->pago_santander=='0.00' && $row->pago_cheque=='0.00' && $row->transferencia == '0.00' && $row->anticipo_efe == '0.00'){
+            $colum_set = 'Sr pago';
+            $monto_anticipo = $row->sr_pago;} //es efectivo
+        /**********/
                                                 
         $sumatoria_anticipos += $monto_anticipo;
     }
@@ -2699,7 +2892,17 @@ function sumatoria_de_anticipos($idpaciente){
 }
 
 function ver_tratamientos_del_dia($fecha_act){
+/*---------------------------------------------------------------------
+// Devuelve una tabla en la que apartir de la $fecha_act busca su hay pacientes
+// que tienen tratamientos so los encuentra entonces procede a mostrarlos.
+// Una vez mostrados se visualiza el botón para imprimier las hojas de tratamientos
+// por pacientes de acuerdo con la dosis suministradas seran los ciudados que 
+// tiene que tener el paciente.
 
+// invoca: viewmod_imprimir_hoja_tratamientos.php.php
+
+// rev. 2019/07/12
+---------------------------------------------------------------------*/
     echo '
         <div class="panel panel-info">
             <div class="panel-heading">
@@ -3048,6 +3251,11 @@ una factura, ademas de agregar el numero de factura
                                                             t1.fecha,
                                                             t1.institucion,
                                                             concat(t1.nombre,' ',t1.ap_paterno,' ',t1.ap_materno) as nombre,
+
+                                                            t1.nombre as nombre_pila,
+                                                            t1.ap_paterno as appat,
+                                                            t1.ap_materno as apmat,
+
                                                             (Select concat(t2.tipo,' ',t2.nombre) as estudio 
                                                                 from estudio t2 
                                                                 where idgammagramas = t1.estudio_idgammagramas) as estudio,
@@ -3164,10 +3372,10 @@ una factura, ademas de agregar el numero de factura
             echo'</tbody>
             </table>
         </div>'; 
-       /* echo "<script type='text/javascript'>
-                                $(document).ready( function () {
-                                    $('#myclass').DataTable();} );
-                            </script>";*/
+        // echo "<script type='text/javascript'>
+        //                         $(document).ready( function () {
+        //                             $('#myclass').DataTable();} );
+        //                     </script>";
 }
 
 function ver_pacientes_del_mes_factura_folios($fecha_ini, $fecha_fin, $pagina){
@@ -3203,6 +3411,11 @@ imprimir todos los folios de facturas ingresados en ver_pacientes_del_mes_factur
                                                             t1.fecha,
                                                             t1.institucion,
                                                             concat(t1.nombre,' ',t1.ap_paterno,' ',t1.ap_materno) as nombre,
+
+                                                            t1.nombre as nombre_pila,
+                                                            t1.ap_paterno as appat,
+                                                            t1.ap_materno as apmat,
+
                                                             (Select concat(t2.tipo,' ',t2.nombre) as estudio 
                                                                 from estudio t2 
                                                                 where idgammagramas = t1.estudio_idgammagramas) as estudio,
@@ -3580,6 +3793,474 @@ function ver_listas_de_instituciones(){
 
     $mysql->close(); 
 }
+
+function monto_ejecutado_por_instituciones(){
+/*---------------------------------------------------------------------
+// Despliega una lista de instituciones publicas y muestra los contratos
+// existentes
+
+// invoca: controlador_monto_ejecutado.php
+
+// Llama a procesos:  pasarMayusculas();
+
+// rev. 2019/07/12
+---------------------------------------------------------------------*/
+    
+    //*************************************************
+    //visualiza lista de precios instituciones PUBLICAS
+    //*************************************************
+
+    if($_SESSION['nivel_acceso'] <= 2)
+    {
+        $mysql =new mysql();
+        $link = $mysql->connect();
+        $resp = $mysql->query($link, "SET lc_time_names = 'es_ES';");
+
+
+        /**************************************************
+        //INICIA ACTUALIZA MONTOS DISPONIBLES
+        **************************************************/
+        $sql = $mysql->query($link,"SELECT 	id_montos_disponibles,
+                                            monto_maximo,
+                                            
+                                            (SELECT 
+                                                instituciones.nombre as nombre 
+                                            FROM instituciones 
+                                            WHERE instituciones.idinstitucion = tbl_montos_disponibles.idinstitucion) AS nombre,
+
+                                            (SELECT DATE_FORMAT(fecha_inicio, '%d %b %Y %r')) as fecha_inicio,
+                                            
+                                            (SELECT DATE_FORMAT(fecha_fin, '%d %b %Y %r')) as fecha_fin
+
+                                            FROM tbl_montos_disponibles where 1;");
+                                            
+        
+        while ($row = $mysql->f_obj($sql))
+        {
+            // print_r($row);
+            $nombre_minusculas = $row->nombre;
+            $nombre = str_replace("_", " ", $row->nombre);
+            $nombre = pasarMayusculas($nombre);
+
+            if($nombre == 'IMSS TUXTLA')
+            {
+
+                $sql2 = $mysql->query($link,"SELECT 	
+                                            sum(estudio.imss_tuxtla) as total_ejercido
+                                            
+                                            from pacientes INNER JOIN estudio on idgammagramas = pacientes.estudio_idgammagramas
+
+                                            where  ((fecha >= (select   DATE_FORMAT(fecha_inicio, '%Y-%m-%d') as fecha_inicio 
+                                                    from tbl_montos_disponibles 
+                                                    where id_montos_disponibles=  $row->id_montos_disponibles)
+                                                )
+                                                and
+                                                (fecha <= (select   DATE_FORMAT(fecha_fin, '%Y-%m-%d') as fecha_fin 
+                                                                from tbl_montos_disponibles 
+                                                                where id_montos_disponibles=  $row->id_montos_disponibles)	
+                                                ))
+                                                and
+                                                (pacientes.institucion = '$nombre')");
+
+                $row2 = $mysql->f_obj($sql2);
+
+                if(isset($row2))
+                {
+                    $monto_restante = $row->monto_maximo - $row2->total_ejercido;
+
+                    if($row2->total_ejercido < $row->monto_maximo)
+                    {
+                        $sql_update = $mysql->query($link,"UPDATE  tbl_montos_disponibles
+                                                        set monto_ejecutado = $row2->total_ejercido,
+                                                            monto_restante = $monto_restante
+                                                    WHERE id_montos_disponibles = $row->id_montos_disponibles;"); 
+                    }else {
+                        
+                        $sql_update = $mysql->query($link,"UPDATE  tbl_montos_disponibles
+                                                        set monto_ejecutado = $row2->total_ejercido,
+                                                            monto_restante = $monto_restante
+                                                    WHERE id_montos_disponibles = $row->id_montos_disponibles;"); 
+
+                        echo'   <div class="alert alert-danger alert-dismissible" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    <strong>Se rebazó el tope máximo del contrato! </strong> '.$nombre.' por: $ '.number_format($monto_restante,2).'
+                                </div>';
+                                
+                    
+                    }
+                    
+                }
+                                        
+            }
+            else
+            {
+            
+                $sql2 = $mysql->query($link,"SELECT 	
+                                            sum(estudio.$nombre_minusculas) as total_ejercido
+                                    from pacientes INNER JOIN estudio on idgammagramas = pacientes.estudio_idgammagramas
+
+                                    where  ((fecha >= (select   DATE_FORMAT(fecha_inicio, '%Y-%m-%d') as fecha_inicio 
+                                                            from tbl_montos_disponibles 
+                                                            where id_montos_disponibles=  $row->id_montos_disponibles)
+                                            )
+                                            and
+                                            (fecha <= (select   DATE_FORMAT(fecha_fin, '%Y-%m-%d') as fecha_fin 
+                                                            from tbl_montos_disponibles 
+                                                            where id_montos_disponibles=  $row->id_montos_disponibles)	
+                                            ))
+                                            and
+                                            (pacientes.institucion = '$nombre')
+                                            and 
+                                            (pacientes.estatus = 'ATENDIDO' || pacientes.estatus = 'POR ATENDER') ");
+                $row2 = $mysql->f_obj($sql2);
+
+                if(isset($row2))
+                {
+                    $monto_restante = $row->monto_maximo - $row2->total_ejercido;
+
+                    if($row2->total_ejercido < $row->monto_maximo)
+                    {
+
+                        $sql_update = $mysql->query($link,"UPDATE  tbl_montos_disponibles
+                                                        set monto_ejecutado = $row2->total_ejercido,
+                                                            monto_restante = $monto_restante
+                                                    WHERE id_montos_disponibles = $row->id_montos_disponibles;"); 
+
+                    }else {
+
+                        $sql_update = $mysql->query($link,"UPDATE  tbl_montos_disponibles
+                                                        set monto_ejecutado = $row2->total_ejercido,
+                                                            monto_restante = $monto_restante
+                                                    WHERE id_montos_disponibles = $row->id_montos_disponibles;"); 
+                        
+                        echo'   <div class="alert alert-danger alert-dismissible" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    <strong>Se rebazó el tope máximo del contrato! </strong> '.$nombre.' por: $ '.number_format($monto_restante,2).'
+                                </div>';
+                    }
+                    
+                }
+            }
+        }
+        /**************************************************
+        //FINALIZA ACTUALIZA MONTOS DISPONIBLES
+        **************************************************/
+
+
+        /**************************************************
+        //INICIA.- CONSULTA TODOS LOS DATOS DE LOS CONTRATOS
+        **************************************************/
+        $sql = $mysql->query($link,"SELECT 	id_montos_disponibles,
+                                            monto_maximo,
+                                            monto_restante, 
+                                            monto_ejecutado,
+                                            (SELECT 
+                                                instituciones.nombre as nombre 
+                                            FROM instituciones 
+                                            WHERE instituciones.idinstitucion = tbl_montos_disponibles.idinstitucion) AS nombre,
+
+                                            (SELECT DATE_FORMAT(fecha_inicio, '%d %b %Y')) as fecha_inicio,
+                                            
+                                            (SELECT DATE_FORMAT(fecha_fin, '%d %b %Y')) as fecha_fin
+
+                                            FROM tbl_montos_disponibles where 1;");
+        
+    echo '
+        <div class="table-responsive">
+            <table class="table  table-hover table-striped table-bordered" id="myclass">
+
+                <thead>
+                    <tr>
+                        <th>Institucion</th>
+                        <th>Monto máximo de contrato</th>
+                        <th>Monto ejecutado</th>
+                        <th>Monto restante</th>
+                        <th>Fecha inicio de contrato</th>
+                        <th>Fecha termino de contrato</th>
+                        <th>Editar</th>
+                        <th>EXCEL</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+               
+        ';    
+
+        while ($row = $mysql->f_obj($sql)){
+             // print_r($row);
+             $nombre = str_replace("_", " ", $row->nombre);
+             $monto_maximo =number_format($row->monto_maximo,2);
+             $ejecutado=number_format($row->monto_ejecutado,2);
+             $monto_restante = number_format($row->monto_restante,2);
+             
+             //$row->fecha_inicio = date('d-m-Y',strtotime($row->fecha_inicio));
+
+             echo ' <tr>
+                        <th>'.pasarMayusculas($nombre).'</th>
+                        <th>$ '.$monto_maximo.'</th>
+                        <th>$ '.$ejecutado.'</th>
+                        <th>$ '.$monto_restante.'</th>
+                        <th>'.$row->fecha_inicio.'</th>
+                        <th>'.$row->fecha_fin.'</th>
+                        <th>';
+            echo'
+                            <form role="form" id="editar_monto'.$row->id_montos_disponibles.'" method="post" action="viewmod_crear_contrato.php">
+                                <input type="hidden" form="editar_monto'.$row->id_montos_disponibles.'" name="id_contrato" value="'.$row->id_montos_disponibles.'"/>
+                            </form>
+
+                            <button type="submit" class="btn btn-success btn-sm btn-block" form="editar_monto'.$row->id_montos_disponibles.'">
+                                <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                            </button> 
+
+                        </th>
+                        
+                        <th>';
+            
+
+                echo'       <form role="form" id="exportar'.$row->id_montos_disponibles.'" method="post"                                      action="view_reporte_pacientes_institucion.php" target="_blank">
+
+                                <input type="hidden" form="exportar'.$row->id_montos_disponibles.'" name="fecha_inicio" value="'.$row->fecha_inicio.'"/>
+
+                                <input type="hidden" form="exportar'.$row->id_montos_disponibles.'" name="fecha_fin" value="'.$row->fecha_fin.'"/>
+
+                                <input type="hidden" form="exportar'.$row->id_montos_disponibles.'" name="nombre_institucion" value="'.pasarMayusculas($nombre).'"/>
+
+                                <input type="hidden" form="exportar'.$row->id_montos_disponibles.'" name="nombre_minusculas" value="'.$row->nombre.'"/>
+
+                                <input type="hidden" form="exportar'.$row->id_montos_disponibles.'" name="id_contrato" value="'.$row->id_montos_disponibles.'"/>
+                            </form>
+
+                            <button type="submit" class="btn btn-primary btn-sm btn-block" form="exportar'.$row->id_montos_disponibles.'">
+                                <span class="glyphicon glyphicon-export" aria-hidden="true"></span>
+                            </button> 
+
+                        </th>';
+            echo'   </tr>';
+        }
+
+        echo' </tbody>
+            </table>
+        </div>';
+    }
+
+    $mysql->close(); 
+
+    
+}
+
+function monto_ejecutado_por_instituciones_resumen(){
+/*---------------------------------------------------------------------
+// Despliega una lista de instituciones publicas y muestra los contratos
+// existentes
+
+// invoca: controlador_monto_ejecutado.php
+
+// Llama a procesos:  pasarMayusculas();
+
+// rev. 2019/07/12
+---------------------------------------------------------------------*/
+    
+    //*************************************************
+    //visualiza lista de precios instituciones PUBLICAS
+    //*************************************************
+
+    if($_SESSION['nivel_acceso'] <= 2)
+    {
+        $mysql =new mysql();
+        $link = $mysql->connect();
+        $resp = $mysql->query($link, "SET lc_time_names = 'es_ES';");
+
+
+        /**************************************************
+        //INICIA ACTUALIZA MONTOS DISPONIBLES
+        **************************************************/
+        $sql = $mysql->query($link,"SELECT 	id_montos_disponibles,
+                                            monto_maximo,
+                                            
+                                            (SELECT 
+                                                instituciones.nombre as nombre 
+                                            FROM instituciones 
+                                            WHERE instituciones.idinstitucion = tbl_montos_disponibles.idinstitucion) AS nombre,
+
+                                            (SELECT DATE_FORMAT(fecha_inicio, '%d %b %Y %r')) as fecha_inicio,
+                                            
+                                            (SELECT DATE_FORMAT(fecha_fin, '%d %b %Y %r')) as fecha_fin
+
+                                            FROM tbl_montos_disponibles where 1;");
+                                            
+        
+        while ($row = $mysql->f_obj($sql))
+        {
+            // print_r($row);
+            $nombre_minusculas = $row->nombre;
+            $nombre = str_replace("_", " ", $row->nombre);
+            $nombre = pasarMayusculas($nombre);
+
+            if($nombre == 'IMSS TUXTLA')
+            {
+
+                $sql2 = $mysql->query($link,"SELECT 	
+                                            sum(estudio.imss_tuxtla) as total_ejercido
+                                            
+                                            from pacientes INNER JOIN estudio on idgammagramas = pacientes.estudio_idgammagramas
+
+                                            where  ((fecha >= (select   DATE_FORMAT(fecha_inicio, '%Y-%m-%d') as fecha_inicio 
+                                                    from tbl_montos_disponibles 
+                                                    where id_montos_disponibles=  $row->id_montos_disponibles)
+                                                )
+                                                and
+                                                (fecha <= (select   DATE_FORMAT(fecha_fin, '%Y-%m-%d') as fecha_fin 
+                                                                from tbl_montos_disponibles 
+                                                                where id_montos_disponibles=  $row->id_montos_disponibles)	
+                                                ))
+                                                and
+                                                (pacientes.institucion = '$nombre')");
+
+                $row2 = $mysql->f_obj($sql2);
+
+                if(isset($row2))
+                {
+                    $monto_restante = $row->monto_maximo - $row2->total_ejercido;
+
+                    if($row2->total_ejercido < $row->monto_maximo)
+                    {
+                        $sql_update = $mysql->query($link,"UPDATE  tbl_montos_disponibles
+                                                        set monto_ejecutado = $row2->total_ejercido,
+                                                            monto_restante = $monto_restante
+                                                    WHERE id_montos_disponibles = $row->id_montos_disponibles;"); 
+                    }else {
+                        
+                        $sql_update = $mysql->query($link,"UPDATE  tbl_montos_disponibles
+                                                        set monto_ejecutado = $row2->total_ejercido,
+                                                            monto_restante = $monto_restante
+                                                    WHERE id_montos_disponibles = $row->id_montos_disponibles;"); 
+
+                        echo'   <div class="alert alert-danger alert-dismissible" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    <strong>Se rebazó el tope máximo del contrato! </strong> '.$nombre.' por: $ '.number_format($monto_restante,2).'
+                                </div>';
+                                
+                    
+                    }
+                    
+                }
+                                        
+            }
+            else
+            {
+            
+                $sql2 = $mysql->query($link,"SELECT 	
+                                            sum(estudio.$nombre_minusculas) as total_ejercido
+                                    from pacientes INNER JOIN estudio on idgammagramas = pacientes.estudio_idgammagramas
+
+                                    where  ((fecha >= (select   DATE_FORMAT(fecha_inicio, '%Y-%m-%d') as fecha_inicio 
+                                                            from tbl_montos_disponibles 
+                                                            where id_montos_disponibles=  $row->id_montos_disponibles)
+                                            )
+                                            and
+                                            (fecha <= (select   DATE_FORMAT(fecha_fin, '%Y-%m-%d') as fecha_fin 
+                                                            from tbl_montos_disponibles 
+                                                            where id_montos_disponibles=  $row->id_montos_disponibles)	
+                                            ))
+                                            and
+                                            (pacientes.institucion = '$nombre')
+                                            and 
+                                            (pacientes.estatus = 'ATENDIDO' || pacientes.estatus = 'POR ATENDER') ");
+                $row2 = $mysql->f_obj($sql2);
+
+                if(isset($row2))
+                {
+                    $monto_restante = $row->monto_maximo - $row2->total_ejercido;
+
+                    if($row2->total_ejercido < $row->monto_maximo)
+                    {
+
+                        $sql_update = $mysql->query($link,"UPDATE  tbl_montos_disponibles
+                                                        set monto_ejecutado = $row2->total_ejercido,
+                                                            monto_restante = $monto_restante
+                                                    WHERE id_montos_disponibles = $row->id_montos_disponibles;"); 
+
+                    }else {
+
+                        $sql_update = $mysql->query($link,"UPDATE  tbl_montos_disponibles
+                                                        set monto_ejecutado = $row2->total_ejercido,
+                                                            monto_restante = $monto_restante
+                                                    WHERE id_montos_disponibles = $row->id_montos_disponibles;"); 
+                        
+                        echo'   <div class="alert alert-danger alert-dismissible" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    <strong>Se rebazó el tope máximo del contrato! </strong> '.$nombre.' por: $ '.number_format($monto_restante,2).'
+                                </div>';
+                    }
+                    
+                }
+            }
+        }
+        /**************************************************
+        //FINALIZA ACTUALIZA MONTOS DISPONIBLES
+        **************************************************/
+
+
+        /**************************************************
+        //INICIA.- CONSULTA TODOS LOS DATOS DE LOS CONTRATOS
+        **************************************************/
+        $sql = $mysql->query($link,"SELECT 	id_montos_disponibles,
+                                            monto_maximo, 
+                                            monto_ejecutado,
+                                            (SELECT 
+                                                instituciones.nombre as nombre 
+                                            FROM instituciones 
+                                            WHERE instituciones.idinstitucion = tbl_montos_disponibles.idinstitucion) AS nombre
+
+                                            FROM tbl_montos_disponibles where 1;");
+        
+    echo '
+        <div class="table-responsive">
+            <table class="table  table-hover table-striped table-bordered" id="myClass3">
+
+                <thead>
+                    <tr>
+                        <th>Institucion</th>
+                        <th>Monto máximo de contrato</th>
+                        <th>Monto ejecutado</th>
+                    </tr>
+                </thead>
+
+                <tbody>  
+        ';    
+
+        while ($row = $mysql->f_obj($sql)){
+             // print_r($row);
+             $nombre = str_replace("_", " ", $row->nombre);
+             $monto_maximo =number_format($row->monto_maximo,2);
+             $ejecutado=number_format($row->monto_ejecutado,2);
+             
+             //$row->fecha_inicio = date('d-m-Y',strtotime($row->fecha_inicio));
+
+             echo ' <tr>
+                        <th>'.pasarMayusculas($nombre).'</th>
+                        <th>$ '.$monto_maximo.'</th>
+                        <th>$ '.$ejecutado.'</th>';
+            echo'   </tr>';
+        }
+
+        echo' </tbody>
+            </table>
+        </div>';
+    }
+
+    $mysql->close(); 
+
+    
+}
 function relacion_pacientes_por_institucion($institucion, $fecha_ini, $fecha_fin, $pagina){
     
     echo '
@@ -3611,6 +4292,11 @@ function relacion_pacientes_por_institucion($institucion, $fecha_ini, $fecha_fin
                                                             t1.fecha,
                                                             t1.institucion,
                                                             concat(t1.nombre,' ',t1.ap_paterno,' ',t1.ap_materno) as nombre,
+
+                                                            t1.nombre as nombre_pila,
+                                                            t1.ap_paterno as appat,
+                                                            t1.ap_materno as apmat,
+                                                            
                                                             (Select concat(t2.tipo,' ',t2.nombre) as estudio 
                                                                 from estudio t2 
                                                                 where idgammagramas = t1.estudio_idgammagramas) as estudio,
@@ -3741,9 +4427,16 @@ function relacion_pacientes_por_institucion($institucion, $fecha_ini, $fecha_fin
 }
 
 function cantidad_de_pacientes_por_mes($fecha_ini, $fecha_fin, $pagina, $estatus){
+/*---------------------------------------------------------------------
+// Obtiene la cantidad de pacientes de acuerdo con las instituciones
+// existentes
 
-    include_once "mysql.php";
-    include_once "funciones_consultas.php";
+// invoca:  index.php
+            viewmod_graficar_pacientes_por_mes
+
+// rev. 2019/07/15
+---------------------------------------------------------------------*/
+    
 
     $mysql = new mysql();
     $link = $mysql->connect(); 
@@ -3836,8 +4529,14 @@ function cantidad_de_estudios($fecha_ini, $fecha_fin, $pagina, $estatus){
 }
 
 function obtener_usuario(){
-    //obtener el nombre de recepcionista
-    //agregado el 22_03_2016
+/*--------------------------------------------------------------------
+// Con esta rutina se obtiene el nombre del usuario a partir de la session
+
+// invoca: view_reimprimir_recibo_anticipo.php
+
+// rev. 2019/07/12
+--------------------------------------------------------------------*/
+    
     include_once "mysql.php";
 
     $usuario = $_SESSION['usuario'];
@@ -3855,6 +4554,16 @@ function obtener_usuario(){
 }
 
 function fecha_letras($fecha_estudio){
+/*--------------------------------------------------------------------
+// Convierte la fecha por ejemplo 11/07/2019 a Jueves, 11 de Julio de 2019 . 
+
+// invoca:  viewmod_ver_corte_caja_por_dia.php
+//          viewmod_imprimir_hoja_tratamientos.php
+//          viewmod_ver_pacientes_del_dia.php
+//          viewmod_ver_pacientes_por_semana.php
+
+// rev. 2019/07/12
+--------------------------------------------------------------------*/
 
         date_default_timezone_set('America/Mexico_City');
         //Variable nombre del mes 
@@ -3877,7 +4586,15 @@ function fecha_letras($fecha_estudio){
 }
 
 function obtener_semana($day, $month, $year){
+/*--------------------------------------------------------------------
+// Obtiene el los dias de la semana y retorna una lista con cada uno
+// de los dias.
 
+// invoca:  viewmod_ver_pacientes_por_semana.php
+
+// rev. 2019/07/12
+
+--------------------------------------------------------------------*/
     //          ¡Cuidado! con los echo
     $year=$year;
     $month=$month;
@@ -3920,6 +4637,14 @@ function obtener_semana($day, $month, $year){
 }
 
 function obtener_mes($fecha){
+/*--------------------------------------------------------------------
+// Convierte la fecha por ejemplo 11/07/2019 a JULIO. 
+
+// invoca: viewmod_reimprimir_recibo.php
+//         viewmod_ver_corte_caja_por_mes.php
+
+// rev. 2019/07/12
+--------------------------------------------------------------------*/
     date_default_timezone_set('America/Mexico_City');
     $mes = array('enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre');
     $mes = $mes[(date('m', strtotime($fecha))*1)-1];
@@ -3927,6 +4652,16 @@ function obtener_mes($fecha){
 }
 
 function pasarMayusculas($cadena) { 
+/*--------------------------------------------------------------------
+// Convierte minusculas a MAYUSCULAS. 
+
+// invoca:  viewmod_reimprimir_recibo.php
+//          viewmod_ver_corte_caja_por_mes.php
+//          viewmod_ver_lista_precios_instituciones.php
+//          controlador_citar_pacientes_institucion.php
+
+// rev. 2019/07/12
+--------------------------------------------------------------------*/
         $cadena = strtoupper($cadena); 
         $cadena = str_replace("á", "Á", $cadena); 
         $cadena = str_replace("é", "É", $cadena); 
@@ -3939,6 +4674,13 @@ function pasarMayusculas($cadena) {
 } 
 
 function last_month_day($fecha) { 
+/*--------------------------------------------------------------------
+// Obtiene el ultimo día del mes. 
+
+// invoca: funciones_consultas  --> reimprimir_recibos()
+
+// rev. 2019/07/12
+--------------------------------------------------------------------*/ 
         date_default_timezone_set('America/Mexico_City');
         $fecha = explode("-", $fecha);
         /*$month = date('m');
@@ -3951,6 +4693,13 @@ function last_month_day($fecha) {
 };
  
 function first_month_day($fecha) {
+/*--------------------------------------------------------------------
+// Obtiene el primer día del mes. 
+
+// invoca: funciones_consultas  --> reimprimir_recibos()
+
+// rev. 2019/07/12
+--------------------------------------------------------------------*/   
         date_default_timezone_set('America/Mexico_City');
         $fecha = explode("-", $fecha);
         /*$month = date('m');
@@ -3962,6 +4711,13 @@ function first_month_day($fecha) {
 
 //////////////////////////////////////////
 function primer_dia_semestre($fecha) {
+/*--------------------------------------------------------------------
+// Obtiene el primer día del semestre enero-junio
+
+// invoca: index.php
+
+// rev. 2019/07/15
+--------------------------------------------------------------------*/
     date_default_timezone_set('America/Mexico_City');
     $fecha = explode("-", $fecha);
     /*$month = date('m');
@@ -3972,6 +4728,13 @@ function primer_dia_semestre($fecha) {
 }
 
 function ultimo_dia_semestre($fecha) { 
+/*--------------------------------------------------------------------
+// Obtiene el ultimo día del semestre enero-junio
+
+// invoca: index.php
+
+// rev. 2019/07/15
+--------------------------------------------------------------------*/
     date_default_timezone_set('America/Mexico_City');
     $fecha = explode("-", $fecha);
     /*$month = date('m');
@@ -3984,6 +4747,13 @@ function ultimo_dia_semestre($fecha) {
 };
 
 function primer_dia_segundo_semestre($fecha) {
+/*--------------------------------------------------------------------
+// Obtiene el primer día del segundo semestre julio-diciembre
+
+// invoca: index.php
+
+// rev. 2019/07/15
+--------------------------------------------------------------------*/
     date_default_timezone_set('America/Mexico_City');
     $fecha = explode("-", $fecha);
     /*$month = date('m');
@@ -3993,7 +4763,14 @@ function primer_dia_segundo_semestre($fecha) {
     return date('Y-m-d', mktime(0,0,0, 7, 1, $year));
 }
 
-function ultimo_dia_segundo_semestre($fecha) { 
+function ultimo_dia_segundo_semestre($fecha) {
+/*--------------------------------------------------------------------
+// Obtiene el último día del segundo semestre julio-diciembre
+
+// invoca: index.php
+
+// rev. 2019/07/15
+--------------------------------------------------------------------*/ 
     date_default_timezone_set('America/Mexico_City');
     $fecha = explode("-", $fecha);
     /*$month = date('m');
@@ -4004,6 +4781,230 @@ function ultimo_dia_segundo_semestre($fecha) {
 
     return date('Y-m-d', (mktime(0,0,0,12+1,1,$year)-1) );
 };
+
+
+
+function graficas_semestrales_inicio($pagina){
+
+echo'<div class="row">';
+
+/******************************************************************************************
+// INICIO  PRIMER SEMESTRE
+*****************************************************************************************/    
+
+    date_default_timezone_set('America/Mexico_City'); 
+    $fecha_act = date('Y-m-d');
+
+    $fecha_fin = ultimo_dia_semestre($fecha_act);
+    $fecha_ini = primer_dia_semestre($fecha_act); 
+
+    $fecha_ini = date("d-m-Y",strtotime($fecha_ini));
+    $fecha_fin = date("d-m-Y",strtotime($fecha_fin));                                    
+    
+    
+    $fecha = explode("-", $fecha_act);
+    $year = $fecha[0];
+
+
+echo'
+    <div class="col-md-6">
+        <button type="submit" class="btn btn-success btn-lg btn-block"  aria-label="Left Align">'; 
+            $año= 'GRÁFICAS DEL PRIMER SEMESTRE DEL '.$year;
+            echo $año; 
+echo'                    
+        </button>
+        <br>';
+
+echo '  <div class="panel panel-success">
+
+            <!--    inicio panel heading   -->
+
+            <div class="panel-heading">';
+echo'           <h3 class="panel-title">PACIENTES ATENDIDOS del '.$fecha_ini.' al '.$fecha_fin.'</h3>
+            </div>
+            
+            <!--    fin panel heading   -->
+
+            <!--    inicio panel body   -->';
+echo'
+            <div class="panel-body">
+                <!-- CHART Aquí se invoca   -->
+                
+                    <div id="primer_semestre" class="chart"></div>
+                
+                <!-- Fin CHART   -->
+                ';
+            
+                //$datos = array();
+                $estatus = 'ATENDIDO';
+                $fecha_ini = date('Y-m-d',strtotime($fecha_ini));
+                $fecha_fin = date('Y-m-d',strtotime($fecha_fin));
+                // echo $fecha_ini.'   '. $fecha_fin;
+                $datos_atendido_institucion_1 = cantidad_de_pacientes_por_mes($fecha_ini, $fecha_fin,$_POST['pagina'],$estatus );
+            
+                // echo '<pre>';
+                // print_r($datos_atendido_institucion_1);
+                // echo '</pre>';
+                $num = count($datos_atendido_institucion_1);
+            
+
+            echo '<div class="table-responsive">
+                    <table class="table table-bordered table-hover table-striped" id="myClass" >
+                        <thead>
+                            <tr>
+                                <th>Institucion</th>
+                                <th>Cantidad</th>';
+                    
+                    echo '  </tr>
+                        </thead>
+                        <tbody>';
+                            $total_de_estudios=0;
+
+                            for($i=0; $i < $num; $i++){
+                                echo '<tr>';
+                                echo        '<td>'.$datos_atendido_institucion_1[$i]['institucion'].'</td>';
+                                echo        '<td>'.$datos_atendido_institucion_1[$i]['cantidad'].'</td>';
+                                echo '</tr>';
+                                $total_de_estudios +=$datos_atendido_institucion_1[$i]['cantidad'];
+                            }
+                                echo '<tr>';
+                                echo '      <td> <strong>Total de estudios atendidos (sumatoria):</strong> </td>';
+                                echo '      <td> <strong>'.$total_de_estudios.'</strong> </td>';
+                                echo '</tr>';
+
+                    echo '</tbody>
+                    </table>
+                </div>';
+         
+
+            // echo '<pre>';
+            // print_r($datos_atendido_institucion_1);
+            // echo '</pre>';
+                        
+        echo'</div>
+            
+            <!-- /. fin panel body -->
+
+        </div>
+
+        <!-- /. fin panel  -->
+
+    <!--    **********************  FIN PACIENTES POR INSTITUCION **********************-->';
+
+            
+echo'    
+    </div>
+
+    <!--  fin Col-6 -->';
+
+/******************************************************************************************
+// INICIO SEGUNDO SEMESTRE
+*****************************************************************************************/
+
+date_default_timezone_set('America/Mexico_City'); 
+$fecha_act = date('Y-m-d');
+
+$fecha_fin = ultimo_dia_segundo_semestre($fecha_act);
+$fecha_ini = primer_dia_segundo_semestre($fecha_act); 
+
+$fecha_ini = date("d-m-Y",strtotime($fecha_ini));
+$fecha_fin = date("d-m-Y",strtotime($fecha_fin)); 
+
+$fecha = explode("-", $fecha_act);
+$year = $fecha[0];
+
+echo'
+    <div class="col-md-6">
+        <button type="submit" class="btn btn-success btn-lg btn-block"  aria-label="Left Align">'; 
+            $año= 'GRÁFICAS DEL SEGUNDO SEMESTRE DEL '.$year;
+            echo $año; 
+echo'                    
+        </button>
+        <br>';
+
+echo '  <div class="panel panel-success">
+
+            <!--    inicio panel heading   -->
+
+            <div class="panel-heading">';
+echo'           <h3 class="panel-title">PACIENTES ATENDIDOS del '.$fecha_ini.' al '.$fecha_fin.'</h3>
+            </div>
+            
+            <!--    fin panel heading   -->
+
+            <!--    inicio panel body   -->';
+echo'
+            <div class="panel-body">
+                <!-- CHART Aquí se invoca   -->
+                
+                    <div id="segundo_semestre" class="chart"></div>
+                
+                <!-- Fin CHART   -->
+                ';
+            
+                //$datos = array();
+                $estatus = 'ATENDIDO';
+                $fecha_ini = date('Y-m-d',strtotime($fecha_ini));
+                $fecha_fin = date('Y-m-d',strtotime($fecha_fin));
+                $datos_atendido_institucion_1 = cantidad_de_pacientes_por_mes($fecha_ini, $fecha_fin,$_POST['pagina'],$estatus );
+            
+                // echo '<pre>';
+                // print_r($datos_atendido_institucion_1);
+                // echo '</pre>';
+                $num = count($datos_atendido_institucion_1);
+            
+
+            echo '<div class="table-responsive">
+                    <table class="table table-bordered table-hover table-striped" id="myClass2" >
+                        <thead>
+                            <tr>
+                                <th>Institucion</th>
+                                <th>Cantidad</th>';
+                    
+                    echo '  </tr>
+                        </thead>
+                        <tbody>';
+                            $total_de_estudios=0;
+
+                            for($i=0; $i < $num; $i++){
+                                echo '<tr>';
+                                echo        '<td>'.$datos_atendido_institucion_1[$i]['institucion'].'</td>';
+                                echo        '<td>'.$datos_atendido_institucion_1[$i]['cantidad'].'</td>';
+                                echo '</tr>';
+                                $total_de_estudios +=$datos_atendido_institucion_1[$i]['cantidad'];
+                            }
+                                echo '<tr>';
+                                echo '      <td> <strong>Total de estudios atendidos (sumatoria):</strong> </td>';
+                                echo '      <td> <strong>'.$total_de_estudios.'</strong> </td>';
+                                echo '</tr>';
+
+                    echo '</tbody>
+                    </table>
+                </div>';
+         
+
+            // echo '<pre>';
+            // print_r($datos_atendido_institucion_1);
+            // echo '</pre>';
+                        
+        echo'</div>
+            
+            <!-- /. fin panel body -->
+
+        </div>
+
+        <!-- /. fin panel  -->';            
+echo'    
+    </div>
+
+    <!--  fin Col-6 -->';
+
+echo'   </div>
+    
+    <!--  fin row -->';
+
+
+}
 
 
 

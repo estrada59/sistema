@@ -77,24 +77,27 @@
                                 <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
                                 Atrás
                             </button> 
-                            </br> 
-
-                                                  
+                            <br>                           
                     </div>
+
+                   
                     <div class="col-md-12 col-lg-12">
                    <?php if($_SESSION['nivel_acceso'] < 3){
-                        echo'
-                        <form role="form" id="imprimir_lista_precios" method="post" action="view_imprimir_lista_precios_instituciones.php" target="_blank">
-                            <input type="hidden" form="imprimir_lista_precios" name="imprimir_precios" value="1"/>
-                            <input type="hidden" form="imprimir_lista_precios" name="institucion" value="'.$institucion.'"/>
-                        </form>
+                        // echo'
+                        // <form role="form" id="imprimir_lista_precios" method="post" action="view_imprimir_lista_precios_instituciones.php" target="_blank">
+                        //     <input type="hidden" form="imprimir_lista_precios" name="imprimir_precios" value="1"/>
+                        //     <input type="hidden" form="imprimir_lista_precios" name="institucion" value="'.$institucion.'"/>
+                        // </form>
 
-                        <button type="submit" class="btn btn-primary btn-lg btn-block"  aria-label="Left Align" form="imprimir_lista_precios">
-                                <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
-                                IMPRIMIR LISTA
-                        </button>
-                        </br>
-                        ';
+                        // <button type="submit" class="btn btn-primary btn-lg btn-block"  aria-label="Left Align" form="imprimir_lista_precios">
+                        //         <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
+                        //         IMPRIMIR LISTA
+                        // </button>
+
+
+                        
+                        // </br>
+                        // ';
                     }
                     ?>
                     </div>

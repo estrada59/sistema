@@ -42,6 +42,7 @@
                             
                                 <?php   
                                 include_once 'include/funciones_consultas.php';
+                                include_once 'include/mysql.php';
                                 $fecha = $_POST['fecha_estudios'];
         
                                 $fecha_fin = last_month_day($fecha);

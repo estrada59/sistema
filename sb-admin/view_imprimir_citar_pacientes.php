@@ -383,7 +383,8 @@ class MYPDF extends TCPDF {
 
 
 					$style = array('width' => 0.5, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0));
-					$this->Line(124+$eje_x, 123+$eje_y, 200+$eje_x, 123+$eje_y, $style);
+					$this->Line(124+$eje_x, 124+$eje_y, 200+$eje_x, 124+$eje_y, $style);
+
 					
 					if($this->cont == 0){ //update 2015_07_01
 						$id_usuario = $_SESSION['id'];
@@ -394,7 +395,7 @@ class MYPDF extends TCPDF {
 																WHERE idusuario = $id_usuario");        
         				$row4 = $mysql->f_obj($datos_usuario);
 
-						$this->CreateTextBox('Atendió:'.$row4->nombre, 110+$eje_x,122+$eje_y, 80, 10, 10, 'B');		
+						$this->CreateTextBox('Atendió:'.$row4->nombre, 110+$eje_x,126+$eje_y, 80, 10, 10, 'B');		
 						$this->cont++;
 
 						$mysql->close();
@@ -405,7 +406,9 @@ class MYPDF extends TCPDF {
 						$datos_usuario = $mysql->query($link,"SELECT concat(nombre,' ',ap_paterno,' ', ap_materno) as nombre
 																FROM users 
 																WHERE idusuario = $id_usuario");        
-        				$row4 = $mysql->f_obj($datos_usuario);
+						$row4 = $mysql->f_obj($datos_usuario);
+						
+						$this->CreateTextBox('Firma familiar o paciente recibí indicaciones', 108+$ax_x,122+$ax_y, 80, 10, 10, '');
 
 						$this->CreateTextBox('Atendió:'.$row4->nombre, 0+$eje_x,122+$eje_y, 80, 10, 10, 'B');		
 						$this->cont++;

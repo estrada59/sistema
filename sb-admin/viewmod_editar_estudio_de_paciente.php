@@ -131,7 +131,9 @@ $institucion        =   $_POST['institucion'];          //identifica institució
 $institucion_estudio=   $_POST['institucion_estudio'];  //identifica intitucion particular en especifico cual es.
 $num_anticipos      = 0;
 
-print_r($_POST);
+// echo '<pre>';
+// print_r($_POST);
+// echo '</pre>';
  
 $usuario = $_SESSION['usuario'];
                   
@@ -152,9 +154,9 @@ if($institucion == 'PARTICULAR'){
     $row = $mysql->f_obj($sql);
 
     $num_anticipos = $row->num_anticipos;
-    //echo '<pre>';
-    //print_r($row);
-    //echo '</pre>';
+    // echo '<pre>';
+    // print_r($row);
+    // echo '</pre>';
     $mysql->close();
 
     if($num_anticipos == 1){
@@ -176,14 +178,14 @@ if($institucion == 'PARTICULAR'){
 
         $mysql->close();
 
-        if($fecha_anticipo != '0000-00-00'){
+        if($fecha_anticipo != '0000-00-00 00:00:00'){
         //si cumple ya finiquito el total del estudio
         //*******************************************
 
             $sumatoria_anticipos = sumatoria_de_anticipos($idpaciente);
-            //echo '<pre>';
+            echo '<pre>';
             echo $sumatoria_anticipos.' finiquitó ';
-            //echo '</pre>';
+            echo '</pre>';
             
             $mysql = new mysql();
             $link = $mysql->connect();
@@ -204,50 +206,51 @@ if($institucion == 'PARTICULAR'){
              //*************************************************************************
                 echo 'paciente debe';
                 $nuevo_monto = abs($y);
-                echo '$'.$nuevo_monto;
+                echo '$ nuevo monto: '.$nuevo_monto;
+                echo '    y: '.$nuevo_monto;
                 $mysql = new mysql();
                 
-                $link = $mysql->connect();
-                $sql = $mysql->query($link,"UPDATE pacientes_has_anticipos 
-                                            SET   monto_restante =   $nuevo_monto
-                                            WHERE pacientes_idpacientes   = $idpaciente");
+                // $link = $mysql->connect();
+                // $sql = $mysql->query($link,"UPDATE pacientes_has_anticipos 
+                //                             SET   monto_restante =   $nuevo_monto
+                //                             WHERE pacientes_idpacientes   = $idpaciente");
                 
 
-                $link = $mysql->connect();
-                $sql = $mysql->query($link,"INSERT INTO anticipos
-                                                        (idanticipos,
-                                                        dep_banamex, 
-                                                        pago_santander,
-                                                        pago_cheque,
-                                                        transferencia,
-                                                        anticipo_efe,
-                                                        factura,
-                                                        no_recibo)
-                                            VALUES ('', '0.00', '0.00', '0.00', '0.00', '0.00', 'NO', '')");
+                // $link = $mysql->connect();
+                // $sql = $mysql->query($link,"INSERT INTO anticipos
+                //                                         (idanticipos,
+                //                                         dep_banamex, 
+                //                                         pago_santander,
+                //                                         pago_cheque,
+                //                                         transferencia,
+                //                                         anticipo_efe,
+                //                                         factura,
+                //                                         no_recibo)
+                //                             VALUES ('', '0.00', '0.00', '0.00', '0.00', '0.00', 'NO', '')");
                 
-                $idanticipos =  mysqli_insert_id($link);
+                // $idanticipos =  mysqli_insert_id($link);
 
-                $link = $mysql->connect();
-                $sql = $mysql->query($link,"INSERT INTO pacientes_has_anticipos
-                                                    (pacientes_idpacientes,
-                                                    anticipos_idanticipos,
-                                                    fecha_anticipo,
-                                                    fecha_estudio,
-                                                    monto_restante) 
+                // $link = $mysql->connect();
+                // $sql = $mysql->query($link,"INSERT INTO pacientes_has_anticipos
+                //                                     (pacientes_idpacientes,
+                //                                     anticipos_idanticipos,
+                //                                     fecha_anticipo,
+                //                                     fecha_estudio,
+                //                                     monto_restante) 
 
-                                            VALUES  ($idpaciente,
-                                                    $idanticipos,
-                                                    '0000-00-00',
-                                                    '$fecha',
-                                                    $nuevo_monto)");
+                //                             VALUES  ($idpaciente,
+                //                                     $idanticipos,
+                //                                     '0000-00-00 00:00:00',
+                //                                     '$fecha',
+                //                                     $nuevo_monto)");
 
-                $link = $mysql->connect();
-                $sql = $mysql->query($link,"UPDATE pacientes 
-                                            SET   estudio_idgammagramas =   $idestudio_nuevo
-                                            WHERE idpacientes   = $idpaciente"); 
+                // $link = $mysql->connect();
+                // $sql = $mysql->query($link,"UPDATE pacientes 
+                //                             SET   estudio_idgammagramas =   $idestudio_nuevo
+                //                             WHERE idpacientes   = $idpaciente"); 
                 
                
-                $mysql->close();
+                // $mysql->close();
 
                 return 0;
 
@@ -272,7 +275,7 @@ if($institucion == 'PARTICULAR'){
                                             SET   monto_restante =   $nuevo_monto,
                                                 fecha_anticipo='$fecha_actual'
                                             WHERE pacientes_idpacientes   = $idpaciente
-                                                 AND fecha_anticipo = '0000-00-00'");
+                                                 AND fecha_anticipo = '0000-00-00 00:00:00'");
                 
                 $link = $mysql->connect();
                 $sql = $mysql->query($link,"UPDATE pacientes 
@@ -305,7 +308,7 @@ if($institucion == 'PARTICULAR'){
                                             SET  monto_restante =    $nuevo_monto,
                                                  fecha_anticipo =    '$fecha_actual'
                                             WHERE pacientes_idpacientes   = $idpaciente 
-                                            AND fecha_anticipo = '0000-00-00'");                 
+                                            AND fecha_anticipo = '0000-00-00 00:00:00'");                 
 
                 $link = $mysql->connect();
                 $sql = $mysql->query($link,"UPDATE pacientes 
@@ -327,6 +330,7 @@ if($institucion == 'PARTICULAR'){
         }
         else{
         //Está registrado que debe pero no ha dejado ningún anticipo
+        // Actualizado y revisado 2019-07-18
         //**********************************************************
 
             echo 'no ha dejado anticipo';
@@ -350,7 +354,7 @@ if($institucion == 'PARTICULAR'){
             $sql = $mysql->query($link,"UPDATE pacientes_has_anticipos 
                                         SET   monto_restante =   $precio_estudio
                                         WHERE pacientes_idpacientes   = $idpaciente
-                                            AND fecha_anticipo = '0000-00-00'");
+                                            AND fecha_anticipo = '0000-00-00 00:00:00'");
             $link = $mysql->connect();
             $sql = $mysql->query($link,"UPDATE pacientes 
                                         SET   estudio_idgammagramas =   $idestudio_nuevo
@@ -362,135 +366,343 @@ if($institucion == 'PARTICULAR'){
 
     }
     else{
-    //ha dejado por lo menos un anticipo y debe
+    //ha dejado  mas de un anticipo.
+    //En esta condición puede que ya halla finiquitado o que deba
     //*******************************************
 
-        $sumatoria_anticipos = sumatoria_de_anticipos($idpaciente);
-       // echo '<pre>';
-       // echo $sumatoria_anticipos;
-       // echo '</pre>';
-            
-        $mysql = new mysql();
-        
-        $link = $mysql->connect();
-        $sql = $mysql->query($link,"SELECT $institucion_estudio as precio
-                                    FROM estudio
-                                    WHERE idgammagramas = $idestudio_nuevo;");  
+        $mysql  = new mysql();
+        $link   = $mysql->connect();
+        $sql2   = $mysql->query($link,"SELECT  monto_restante
+                                    FROM pacientes_has_anticipos
+                                    WHERE 
+                                    pacientes_idpacientes = $idpaciente AND monto_restante = 0.00 ;");  
                                        
-        $row = $mysql->f_obj($sql);
-
-        $precio_estudio = $row->precio;
+        $row = $mysql->f_obj($sql2);
         
-        $mysql->close();
-
-
-        $y =  $sumatoria_anticipos - $precio_estudio;
-
-        if( $y < 0.00 ){
-
-            echo 'paciente debe';
-            $nuevo_monto = abs($y);
-            echo '$'.$nuevo_monto;
-            echo 'fecha: '.$fecha;
-
-            $mysql = new mysql();
-                
-            $link = $mysql->connect();
-            $sql = $mysql->query($link,"UPDATE pacientes_has_anticipos 
-                                        SET   monto_restante = $nuevo_monto
-                                        WHERE pacientes_idpacientes = $idpaciente 
-                                            AND fecha_anticipo = '0000-00-00';");
-
-            $link = $mysql->connect();
-            $sql = $mysql->query($link,"UPDATE pacientes 
-                                        SET   estudio_idgammagramas =   $idestudio_nuevo
-                                        WHERE idpacientes   = $idpaciente"); 
-                
-            $mysql->close();
-
-            return 0;
+        if(isset($row->monto_restante))
+        {
+            $monto_restante = $row->monto_restante;
+        }else{
+            $monto_restante = 1.00; //para que pase al else
         }
         
-        //El paciente no debe después de cambiar el precio del estudio pero tiene saldo a favor
-        if($y > 0.00){
+        
+        //echo $fecha_anticipo;
+
+        $mysql->close(); 
+        
+        //Si el paciente ya finiquitó entra
+        if($monto_restante == 0.00)
+        {
+            /********************************************************************************************************
+            Solo funciona cuando hay mas de dos anticipos y ademas el paciente NO DEBE
+            Rev. 19-07-2019
+            ********************************************************************************************************/
+            $sumatoria_anticipos = sumatoria_de_anticipos($idpaciente);
+        
+            $total_pagado = number_format( $sumatoria_anticipos, 2);
+            echo '<div class="alert alert-success" role="alert">Total de anticipos hechos por el paciente: $ <span>'.$total_pagado.'</span></div>';
                 
-            // hacer recibo por el monto de $Y
-            //*************************************************************************
-            echo 'paciente se le debe: $'.$y;
-            $nuevo_monto = 0.00;
-
-            date_default_timezone_set('America/Mexico_City');
-            $fecha_actual = date('Y-m-d');
-
-            $mysql = new mysql();
-                
-            $link = $mysql->connect();
-            $sql = $mysql->query($link,"UPDATE pacientes_has_anticipos 
-                                        SET monto_restante  =   $nuevo_monto,
-                                            fecha_anticipo  =   '$fecha_actual'
-                                        WHERE pacientes_idpacientes   = $idpaciente
-                                            AND fecha_anticipo = '0000-00-00'");
-                
-            $link = $mysql->connect();
-            $sql = $mysql->query($link,"UPDATE pacientes 
-                                        SET   estudio_idgammagramas =   $idestudio_nuevo
-                                        WHERE idpacientes   = $idpaciente"); 
-                 
-            $mysql->close();
-
-            return $y;
-        }
-
-        //El paciente no debe después de cambiar el precio del estudio y tampoco tiene saldo a favor
-        if ($y == 0.00){
-            //echo'entro';
-            $nuevo_monto = 0.00;
-
-            date_default_timezone_set ('America/Mexico_City');
-            $fecha_actual = date('Y-m-d');
-            //echo $fecha_actual;
-
             $mysql = new mysql();
             
-            //*************************************
-            //este update no tiene caso
-            /*
-                hay que eliminar el registro con fecha = '0000-00-00' de pacientes_has_anticipos.
-
-                recolectar todos los anticipos.
-
-                obtener el precio del estudio nuevo y restar; precio estudio - 
-                
-                monto. asi con cada registro de anticipo que se tenga.
-                utilizar num_rows
-
-                el monto de $0.00 hay que ponerlo en el ultimo registro y poner la fecha actual.
-            */
-            //*************************************    
             $link = $mysql->connect();
-            $sql= $mysql->query($link,"UPDATE pacientes_has_anticipos 
-                                        SET     monto_restante =    $nuevo_monto,
-                                                fecha_anticipo =    '$fecha_actual'
-                                        WHERE pacientes_idpacientes   = $idpaciente 
-                                            AND fecha_anticipo = '0000-00-00'");                 
+            $sql = $mysql->query($link,"SELECT $institucion_estudio as precio
+                                        FROM estudio
+                                        WHERE idgammagramas = $idestudio_nuevo;");  
+                                        
+            $row = $mysql->f_obj($sql);
 
-            $link = $mysql->connect();
-            $sql = $mysql->query($link,"UPDATE pacientes 
-                                        SET   estudio_idgammagramas =   $idestudio_nuevo
-                                        WHERE idpacientes   = $idpaciente"); 
+            $precio_estudio = $row->precio;
             
-            //********************************** 
-            //********************************** 
-            //pendiente corregir datos en tabla pacientes has anticipos debido a que los
-            //reportes no salen bien.
-            //********************************** 
-            //********************************** 
-
-
             $mysql->close();
 
-            return 0;
+
+            $y =  $sumatoria_anticipos - $precio_estudio;  //
+
+            //FUNCION COMPROBADA FUNCIONA AL 100% REV. 19/07/2019
+            //El paciente debe después de cambiar el precio del estudio y no tiene saldo a favor
+
+            if( $y < 0.00 ){
+
+                $nuevo_monto = abs($y);
+                $total_nuevo_monto = number_format( $nuevo_monto, 2 );
+            
+                echo '<div class="alert alert-danger" role="alert">El paciente DEBE: $ <span>'.$total_nuevo_monto.'</span></div>';
+                
+
+                $mysql = new mysql();
+                    
+                $link = $mysql->connect();
+                $sql = $mysql->query($link,"UPDATE pacientes_has_anticipos 
+                                            SET     monto_restante = $nuevo_monto
+                                            WHERE pacientes_idpacientes = $idpaciente 
+                                                AND monto_restante = 0.00;");
+
+                $link = $mysql->connect();
+                $sql = $mysql->query($link,"INSERT INTO anticipos
+                                                        (idanticipos,
+                                                        dep_banamex, 
+                                                        pago_santander,
+                                                        pago_cheque,
+                                                        transferencia,
+                                                        anticipo_efe,
+                                                        factura,
+                                                        no_recibo)
+                                            VALUES ('', '0.00', '0.00', '0.00', '0.00', '0.00', 'NO', '')");
+                
+                $idanticipos =  mysqli_insert_id($link);
+
+                $link = $mysql->connect();
+                $sql = $mysql->query($link,"INSERT INTO pacientes_has_anticipos
+                                                    (pacientes_idpacientes,
+                                                    anticipos_idanticipos,
+                                                    fecha_anticipo,
+                                                    fecha_estudio,
+                                                    monto_restante) 
+
+                                            VALUES  ($idpaciente,
+                                                    $idanticipos,
+                                                    '0000-00-00 00:00:00',
+                                                    '$fecha',
+                                                    $nuevo_monto)");
+
+                $link = $mysql->connect();
+                $sql = $mysql->query($link,"UPDATE pacientes 
+                                            SET   estudio_idgammagramas =   $idestudio_nuevo
+                                            WHERE idpacientes   = $idpaciente"); 
+                    
+                $mysql->close();
+
+                return 0;
+            }
+            
+            //FUNCION COMPROBADA FUNCIONA AL 100% REV. 19/07/2019
+            //El paciente no debe después de cambiar el precio del estudio, pero tiene saldo a favor
+
+            if($y > 0.00){
+                    
+                // hacer recibo por el monto de $Y
+                //*************************************************************************
+                $y = abs($y);
+                echo '<div class="alert alert-danger" role="alert">HACER DEVOLUCIÓN AL PACIENTE POR: <span> $ '.$y.'</span></div>';
+
+                $nuevo_monto = 0.00;
+
+                date_default_timezone_set('America/Mexico_City');
+                $fecha_actual = date('Y-m-d');
+
+                $mysql = new mysql();
+                    
+                $link = $mysql->connect();
+                $sql = $mysql->query($link,"UPDATE pacientes_has_anticipos 
+                                            SET monto_restante  =   $nuevo_monto,
+                                                fecha_anticipo  =   '$fecha_actual'
+                                            WHERE pacientes_idpacientes   = $idpaciente
+                                                AND monto_restante = 0.00");
+                    
+                $link = $mysql->connect();
+                $sql = $mysql->query($link,"UPDATE pacientes 
+                                            SET   estudio_idgammagramas =   $idestudio_nuevo
+                                            WHERE idpacientes   = $idpaciente"); 
+                    
+                $mysql->close();
+
+                return $y;
+            }
+
+            //FUNCION COMPROBADA FUNCIONA AL 100% REV. 19/07/2019
+            //El paciente no debe después de cambiar el precio del estudio y tampoco tiene saldo a favor
+
+            if ($y == 0.00){
+                // echo'El paciente no debe y tampoco tiene saldo a favor';
+                echo '<div class="alert alert-success" role="alert">El paciente no debe y tampoco tiene saldo a favor.</div>';
+
+                $mysql = new mysql();
+                               
+
+                $link = $mysql->connect();
+                $sql = $mysql->query($link,"UPDATE pacientes 
+                                            SET   estudio_idgammagramas =   $idestudio_nuevo
+                                            WHERE idpacientes   = $idpaciente"); 
+
+                $mysql->close();
+
+                return 0;
+            }
+
         }
+        else
+        {
+            /********************************************************************************************************
+            Solo funciona cuando hay mas de dos anticipos y ademas el paciente debe
+            Rev. 19-07-2019
+            ********************************************************************************************************/
+            
+            $mysql = new mysql();
+            $link = $mysql->connect();
+            $sql = $mysql->query($link,"SELECT $institucion_estudio as precio
+                                        FROM estudio
+                                        WHERE idgammagramas = $idestudio_nuevo;");  
+                                       
+            $row = $mysql->f_obj($sql);
+
+            $precio_estudio = $row->precio;
+            $mysql->close();
+
+            $sumatoria_anticipos = sumatoria_de_anticipos($idpaciente);
+            
+            $total_pagado = number_format( $sumatoria_anticipos, 2);
+            echo '<div class="alert alert-success" role="alert">Total de anticipos hechos por el paciente: $ <span>'.$total_pagado.'</span></div>';
+            echo '<div class="alert alert-success" role="alert">Precio del nuevo estudio: $ <span>'.$precio_estudio.'</span></div>';           
+
+
+            $y =  $sumatoria_anticipos - $precio_estudio;  //
+
+            //FUNCION COMPROBADA FUNCIONA AL 100% REV. 19/07/2019
+            //El paciente DEBE después de cambiar el precio del estudio y no tiene saldo a favor
+
+            if( $y < 0.00 ){
+
+                $nuevo_monto = abs($y);
+                $total_nuevo_monto = number_format($nuevo_monto, 2);
+            
+                echo '<div class="alert alert-danger" role="alert">El paciente DEBE: $ <span>'.$total_nuevo_monto.'</span></div>';
+                
+
+                $mysql = new mysql();
+                    
+                $link = $mysql->connect();
+                $sql = $mysql->query($link,"UPDATE pacientes_has_anticipos 
+                                            SET   monto_restante = $nuevo_monto
+                                            WHERE pacientes_idpacientes = $idpaciente 
+                                                AND fecha_anticipo = '0000-00-00 00:00:00';");
+
+                $link = $mysql->connect();
+                $sql = $mysql->query($link,"UPDATE pacientes 
+                                            SET   estudio_idgammagramas =   $idestudio_nuevo
+                                            WHERE idpacientes   = $idpaciente"); 
+                    
+                $mysql->close();
+
+                //return 0;
+            }
+            
+            //FUNCION COMPROBADA FUNCIONA AL 100% REV. 19/07/2019
+            //El paciente no debe después de cambiar el precio del estudio, pero tiene saldo a favor
+
+            if($y > 0.00){
+                    
+                // hacer recibo por el monto de $Y
+                //*************************************************************************
+                $y = abs($y);
+
+                $total_devolver = number_format($y, 2);
+                echo '<div class="alert alert-danger" role="alert">HACER DEVOLUCIÓN AL PACIENTE POR: <span> $ '.$total_devolver.'</span></div>';
+
+                $nuevo_monto = 0.00;
+
+                date_default_timezone_set('America/Mexico_City');
+                $fecha_actual = date('Y-m-d');
+
+                $mysql = new mysql();
+                    
+                $link = $mysql->connect();
+
+                $sql = $mysql->query($link,"SELECT anticipos_idanticipos 
+                                                FROM pacientes_has_anticipos
+                                                WHERE pacientes_idpacientes = $idpaciente and fecha_anticipo = '0000-00-00 00:00:00'");
+                $res = $mysql->f_obj($sql);
+
+                if(isset($res->anticipos_idanticipos)){
+                    $res->anticipos_idanticipos = $res->anticipos_idanticipos;
+                }
+
+                $sql = $mysql->query($link,"DELETE FROM anticipos 
+                                            WHERE idanticipos  = $res->anticipos_idanticipos");
+                
+                $sql = $mysql->query($link,"DELETE FROM pacientes_has_anticipos 
+                                                WHERE pacientes_idpacientes = $idpaciente and fecha_anticipo = '0000-00-00 00:00:00'");
+                
+
+                $sql = $mysql->query($link,"SELECT anticipos_idanticipos 
+                                                FROM pacientes_has_anticipos
+                                                WHERE pacientes_idpacientes = $idpaciente ORDER BY anticipos_idanticipos desc limit 1");
+                
+                $res = $mysql->f_obj($sql);  
+                
+
+                $sql = $mysql->query($link,"UPDATE pacientes_has_anticipos 
+                                                SET   monto_restante =   0.00
+                                                WHERE anticipos_idanticipos   = $res->anticipos_idanticipos");                              
+
+                    
+                $link = $mysql->connect();
+                $sql = $mysql->query($link,"UPDATE pacientes 
+                                            SET   estudio_idgammagramas =   $idestudio_nuevo
+                                            WHERE idpacientes   = $idpaciente"); 
+                    
+                $mysql->close();
+
+                return $y;
+            }
+
+            //FUNCION COMPROBADA FUNCIONA AL 100% REV. 19/07/2019
+            //El paciente no debe después de cambiar el precio del estudio y tampoco tiene saldo a favor
+
+            if ($y == 0.00){
+                // echo'El paciente no debe y tampoco tiene saldo a favor';
+                echo '<div class="alert alert-success" role="alert">El paciente no debe y tampoco tiene saldo a favor.</div>';
+                // $nuevo_monto = 0.00;
+
+                //date_default_timezone_set ('America/Mexico_City');
+                //$fecha_actual = date('Y-m-d');
+                //echo $fecha_actual;
+
+                $mysql = new mysql();
+                
+                //*************************************
+                //este update no tiene caso
+                /*
+                    hay que eliminar el registro con fecha = '0000-00-00' de pacientes_has_anticipos.
+
+                    recolectar todos los anticipos.
+
+                    obtener el precio del estudio nuevo y restar; precio estudio - 
+                    
+                    monto. asi con cada registro de anticipo que se tenga.
+                    utilizar num_rows
+
+                    el monto de $0.00 hay que ponerlo en el ultimo registro y poner la fecha actual.
+                */
+                //*************************************    
+                // $link = $mysql->connect();
+                // $sql= $mysql->query($link,"UPDATE pacientes_has_anticipos 
+                //                             SET     monto_restante =    $nuevo_monto,
+                //                                     fecha_anticipo =    '$fecha_actual'
+                //                             WHERE pacientes_idpacientes   = $idpaciente 
+                //                                 AND fecha_anticipo = '0000-00-00'");                 
+
+                $link = $mysql->connect();
+                $sql = $mysql->query($link,"UPDATE pacientes 
+                                            SET   estudio_idgammagramas =   $idestudio_nuevo
+                                            WHERE idpacientes   = $idpaciente"); 
+                
+                //********************************** 
+                //********************************** 
+                //pendiente corregir datos en tabla pacientes has anticipos debido a que los
+                //reportes no salen bien.
+                //********************************** 
+                //********************************** 
+
+
+                $mysql->close();
+
+                return 0;
+            }
+
+        }
+
+       
     }
 }
 // institucion pública

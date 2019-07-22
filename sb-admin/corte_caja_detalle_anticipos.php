@@ -79,20 +79,42 @@
                                     <div class="col-md-4 col-lg-4"> 
                                         <!-- <form role="form" id="agregar_anticipos" method="post" action="viewmod_anticipos_pacientes_por_fecha.php">-->
                                             <?php 
-                                                include "include/mysql.php";
-                                                //print_r($_POST);
+                                                include_once "include/mysql.php";
+                                                include_once "include/funciones_consultas.php";
+                                                
+                                                echo '<pre>';
+                                                print_r($_POST);
+                                                echo '</pre>';
+
                                                 $idpaciente = $_POST["idpaciente"];
                                                 $idanticipo = $_POST["idanticipo"];
                                                 $paciente = $_POST["nombre_paciente"];
                                                 $nombre_estudio = $_POST["estudio"];
                                                 $precio_estudio = $_POST["precio"];
-                                                $debe = $_POST["debe"];
+
+                                                $sumatoria_anticipos = sumatoria_de_anticipos($idpaciente);
+
+                                                echo $sumatoria_anticipos;
+
+                                                $debe =   $precio_estudio - $sumatoria_anticipos ;
+                                                $debe = number_format($debe,2);
+                                                $precio_estudio_imprimir = number_format($precio_estudio,2);
+
+                                                
                                                
                                     
                                                 echo '<p><strong>Paciente:  </strong> '.$paciente.'</p>';
                                                 echo '<p><strong>Estudio:  </strong> '.$nombre_estudio.'</p>';
-                                                echo '<p><strong>Precio estudio:  </strong>'.$precio_estudio.'</p>';
-                                                echo '<p><strong>Debe:  </strong>'.$debe.'</p>';
+                                                echo '<p><strong>Precio estudio:  </strong>$ '.$precio_estudio_imprimir.'</p>';
+
+                                                if($debe >= 0.00){
+                                                    echo '<p><strong>Debe:</strong> $  '.$debe.'</p>';
+                                                }else{
+                                                    
+                                                    echo '<div class="alert alert-success" role="alert">Hubo una devolución:  <span> $ '.$debe.'</span></div>';
+                                                }
+
+                                                
                                                 
                                                 
                                             ?>

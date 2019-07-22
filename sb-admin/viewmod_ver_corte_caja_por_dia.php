@@ -8,9 +8,9 @@
 			include "../include/sesion.php";
 			comprueba_url();
 
-            if(!isset($_POST['fecha_act'])){
-                header('Location: controlador_ver_pacientes_del_dia.php');
-            }
+            // if(!isset($_POST['fecha_act'])){
+            //     header('Location: controlador_ver_pacientes_del_dia.php');
+            // }
  	?>
 </head>
 
@@ -18,19 +18,10 @@
     <div id="wrapper">
 
         <!-- Navigation -->
-       <?php 
-            if($_SESSION['nivel_acceso'] == 4){
-                include "nav_op.php";  }
-
-       		if($_SESSION['nivel_acceso'] == 3){
-                include "nav.php";  }
-
-            if($_SESSION['nivel_acceso'] == 1){
-                include "nav_priv.php"; }
-                
-            if($_SESSION['nivel_acceso'] == 2){
-                include "nav_contador.php"; }
-       ?>
+        <?php
+            include_once 'include/nav_session.php';
+        ?>
+        
         <div id="page-wrapper">
 
             <div class="container-fluid">
@@ -43,7 +34,8 @@
                                 <?php 
                                 include 'include/funciones_consultas.php';
                                 
-                                $fecha_act = $_POST['fecha_act'];
+                                //$fecha_act = $_POST['fecha_act'];
+                                $fecha_act = date('Y-m-d');
                                 $fecha_l = fecha_letras($fecha_act);
                                 echo $fecha_l;
                                 ?>
@@ -59,7 +51,7 @@
                 <!-- /.row -->
                
                 <?php 
-                    $fecha_act = $_POST['fecha_act'];
+                    // $fecha_act = $_POST['fecha_act'];
                     corte_caja($fecha_act);
                      	/*print "<pre>"; print_r($_POST); print_r($_SESSION); print "</pre>";*/
                 ?>
