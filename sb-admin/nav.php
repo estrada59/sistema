@@ -142,7 +142,7 @@ function menu($pag){
                         <a href="controlador_ver_anticipos_por_fecha.php">Anticipos</a>
                     </li>
                     <li>
-                        <a href="controlador_ver_corte_caja_por_dia.php">Corte de caja</a>
+                        <a href="viewmod_ver_corte_caja_por_dia.php">Corte de caja</a>
                     </li>
                     <li>
                         <a href="controlador_reimprimir_corte_caja_por_dia.php">Reimprimir corte de caja</a>
