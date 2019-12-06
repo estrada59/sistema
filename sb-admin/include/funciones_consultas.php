@@ -4575,7 +4575,7 @@ y particulares por cada uno de los meses    Array['ENE',  31,      2],
         // echo $fecha_fin.'   /n  ';
 
         while ($instituciones = $mysql->f_obj($sql)) {
-            //echo $instituciones->nombre;
+            // echo $instituciones->nombre;
 
             $institucion = mb_strtolower($instituciones->nombre, "UTF-8" );
             $institucion = str_replace("_", " ", $institucion);
@@ -4647,9 +4647,8 @@ y particulares por cada uno de los meses    Array['ENE',  31,      2],
     // print_r($datos);
     // echo'</pre>';    
 
-    $datos_ventas_totales = $datos;
 
-    return $datos_ventas_totales;
+    return $datos;
 }
 
 function obtener_usuario(){
