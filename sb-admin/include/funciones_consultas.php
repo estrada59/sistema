@@ -683,7 +683,7 @@ llama a otros procesos:     funciones_consultas.php  --> mod_estatus_pac_buscar(
 
     echo '
         <div class="table-responsive">
-            <table class="table table-bordered table-hover table-striped">
+            <table class="table table-bordered table-hover table-striped" id="myClass">
                 <thead>
                     <tr>
                         <th data-field="id">Fecha</th>
@@ -2437,7 +2437,7 @@ function reimprimir_recibos($fecha_estudio){
     
     echo '
     <div class="table-responsive">
-        <table class="table table-bordered table-hover table-striped table-responsive">
+        <table class="table table-bordered table-hover table-striped table-responsive" id="myClass">
             <thead>
                 <tr>
                     <th data-field ="fecha_anticipo">Fecha anticipo</th>                
@@ -3709,11 +3709,7 @@ function ver_pacientes_del_mes_prueba_esfuerzo($fecha_ini, $fecha_fin, $pagina){
     echo'</tbody>
         </table>
     </div>';
-        echo "<script >
-                    $(document).ready( function () {
-                        $('#myclass').DataTable();
-                    } );
-                </script>";
+       
 }
 
 function ver_listas_de_instituciones(){
@@ -4526,6 +4522,134 @@ function cantidad_de_estudios($fecha_ini, $fecha_fin, $pagina, $estatus){
             
     return $instituciones;     
      
+}
+
+
+function ventas_por_instituciones_meses($fecha_act){
+/*---------------------------------------------------------------------
+// Obtiene la cantidad de pacientes atendidos y los divide en instituciones
+y particulares por cada uno de los meses    Array['ENE',  31,      2],
+                                                 ['FEB',  31,      5], etc.
+
+// invoca:  index.php
+            
+
+// rev. 2019/12/05
+---------------------------------------------------------------------*/
+
+    date_default_timezone_set('America/Mexico_City'); 
+    
+    //print_r($fecha_act);
+    $fecha = explode("-", $fecha_act);
+     
+
+    $year = $fecha[0];  //AÑO ACTUAL
+
+    $mysql = new mysql();
+    $link = $mysql->connect(); 
+
+    $datos = array();
+    
+    
+    $meses = array("Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic");
+
+    // print_r($meses);
+
+    $cont_meses = 1;
+
+    for($i=0; $i<12; $i++){
+        
+        $total_particular = 0;
+        $total_instituciones = 0;
+
+        $sql = $mysql->query($link, "SELECT instituciones.nombre
+                                        FROM instituciones
+                                        WHERE instituciones.tipo = 'PARTICULAR'");
+        
+        $fecha_inicio = $year.'-'.$cont_meses.'-'.'01';
+        $fecha_inicio = date('Y-m-d', strtotime($fecha_inicio));
+
+        $fecha_fin = last_month_day($fecha_inicio);
+
+        // echo $fecha_inicio.'   /n  ';
+        // echo $fecha_fin.'   /n  ';
+
+        while ($instituciones = $mysql->f_obj($sql)) {
+            //echo $instituciones->nombre;
+
+            $institucion = mb_strtolower($instituciones->nombre, "UTF-8" );
+            $institucion = str_replace("_", " ", $institucion);
+            $estatus = 'ATENDIDO';
+
+            // echo $institucion;
+
+            $sql2 = $mysql->query($link, "SELECT COUNT(t1.idpacientes)  AS total
+                                            FROM pacientes t1 
+                                            WHERE (t1.fecha >= '$fecha_inicio' AND  t1.fecha <= '$fecha_fin') and t1.institucion= '$institucion' and t1.estatus = '$estatus'");
+
+            $row = $mysql->f_obj($sql2);
+                
+            $total_particular += $row->total;
+            // echo'<pre>';
+            // print_r($row);    
+            // echo'</pre>';
+        }
+
+
+        /**********************
+        **********************/
+
+        $sql = $mysql->query($link, "SELECT instituciones.nombre
+                                        FROM instituciones
+                                        WHERE instituciones.tipo != 'PARTICULAR'");
+        
+        $fecha_inicio = $year.'-'.$cont_meses.'-'.'01';
+        $fecha_inicio = date('Y-m-d', strtotime($fecha_inicio));
+
+        $fecha_fin = last_month_day($fecha_inicio);
+
+        // echo $fecha_inicio.'   /n  ';
+        // echo $fecha_fin.'   /n  ';
+
+        while ($instituciones = $mysql->f_obj($sql)) {
+            //echo $instituciones->nombre;
+
+            $institucion = mb_strtolower($instituciones->nombre, "UTF-8" );
+            $institucion = str_replace("_", " ", $institucion);
+            $estatus = 'ATENDIDO';
+
+            // echo $institucion;
+
+            $sql3 = $mysql->query($link, "SELECT COUNT(t1.idpacientes)  AS total
+                                            FROM pacientes t1 
+                                            WHERE (t1.fecha >= '$fecha_inicio' AND  t1.fecha <= '$fecha_fin') and t1.institucion= '$institucion' and t1.estatus = '$estatus'");
+
+            $row2 = $mysql->f_obj($sql3);
+                
+            $total_instituciones += $row2->total;
+            // echo'<pre>';
+            // print_r($row);    
+            // echo'</pre>';
+        }
+
+
+
+
+        $datos[$i]['Mes'] = $meses[$i];
+        $datos[$i]['Particulares'] = $total_particular;
+        $datos[$i]['Instituciones'] = $total_instituciones;
+        
+        $cont_meses ++;
+        // echo $meses[$i].':  '.$total.'      ';
+
+    }
+    // echo'<pre>';
+    // print_r($datos);
+    // echo'</pre>';    
+
+    $datos_ventas_totales = $datos;
+
+    return $datos_ventas_totales;
 }
 
 function obtener_usuario(){
