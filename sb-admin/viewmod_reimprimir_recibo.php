@@ -53,6 +53,18 @@
                     reimprimir_recibos($fecha_estudios);
                      /*	print "<pre>"; print_r($_POST); print_r($_SESSION); print "</pre>";*/    
                 ?>
+                <script type="text/javascript">
+                    $(document).ready(function() {
+                        $('#myClass').DataTable( {
+                            language: {
+                                url: 'js/dataTables_es.lang'
+                            },
+                            "paging":   false,
+                            "ordering": true,
+                            "info":     true
+                            });
+                    } );
+                </script>
             </div>  <!--    fin col-lg-12   -->
             <!-- /.container-fluid -->
         </div>

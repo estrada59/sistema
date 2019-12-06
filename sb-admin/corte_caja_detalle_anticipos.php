@@ -23,17 +23,9 @@
 <body>
     <div id="wrapper">
         <!-- Navigation -->
-       <?php 
-            if($_SESSION['nivel_acceso'] == 3){
-                include "nav.php";  
-            }
-            if($_SESSION['nivel_acceso'] == 1){
-                include "nav_priv.php"; 
-            }
-             if($_SESSION['nivel_acceso'] == 2){
-                include "nav_contador.php"; 
-            }
-       ?>
+        <?php
+            include_once 'include/nav_session.php';
+        ?>
 
         <div id="page-wrapper">
             <div class="container-fluid">
@@ -82,9 +74,9 @@
                                                 include_once "include/mysql.php";
                                                 include_once "include/funciones_consultas.php";
                                                 
-                                                echo '<pre>';
-                                                print_r($_POST);
-                                                echo '</pre>';
+                                                // echo '<pre>';
+                                                // print_r($_POST);
+                                                // echo '</pre>';
 
                                                 $idpaciente = $_POST["idpaciente"];
                                                 $idanticipo = $_POST["idanticipo"];
@@ -94,7 +86,7 @@
 
                                                 $sumatoria_anticipos = sumatoria_de_anticipos($idpaciente);
 
-                                                echo $sumatoria_anticipos;
+                                                //echo $sumatoria_anticipos;
 
                                                 $debe =   $precio_estudio - $sumatoria_anticipos ;
                                                 $debe = number_format($debe,2);

@@ -58,7 +58,18 @@
                  buscar_paciente($nombre, $appat, $apmat, $_POST['pagina']);
                 ?>
                 
-                     
+                <script type="text/javascript">
+                    $(document).ready(function() {
+                        $('#myClass').DataTable( {
+                            language: {
+                                url: 'js/dataTables_es.lang'
+                            },
+                            "paging":   false,
+                            "ordering": true,
+                            "info":     true
+                            });
+                    } );
+                </script>
             </div>  <!--    fin col-lg-12   -->
             <!-- /.container-fluid -->
         </div>
@@ -68,7 +79,7 @@
 
     <!-- jQuery -->
     <!-- Esto es para subir archivo-->
-    <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    
     <script type="text/javascript" src="js/bootstrap-fancyfile.min.js"></script>
     
     <script type="text/javascript">

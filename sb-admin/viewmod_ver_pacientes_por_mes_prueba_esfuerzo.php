@@ -22,16 +22,8 @@
     <div id="wrapper">
 
         <!-- Navigation -->
-       <?php  
-            if($_SESSION['nivel_acceso'] == 3){
-                include "nav.php";  }
-            if($_SESSION['nivel_acceso'] == 1){
-                include "nav_priv.php"; }
-            if($_SESSION['nivel_acceso'] == 2){
-                include "nav_contador.php"; }
-            if($_SESSION['nivel_acceso'] == 4){
-                include "nav_op.php"; }
-       ?>
+        <?php include_once "include/nav_session.php" ?>
+
         <div id="page-wrapper">
 
             <div class="container-fluid">
@@ -86,6 +78,18 @@
                                     ver_pacientes_del_mes_prueba_esfuerzo($fecha_ini, $fecha_fin,$_POST['pagina']);
                                 ?>
                         
+                        <script type="text/javascript">
+                            $(document).ready(function() {
+                                $('#myclass').DataTable( {
+                                    language: {
+                                        url: 'js/dataTables_es.lang'
+                                    },
+                                    "paging":   false,
+                                    "ordering": true,
+                                    "info":     true
+                                    });
+                            } );
+                        </script>
             </div>  <!--    fin col-lg-12   -->
             <!-- /.container-fluid -->
         </div>
