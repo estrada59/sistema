@@ -147,9 +147,9 @@ function menu($pag){
                     </li>
                 </ul>
             </li>
-            <!--<li class ="'.$buscar_paciente.' ">
+            <li class ="'.$buscar_paciente.' ">
                 <a href="controlador_buscar_paciente.php"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>  Buscar paciente</a>
-            </li>-->
+            </li>
 
             <li class ="'.$anticipos_por_fecha.' ">
                 <a href="javascript:;" data-toggle="collapse" data-target="#demo1"><i class="fa fa-fw fa-arrows-v"></i> Cobros <i class="fa fa-fw fa-caret-down"></i></a>
