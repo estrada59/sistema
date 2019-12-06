@@ -79,9 +79,36 @@
                         echo'
                         <div class="row">
                             <div class="col-md-12">
-                                <div id="chart_div"></div>
+                                <div id="chart_div_ant"></div>
                             </div>
                         </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="chart_div_act"></div>
+                            </div>
+                        </div>';
+                        
+                        include_once "include/funciones_consultas.php";
+
+                        $fecha_act = date('Y-m-d');
+                        $fecha_ant = date("Y-m-d",strtotime("-1 year"));
+
+                        $fecha_año_act = explode("-", $fecha_act);
+                        $fecha_año_ant = explode("-", $fecha_ant);
+                            // print_r($fecha_año_ant);
+
+                        $year_act = $fecha_año_act[0];  //AÑO ACTUAL
+                        $year_ant = $fecha_año_ant[0]; //AÑO ANTERIOR
+                        
+                        $datos_ventas_totales_act = ventas_por_instituciones_meses($fecha_act);
+                        $datos_ventas_totales_ant = ventas_por_instituciones_meses($fecha_ant);
+
+                        // echo'<pre>';
+                        //     print_r($datos_ventas_totales_ant);
+                        // echo'</pre>';
+
+                        echo'
 
                         <br>
                         <br>
@@ -93,7 +120,7 @@
                                         Contratos instituciones
                                     </div>
                                     <div class="panel-body">';
-                                        include_once "include/funciones_consultas.php";
+                                        
                                         monto_ejecutado_por_instituciones_resumen();
                         echo'       </div>
                                 </div>
@@ -103,7 +130,7 @@
                                 <div class="panel panel-success">
 
                                     <div class="panel-heading">
-                                        Ventas particulares
+                                        Ventas particulares '.$year_act.'
                                     </div>
 
                                     <div class="panel-body">';
@@ -115,118 +142,6 @@
                                                 <div id="ventas_instituciones" class="chart"></div>
                                                 
                                             <!-- Fin CHART   -->';
-
-                                    date_default_timezone_set('America/Mexico_City'); 
-                                    $fecha_act = date('Y-m-d');
-
-                                    $fecha = explode("-", $fecha_act);
-                                    // print_r($fecha);
-
-                                    $year = $fecha[0];  //AÑO ACTUAL
-
-                                    $mysql = new mysql();
-                                    $link = $mysql->connect(); 
-
-                                    $datos = array();
-                                    
-                                    
-                                    $meses = array("Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic");
-
-                                    // print_r($meses);
-
-                                    $cont_meses = 1;
-
-                                    for($i=0; $i<12; $i++){
-                                        
-                                        $total_particular = 0;
-                                        $total_instituciones = 0;
-
-                                        $sql = $mysql->query($link, "SELECT instituciones.nombre
-                                                                        FROM instituciones
-                                                                        WHERE instituciones.tipo = 'PARTICULAR'");
-                                        
-                                        $fecha_inicio = $year.'-'.$cont_meses.'-'.'01';
-                                        $fecha_inicio = date('Y-m-d', strtotime($fecha_inicio));
-
-                                        $fecha_fin = last_month_day($fecha_inicio);
-
-                                        // echo $fecha_inicio.'   /n  ';
-                                        // echo $fecha_fin.'   /n  ';
-
-                                        while ($instituciones = $mysql->f_obj($sql)) {
-                                            //echo $instituciones->nombre;
-
-                                            $institucion = mb_strtolower($instituciones->nombre, "UTF-8" );
-                                            $institucion = str_replace("_", " ", $institucion);
-                                            $estatus = 'ATENDIDO';
-
-                                            // echo $institucion;
-
-                                            $sql2 = $mysql->query($link, "SELECT COUNT(t1.idpacientes)  AS total
-                                                                            FROM pacientes t1 
-                                                                            WHERE (t1.fecha >= '$fecha_inicio' AND  t1.fecha <= '$fecha_fin') and t1.institucion= '$institucion' and t1.estatus = '$estatus'");
-
-                                            $row = $mysql->f_obj($sql2);
-                                             
-                                            $total_particular += $row->total;
-                                            // echo'<pre>';
-                                            // print_r($row);    
-                                            // echo'</pre>';
-                                        }
-
-
-                                        /**********************
-                                        **********************/
-
-                                        $sql = $mysql->query($link, "SELECT instituciones.nombre
-                                                                        FROM instituciones
-                                                                        WHERE instituciones.tipo != 'PARTICULAR'");
-                                        
-                                        $fecha_inicio = $year.'-'.$cont_meses.'-'.'01';
-                                        $fecha_inicio = date('Y-m-d', strtotime($fecha_inicio));
-
-                                        $fecha_fin = last_month_day($fecha_inicio);
-
-                                        // echo $fecha_inicio.'   /n  ';
-                                        // echo $fecha_fin.'   /n  ';
-
-                                        while ($instituciones = $mysql->f_obj($sql)) {
-                                            //echo $instituciones->nombre;
-
-                                            $institucion = mb_strtolower($instituciones->nombre, "UTF-8" );
-                                            $institucion = str_replace("_", " ", $institucion);
-                                            $estatus = 'ATENDIDO';
-
-                                            // echo $institucion;
-
-                                            $sql3 = $mysql->query($link, "SELECT COUNT(t1.idpacientes)  AS total
-                                                                            FROM pacientes t1 
-                                                                            WHERE (t1.fecha >= '$fecha_inicio' AND  t1.fecha <= '$fecha_fin') and t1.institucion= '$institucion' and t1.estatus = '$estatus'");
-
-                                            $row2 = $mysql->f_obj($sql3);
-                                             
-                                            $total_instituciones += $row2->total;
-                                            // echo'<pre>';
-                                            // print_r($row);    
-                                            // echo'</pre>';
-                                        }
-
-
-
-
-                                        $datos[$i]['Mes'] = $meses[$i];
-                                        $datos[$i]['Particulares'] = $total_particular;
-                                        $datos[$i]['Instituciones'] = $total_instituciones;
-                                        
-                                        $cont_meses ++;
-                                        // echo $meses[$i].':  '.$total.'      ';
-
-                                    }
-                                    // echo'<pre>';
-                                    // print_r($datos);
-                                    // echo'</pre>';    
-
-                                    $datos_ventas_totales = $datos;
                                     
                                 echo'</div>  <!-- fin body -->';
                             echo'</div>  <!-- fin panel -->';
@@ -261,6 +176,11 @@
                         // GENERA HTML5, GRAFICA Y TABLAS
                         graficas_semestrales_inicio($_POST['pagina']);
                     }
+                    else{
+                        // echo'<a class="btn btn-primary" href="confirmacion_cita.php" role="button">Enviar SMS</a>';
+                    }
+                    
+                    
                 ?>
                 
                 <div class="row">
@@ -442,14 +362,14 @@
             var ventas = google.visualization.arrayToDataTable([
                 <?php
                     echo '["Mes", "Cantidad"],';
-                    $num = count($datos_ventas_totales);
+                    $num = count($datos_ventas_totales_act);
 
                     for($i=0; $i < $num; $i++)
                     {
                         if($i == $num-1){
-                            echo '["'.$datos_ventas_totales[$i]['Mes'].'",'.$datos_ventas_totales[$i]['Particulares'].']';    
+                            echo '["'.$datos_ventas_totales_act[$i]['Mes'].'",'.$datos_ventas_totales_act[$i]['Particulares'].']';    
                         }else{
-                            echo '["'.$datos_ventas_totales[$i]['Mes'].'",'.$datos_ventas_totales[$i]['Particulares'].'],';    
+                            echo '["'.$datos_ventas_totales_act[$i]['Mes'].'",'.$datos_ventas_totales_act[$i]['Particulares'].'],';    
                         }   
                     }
                     echo "]);";
@@ -483,14 +403,14 @@
             var ventas = google.visualization.arrayToDataTable([
                 <?php
                     echo '["Mes", "Cantidad"],';
-                    $num = count($datos_ventas_totales);
+                    $num = count($datos_ventas_totales_act);
 
                     for($i=0; $i < $num; $i++)
                     {
                         if($i == $num-1){
-                            echo '["'.$datos_ventas_totales[$i]['Mes'].'",'.$datos_ventas_totales[$i]['Instituciones'].']';    
+                            echo '["'.$datos_ventas_totales_act[$i]['Mes'].'",'.$datos_ventas_totales_act[$i]['Instituciones'].']';    
                         }else{
-                            echo '["'.$datos_ventas_totales[$i]['Mes'].'",'.$datos_ventas_totales[$i]['Instituciones'].'],';    
+                            echo '["'.$datos_ventas_totales_act[$i]['Mes'].'",'.$datos_ventas_totales_act[$i]['Instituciones'].'],';    
                         }   
                     }
                     echo "]);";
@@ -512,7 +432,7 @@
    
     </script>
 
-    <!-- VENTAS TOTALES -->
+    <!-- VENTAS TOTALES ACTUALES-->
 
     <script type="text/javascript">
       google.charts.load('current', {'packages':['corechart']});
@@ -538,26 +458,63 @@
 
         <?php
             echo "['MESES', 'PARTICULARES', 'INSTITUCIONES'],";
-            $num = count($datos_ventas_totales);
-
+            $num = count($datos_ventas_totales_act);
+            
             for($i=0; $i < $num; $i++)
             {
                 if($i == $num-1){
-                    echo "['".$datos_ventas_totales[$i]['Mes']."',".$datos_ventas_totales[$i]['Particulares'].",".$datos_ventas_totales[$i]['Instituciones']."]";    
+                    echo "['".$datos_ventas_totales_act[$i]['Mes']."',".$datos_ventas_totales_act[$i]['Particulares'].",".$datos_ventas_totales_act[$i]['Instituciones']."]";    
                 }else{
-                    echo "['".$datos_ventas_totales[$i]['Mes']."',".$datos_ventas_totales[$i]['Particulares'].",".$datos_ventas_totales[$i]['Instituciones']."],";    
+                    echo "['".$datos_ventas_totales_act[$i]['Mes']."',".$datos_ventas_totales_act[$i]['Particulares'].",".$datos_ventas_totales_act[$i]['Instituciones']."],";    
                 }   
             }
             echo "]);";
         ?>
 
         var options = {
-          title: 'VENTAS TOTALES <?php echo " ".$year." ' "?>,
+          title: 'VENTAS TOTALES <?php echo " ".$year_act." ' "?>,
         //   curveType: 'function',
           legend: { position: 'bottom' }
         };
 
-        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+        var chart = new google.visualization.LineChart(document.getElementById('chart_div_act'));
+
+        chart.draw(data, options);
+      }
+    </script>
+
+    <!-- VENTAS TOTALES Anteriores-->
+
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+       
+
+        <?php
+            echo "['MESES', 'PARTICULARES', 'INSTITUCIONES'],";
+            $num = count($datos_ventas_totales_ant);
+            
+            for($i=0; $i < $num; $i++)
+            {
+                if($i == $num-1){
+                    echo "['".$datos_ventas_totales_ant[$i]['Mes']."',".$datos_ventas_totales_ant[$i]['Particulares'].",".$datos_ventas_totales_ant[$i]['Instituciones']."]";    
+                }else{
+                    echo "['".$datos_ventas_totales_ant[$i]['Mes']."',".$datos_ventas_totales_ant[$i]['Particulares'].",".$datos_ventas_totales_ant[$i]['Instituciones']."],";    
+                }   
+            }
+            echo "]);";
+        ?>
+
+        var options = {
+          title: 'VENTAS TOTALES <?php echo " ".$year_ant." ' "?>,
+        //   curveType: 'function',
+          legend: { position: 'bottom' }
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('chart_div_ant'));
 
         chart.draw(data, options);
       }
