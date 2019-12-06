@@ -182,75 +182,86 @@ if($institucion == 'PARTICULAR'){
         //si cumple ya finiquito el total del estudio
         //*******************************************
 
-            $sumatoria_anticipos = sumatoria_de_anticipos($idpaciente);
-            echo '<pre>';
-            echo $sumatoria_anticipos.' finiquitó ';
-            echo '</pre>';
             
+            // echo '<pre>';
+            // echo $sumatoria_anticipos.' finiquitó ';
+            // echo '</pre>';
+
             $mysql = new mysql();
+            
             $link = $mysql->connect();
             $sql = $mysql->query($link,"SELECT $institucion_estudio as precio
                                         FROM estudio
                                         WHERE idgammagramas = $idestudio_nuevo;");  
-                                       
+                                        
             $row = $mysql->f_obj($sql);
 
             $precio_estudio = $row->precio;
+            
             $mysql->close();
 
+            $sumatoria_anticipos = sumatoria_de_anticipos($idpaciente);
 
             $y =  $sumatoria_anticipos - $precio_estudio;
+        
+            $total_pagado = number_format( $sumatoria_anticipos, 2);
+            $precio_estudio_impresion = number_format($precio_estudio, 2);
+
+            echo '<div class="alert alert-success" role="alert">Total de anticipos hechos por el paciente: $ <span>'.$total_pagado.'</span></div>';
+            echo '<div class="alert alert-success" role="alert">Precio del nuevo estudio: $ <span>'.$precio_estudio_impresion.'</span></div>';  
 
             //El paciente debe después de cambiar el precio del estudio y no tiene saldo a favor
             if( $y < 0.00 ){
              //*************************************************************************
-                echo 'paciente debe';
+                
+                
                 $nuevo_monto = abs($y);
-                echo '$ nuevo monto: '.$nuevo_monto;
-                echo '    y: '.$nuevo_monto;
+                $total_nuevo_monto = number_format($nuevo_monto , 2);
+
+                echo '<div class="alert alert-danger" role="alert">El paciente DEBE: $ <span>'.$total_nuevo_monto.'</span></div>';
+                
                 $mysql = new mysql();
-                
-                // $link = $mysql->connect();
-                // $sql = $mysql->query($link,"UPDATE pacientes_has_anticipos 
-                //                             SET   monto_restante =   $nuevo_monto
-                //                             WHERE pacientes_idpacientes   = $idpaciente");
-                
+                    
+                $link = $mysql->connect();
+                $sql = $mysql->query($link,"UPDATE pacientes_has_anticipos 
+                                            SET     monto_restante = $nuevo_monto
+                                            WHERE pacientes_idpacientes = $idpaciente 
+                                                AND monto_restante = 0.00;");
 
-                // $link = $mysql->connect();
-                // $sql = $mysql->query($link,"INSERT INTO anticipos
-                //                                         (idanticipos,
-                //                                         dep_banamex, 
-                //                                         pago_santander,
-                //                                         pago_cheque,
-                //                                         transferencia,
-                //                                         anticipo_efe,
-                //                                         factura,
-                //                                         no_recibo)
-                //                             VALUES ('', '0.00', '0.00', '0.00', '0.00', '0.00', 'NO', '')");
+                $link = $mysql->connect();
+                $sql = $mysql->query($link,"INSERT INTO anticipos
+                                                        (idanticipos,
+                                                        dep_banamex, 
+                                                        pago_santander,
+                                                        pago_cheque,
+                                                        transferencia,
+                                                        anticipo_efe,
+                                                        factura,
+                                                        no_recibo)
+                                            VALUES ('', '0.00', '0.00', '0.00', '0.00', '0.00', 'NO', '')");
                 
-                // $idanticipos =  mysqli_insert_id($link);
+                $idanticipos =  mysqli_insert_id($link);
 
-                // $link = $mysql->connect();
-                // $sql = $mysql->query($link,"INSERT INTO pacientes_has_anticipos
-                //                                     (pacientes_idpacientes,
-                //                                     anticipos_idanticipos,
-                //                                     fecha_anticipo,
-                //                                     fecha_estudio,
-                //                                     monto_restante) 
+                $link = $mysql->connect();
+                $sql = $mysql->query($link,"INSERT INTO pacientes_has_anticipos
+                                                    (pacientes_idpacientes,
+                                                    anticipos_idanticipos,
+                                                    fecha_anticipo,
+                                                    fecha_estudio,
+                                                    monto_restante) 
 
-                //                             VALUES  ($idpaciente,
-                //                                     $idanticipos,
-                //                                     '0000-00-00 00:00:00',
-                //                                     '$fecha',
-                //                                     $nuevo_monto)");
+                                            VALUES  ($idpaciente,
+                                                    $idanticipos,
+                                                    '0000-00-00 00:00:00',
+                                                    '$fecha',
+                                                    $nuevo_monto)");
 
-                // $link = $mysql->connect();
-                // $sql = $mysql->query($link,"UPDATE pacientes 
-                //                             SET   estudio_idgammagramas =   $idestudio_nuevo
-                //                             WHERE idpacientes   = $idpaciente"); 
-                
-               
-                // $mysql->close();
+                $link = $mysql->connect();
+                $sql = $mysql->query($link,"UPDATE pacientes 
+                                            SET   estudio_idgammagramas =   $idestudio_nuevo
+                                            WHERE idpacientes   = $idpaciente"); 
+                    
+                $mysql->close();
 
                 return 0;
 
@@ -260,9 +271,9 @@ if($institucion == 'PARTICULAR'){
             if($y > 0.00){
                 //*************************************************************************
                 // hacer recibo de devolucion e insertar registro en BD por el monto de $Y
-                //*************************************************************************
-                
-                echo 'paciente se le debe: $'.$y;
+                //*************************************************************************                
+                $dev = number_format($y, 2);
+                echo '<div class="alert alert-danger" role="alert">HACER DEVOLUCIÓN AL PACIENTE POR: <span> $ '.$dev.'</span></div>';
                 $nuevo_monto = 0.00;
 
                 date_default_timezone_set('America/Mexico_City');
@@ -285,22 +296,17 @@ if($institucion == 'PARTICULAR'){
 
                 $mysql->close();
 
-                $usuario = $_SESSION['usuario'];
-
-                echo '<input type="hidden" form="editar_paciente_devolucion" name="idpaciente" id="idpaciente" value="'.$idpaciente.'"/>';
-                echo '<input type="hidden" form="editar_paciente_devolucion" name="usuario" id="usuario" value="'.$usuario.'"/>';
-
                 return $y;
                 //*************************************************************************
             }
 
             //El paciente no debe después de cambiar el precio del estudio y tampoco tiene saldo a favor
             if ($y == 0.00){
-                echo 'no se le debe ni debe el paciente con lo que dejo cubre el total';
+                echo '<div class="alert alert-success" role="alert">El paciente no debe y tampoco tiene saldo a favor.</div>';
                 $nuevo_monto = 0.00;
 
                 date_default_timezone_set ('America/Mexico_City');
-                $fecha_actual = date('Y-m-d');
+                $fecha_actual = date('Y-m-d H:i:s');
 
                 $mysql = new mysql();
                 $link = $mysql->connect();
@@ -396,12 +402,8 @@ if($institucion == 'PARTICULAR'){
         {
             /********************************************************************************************************
             Solo funciona cuando hay mas de dos anticipos y ademas el paciente NO DEBE
-            Rev. 19-07-2019
+            Rev. 23-07-2019
             ********************************************************************************************************/
-            $sumatoria_anticipos = sumatoria_de_anticipos($idpaciente);
-        
-            $total_pagado = number_format( $sumatoria_anticipos, 2);
-            echo '<div class="alert alert-success" role="alert">Total de anticipos hechos por el paciente: $ <span>'.$total_pagado.'</span></div>';
                 
             $mysql = new mysql();
             
@@ -416,8 +418,16 @@ if($institucion == 'PARTICULAR'){
             
             $mysql->close();
 
+            $sumatoria_anticipos = sumatoria_de_anticipos($idpaciente);
+        
+            $total_pagado = number_format( $sumatoria_anticipos, 2);
+            $precio_estudio_impresion = number_format($precio_estudio, 2);
 
-            $y =  $sumatoria_anticipos - $precio_estudio;  //
+            echo '<div class="alert alert-success" role="alert">Total de anticipos hechos por el paciente: $ <span>'.$total_pagado.'</span></div>';
+            echo '<div class="alert alert-success" role="alert">Precio del nuevo estudio: $ <span>'.$precio_estudio_impresion.'</span></div>';    
+
+            $y =  $sumatoria_anticipos - $precio_estudio;  //        
+            
 
             //FUNCION COMPROBADA FUNCIONA AL 100% REV. 19/07/2019
             //El paciente debe después de cambiar el precio del estudio y no tiene saldo a favor
@@ -484,12 +494,14 @@ if($institucion == 'PARTICULAR'){
                 // hacer recibo por el monto de $Y
                 //*************************************************************************
                 $y = abs($y);
-                echo '<div class="alert alert-danger" role="alert">HACER DEVOLUCIÓN AL PACIENTE POR: <span> $ '.$y.'</span></div>';
+                $dev = number_format($y);
+
+                echo '<div class="alert alert-danger" role="alert">HACER DEVOLUCIÓN AL PACIENTE POR: <span> $ '.$dev.'</span></div>';
 
                 $nuevo_monto = 0.00;
 
                 date_default_timezone_set('America/Mexico_City');
-                $fecha_actual = date('Y-m-d');
+                $fecha_actual = date('Y-m-d H:i:s');
 
                 $mysql = new mysql();
                     
@@ -552,8 +564,10 @@ if($institucion == 'PARTICULAR'){
             $sumatoria_anticipos = sumatoria_de_anticipos($idpaciente);
             
             $total_pagado = number_format( $sumatoria_anticipos, 2);
+            $precio_estudio_impresion = number_format($precio_estudio, 2);
+
             echo '<div class="alert alert-success" role="alert">Total de anticipos hechos por el paciente: $ <span>'.$total_pagado.'</span></div>';
-            echo '<div class="alert alert-success" role="alert">Precio del nuevo estudio: $ <span>'.$precio_estudio.'</span></div>';           
+            echo '<div class="alert alert-success" role="alert">Precio del nuevo estudio: $ <span>'.$precio_estudio_impresion.'</span></div>';           
 
 
             $y =  $sumatoria_anticipos - $precio_estudio;  //
@@ -602,7 +616,7 @@ if($institucion == 'PARTICULAR'){
                 $nuevo_monto = 0.00;
 
                 date_default_timezone_set('America/Mexico_City');
-                $fecha_actual = date('Y-m-d');
+                $fecha_actual = date('Y-m-d H:i:s');
 
                 $mysql = new mysql();
                     
@@ -781,33 +795,41 @@ else{
                 previsualizacion();
 
             ?>
-            <form  role="form" id="editar_paciente" method="post" action="viewmod_ver_editar_estudio_de_paciente.php">
+            <form  role="form" id="editar_paciente" method="post" action="viewmod_ver_editar_estudio_de_paciente.php" >
                 <?php 
                     $fecha_ant          =   $_POST["fecha"];
                     $fecha_ant          =   date('Y-m-d',strtotime($fecha_ant)); 
                     echo '<input type="hidden" form="editar_paciente" name="fecha_estudios" id="fecha_estudios" value="'.$fecha_ant.'"/>';
                 ?>
             </form>
-            <form  role="form" id="editar_paciente_devolucion" method="post" action="view_imprimir_devolucion.php">
+            <form  role="form" id="editar_paciente_devolucion" method="post" action="view_imprimir_devolucion.php" target="_blank" onsubmit="myFunction()">
                 <?php 
                     $fecha_ant          =   $_POST["fecha"];
                     $fecha_ant          =   date('Y-m-d',strtotime($fecha_ant)); 
-                    echo '<input type="hidden" form="editar_paciente_devolucion" name="fecha_estudios" id="fecha_estudios" value="'.$fecha_ant.'"/>';
-                    echo '<input type="hidden" form="editar_paciente_devolucion" name="monto" id="monto" value="'.$res.'"/>';
+                    $idpaciente         =   $_POST['idpaciente'];
+
+                    
+                    echo '<input type="hidden" form="editar_paciente_devolucion" name="monto_devolucion" value="'.$res.'"/>';
+                    echo '<input type="hidden" form="editar_paciente_devolucion" name="id_paciente" value="'.$idpaciente.'"/>';
                 ?>
             </form>
             <?php
                 if($res == 0){
-                    echo $res;
+                    // echo $res;
                 echo'
                     <input id="submit" name="submit" class="btn btn-success btn-lg btn-block" form="editar_paciente" type="submit" value="Aceptar" class="btn btn-primary">';
                 }
                 else{
-                    echo $res;
-                echo'
-                    <input id="submit" name="submit" class="btn btn-warning btn-lg btn-block" form="editar_paciente_devolucion" type="submit" value="Aceptar" class="btn btn-primary">';
+                    // echo $res;
+                
+                echo'<button type="submit" id="btn_aceptar" class="btn btn-danger btn-lg btn-block" form="editar_paciente_devolucion">
+                        <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
+                        Aceptar
+                    </button>  ';
                 }
             ?>
+
+            
         </div>
         <!-- /#page-wrapper -->
     </div>
@@ -846,6 +868,14 @@ else{
                 return false;
             }
         };  
+    </script>
+
+    <script>
+        function myFunction() {
+            //se puede comentar para debug
+            document.getElementById("btn_aceptar").disabled = true;
+      
+        }
     </script>
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>
