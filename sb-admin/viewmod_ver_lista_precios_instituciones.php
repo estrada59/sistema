@@ -59,6 +59,24 @@
                     <div class="col-lg-3">
                     </div>
                     <div class="col-lg-3">
+                        <?php 
+                        if($_SESSION['nivel_acceso'] < 3){
+
+                            $institucion_bd = str_replace(" ", "_", $_POST['institucion']);
+                            echo'
+                            <form role="form" id="exportar" method="post" action="view_lista_precios_excel.php" target="_blank">
+
+                            <input type="hidden" form="exportar" name="nombre_institucion_bd" value="'.$institucion_bd.'"/>
+                            <input type="hidden" form="exportar" name="nombre_institucion" value="'.$_POST['institucion'].'"/>
+
+                            </form>
+
+                            <button type="submit" class="btn btn-primary btn-lg btn-block" form="exportar">
+                                <span class="glyphicon glyphicon-export" aria-hidden="true"></span>
+                                Exportar Excel
+                            </button> ';
+                        }
+                        ?> 
                     </div>
                     <div class="col-lg-3">
                        <?php 
@@ -80,7 +98,7 @@
                     </div>
                 </div>
                 <!-- /.row -->
-
+                <br>
                 <?php 
                     include_once "include/mysql.php"; 
                     $institucion = str_replace(" ", "_", $_POST['institucion']);
