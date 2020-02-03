@@ -207,6 +207,16 @@ function delay(){
                 // echo '</pre>';
                 
                 switch ($var) {
+                                case 'ver_pacientes_mañana':
+                                    echo'
+                                     <form role="form" id="ver_lista" method="post" action="viewmod_ver_pacientes_mañana.php" accept-charset="UTF-8">
+                                        <input type="hidden" form="ver_lista" name="fecha_estudios" value="'.$fecha.'"/>
+                                    </form>
+                                    <button type="submit" class="btn btn-success btn-lg btn-block" aria-label="Left Align" form="ver_lista">
+                                        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                                        Aceptar
+                                    </button> ';
+                                     break;
                                 case 'ver_pacientes_por_mes':
                                     echo'
                                      <form role="form" id="ver_lista" method="post" action="viewmod_ver_pacientes_por_mes.php" accept-charset="UTF-8">

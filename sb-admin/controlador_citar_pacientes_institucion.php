@@ -523,13 +523,13 @@
         var f3 = new LiveValidation('tel_local', { validMessage: 'OK!', wait: 500});
         f3.add(Validate.Presence, {failureMessage: "Es necesario llenar este campo"});
         f3.add( Validate.Numericality );
-        f3.add( Validate.Length, { minimum: 7, maximum:11 } );
+        f3.add( Validate.Length, { minimum: 10, maximum:10 } );
     </script> 
 
     <script type="text/javascript">
         var f4 = new LiveValidation('tel_cel', { validMessage: 'OK!', wait: 500});
         f4.add( Validate.Numericality );
-        f4.add( Validate.Length, { minimum: 7,maximum:11 }  );
+        f4.add( Validate.Length, { minimum: 10,maximum:10 }  );
     </script> 
 
     <script type="text/javascript">

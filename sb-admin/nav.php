@@ -46,6 +46,7 @@ function menu($pag){
     $inicio= '';
     $citar_pacientes=' ';
     $ver_lista_precios='';
+    $ver_pacientes_mañana='';
     $ver_pacientes_del_dia='';
     $editar_pacientes_por_fecha='';
     $anticipos_por_fecha='';
@@ -59,6 +60,9 @@ function menu($pag){
     }
     if($pag == 'citar_pacientes'){
         $citar_pacientes = 'active';
+    }
+    if($pag == 'ver_pacientes_mañana'){
+        $ver_pacientes_mañana = 'active';
     }
     if($pag == 'ver_lista_precios'){
         $ver_lista_precios = 'active';
@@ -96,6 +100,10 @@ function menu($pag){
             </li>
             <li class ="'.$ver_lista_precios.' ">
                 <a href="controlador_ver_lista_precios.php"><span class="glyphicon glyphicon-list" aria-hidden="true"></span>   Ver lista de precios</a>
+            </li>
+
+            <li class ="'.$ver_pacientes_mañana.'">
+                <a href="viewmod_ver_pacientes_mañana.php"><i class="glyphicon glyphicon-envelope"></i> Enviar sms</a>
             </li>
 
             <li class ="'.$ver_pacientes_del_dia.' ">
