@@ -84,8 +84,7 @@ class MYPDF extends TCPDF {
           										WHERE iddoctores = t1.doctores_iddoctores) AS medico
 
 									FROM pacientes t1 
-									WHERE  ( (estudio_idgammagramas >= 11  AND estudio_idgammagramas <=77 ) OR
-											  (estudio_idgammagramas >= 1   AND estudio_idgammagramas <=2) ) AND
+									WHERE  
 									       (estatus = 'ATENDIDO' AND institucion = 'PARTICULAR') AND
 									       (fecha >= '$fecha_ini' AND fecha <= '$fecha_fin') ORDER BY fecha;");
         
