@@ -407,6 +407,223 @@ function ver_pacientes_mañana($fecha_act, $pagina){
                 ';               
 }
 
+function ver_sms_enviados($fecha_act, $pagina){
+
+/*---------------------------------------------------------------------
+//Permite ver a los pacientes que se tienen citados para mañana y de esa
+// forma presentar la lista con la opción de enviar sms y recordarles su cita
+
+// invoca: controlador_ver_sms_enviados.php
+
+
+// Llama a otros procesos  funciones_consultas.php --> mod_estatus_pac($row, $pagina);
+//                         funciones_consultas.php --> enviar_sms($row, $pagina);
+
+// rev. 2020/02/03
+---------------------------------------------------------------------*/
+    echo '
+        <div class ="table-responsive">
+            <table class ="table table-bordered table-hover table-striped">
+                <thead>
+                    <tr>
+                        <!--<th data-field="id">Fecha</th>-->
+                        <th data-field="nombre_del_paciente">Nombre de la paciente</th>
+                        <th data-field="nombre_del_estudio">Nombre del estudio</th>
+                        <th data-field="hora">Hora</th>
+                        <th data-field="institucion">Institución</th>
+                        <th data-field="medico">Médico tratante</th>
+                        <th data-field="teléfono">Teléfono</th>
+                        <th data-field="teléfono">Teléfono</th>
+                        <th data-field="estatus">Estatus</th>';
+                        
+                        if( $_SESSION['nivel_acceso'] == 3)
+                        {
+                            echo'
+                            <th data-field="estatus">Estatus servidor sms</th>
+                            <th data-field="estatus">SMS enviado?</th>
+                            <!--<th data-field="re-agendar">Re-agendar</th>-->
+                            ';
+
+                        }
+
+                        
+        echo'       </tr>
+                </thead>
+                <tbody>
+        ';
+
+                    include_once "mysql.php";
+
+                    $mysql = new mysql();
+                    $link = $mysql->connect(); 
+
+                    $sql = $mysql->query($link,"SELECT DISTINCT idpaciente  from log_sms where idpaciente=4488;");
+                    
+                    
+                    while ($row2 = $mysql->f_obj($sql)) 
+                    {   echo'<pre>';
+                        print_r($row2);
+                        echo'</pre>';
+                        $sqltest = $mysql->query($link,"SELECT  
+                                                            (select s_sms_exite($row2->idpaciente))as sms,
+                                                            (select s_sms_respuesta($row2->idpaciente))as respuesta_sms,
+                                                            t1.idpacientes,
+                                                            t1.fecha,
+
+                                                            concat(t1.nombre,' ',t1.ap_paterno,' ',t1.ap_materno) as nombre,
+                                                            
+                                                            t1.nombre as nombre_pila,
+                                                            t1.ap_paterno as appat,
+                                                            t1.ap_materno as apmat,
+
+                                                            (Select concat(t2.tipo,' ',t2.nombre) as estudio 
+                                                                from estudio t2 
+                                                                where idgammagramas = t1.estudio_idgammagramas) as estudio,
+
+                                                            t1.hora,
+
+                                                            (Select concat(t3.grado,' ',t3.nombre,' ',t3.ap_paterno,' ',t3.ap_materno) as medico 
+                                                                from doctores t3 
+                                                                where iddoctores = t1.doctores_iddoctores) as medico,
+                                                            t1.num_tel,
+                                                            t1.num_tel2,
+                                                            t1.institucion,
+                                                            t1.estatus,
+                                                            t1.indicaciones_tratamiento,
+                                                            
+                                                            (SELECT t4.monto_restante 
+                                                                FROM pacientes_has_anticipos t4 
+                                                                WHERE t4.pacientes_idpacientes = t1.idpacientes and t4.fecha_anticipo='0000-00-00' ) as debe
+
+                                                    FROM pacientes t1 
+                                                    WHERE idpacientes = $row2->idpaciente  ORDER BY idpacientes");
+                    
+                        while ($row = $mysql->f_obj($sqltest)) 
+                        {   
+                            // echo'<pre>';
+                            // print_r($row);
+                            // echo'</pre>';
+                            if($row->debe > '0.00')     //pacientes que deben
+                            {            
+                                echo '<tr class ="danger">'; 
+                                //echo '<td>'.$row->fecha.'</td>';
+                                echo '<td>'.$row->nombre.'</td>';
+
+                                if($row->indicaciones_tratamiento != ''){
+                                    echo '<td>'.$row->estudio.' <strong>DOSIS: '.$row->indicaciones_tratamiento.' mCi</strong></td>';                                
+                                }else{
+                                    echo '<td>'.$row->estudio.'</td>';    
+                                }
+
+                                $row->hora = date('g:i a ',strtotime($row->hora));
+
+                                echo '<td>'.$row->hora.'</td>';
+                                echo '<td>'.$row->institucion.'</td>';
+                                echo '<td>'.$row->medico.'</td>';
+                                echo '<td>'.$row->num_tel.'</td>';
+                                echo '<td>'.$row->num_tel2.'</td>';
+
+                                mod_estatus_pac($row, $pagina);
+
+                                if( $_SESSION['nivel_acceso'] == 3 ){
+                                    echo '<td>'.$row->respuesta_sms.'</td>';
+                                    echo '<td>'.$row->sms.'</td>';
+                                    //reagendar_pac($row, $pagina);
+                                }
+                                
+                                echo '</tr>';
+                            }
+                            else
+                            {
+                                // busca a que tipo de institución pertenece
+                                //ayuda a marcar de verde si ya pago de lo contrario no lo 
+                                //sombrea a la hora de hacer la búsqueda.
+                                // ************************************************************
+                                $institucion = mb_strtolower($row->institucion, "UTF-8" );
+                                $institucion = str_replace(" ", "_", $institucion);
+                                //echo $institucion.'-----';
+
+                                $link = $mysql->connect(); 
+                                $sqltest2 = $mysql->query($link,"SELECT (t5.tipo )  as tipo
+                                                                    FROM instituciones t5 
+                                                                    WHERE t5.nombre = '$institucion' ");
+        
+                                $row2 = $mysql->f_obj($sqltest2);
+
+                                //print_r($row2->tipo);
+                                // ************************************************************
+                                if($row2->tipo == 'PARTICULAR' ){  //pacientes que ya no deben
+                                    echo '<tr class ="success" >'; 
+                                    //echo '<td>'.$row->fecha.'</td>';
+                                    echo '<td>'.$row->nombre.'</td>';
+
+                                    if($row->indicaciones_tratamiento != ''){
+                                        echo '<td>'.$row->estudio.' <strong>DOSIS: '.$row->indicaciones_tratamiento.' mCi</strong></td>';                                
+                                    }else{
+                                        echo '<td>'.$row->estudio.'</td>';    
+                                    }
+                                    
+
+                                    $row->hora = date('g:i a ',strtotime($row->hora));
+
+                                    echo '<td>'.$row->hora.'</td>';
+                                    echo '<td>'.$row->institucion.'</td>';
+                                    echo '<td>'.$row->medico.'</td>';
+                                    echo '<td>'.$row->num_tel.'</td>';
+                                    echo '<td>'.$row->num_tel2.'</td>';
+                                    mod_estatus_pac($row, $pagina);
+
+                                    if( $_SESSION['nivel_acceso'] == 3)
+                                    {
+                                        echo '<td>'.$row->respuesta_sms.'</td>';
+                                        echo '<td>'.$row->sms.'</td>';
+                                        //reagendar_pac($row, $pagina);
+                                    }
+
+                                    echo '</tr>';
+                                }
+                                else{
+                                    echo '<tr>';                            //pacientes de instituciones públicas
+                                    //echo '<td>'.$row->fecha.'</td>';
+                                    echo '<td>'.$row->nombre.'</td>';
+                                    
+                                    if($row->indicaciones_tratamiento != ''){
+                                        echo '<td>'.$row->estudio.' <strong>DOSIS: '.$row->indicaciones_tratamiento.' mCi</strong></td>';                                
+                                    }else{
+                                        echo '<td>'.$row->estudio.'</td>';    
+                                    }
+
+                                    $row->hora = date('g:i a ',strtotime($row->hora));
+
+                                    echo '<td>'.$row->hora.'</td>';
+                                    echo '<td>'.$row->institucion.'</td>';
+                                    echo '<td>'.$row->medico.'</td>';
+                                    echo '<td>'.$row->num_tel.'</td>';
+                                    echo '<td>'.$row->num_tel2.'</td>';
+                                    mod_estatus_pac($row, $pagina);
+                                    
+                                    if( $_SESSION['nivel_acceso'] == 3)
+                                    {
+                                        echo '<td>'.$row->respuesta_sms.'</td>';
+                                        echo '<td>'.$row->sms.'</td>';
+                                        //reagendar_pac($row, $pagina);
+                                    }
+
+                                    echo '</tr>';
+                                }
+                            }
+                        }
+                        
+                    }
+
+                    
+                    $mysql->close();
+            echo'</tbody>
+            </table>
+        </div>
+                ';               
+}
+
 function ver_pacientes_del_mes($fecha_ini, $fecha_fin, $pagina){
 
 /*---------------------------------------------------------------------
@@ -2207,10 +2424,6 @@ function anticipo_paciente($fecha_estudio){
                                                             (SELECT concat(t2.tipo,' ',t2.nombre) as estudio 
                                                                 FROM estudio t2 
                                                                 WHERE idgammagramas = t1.estudio_idgammagramas) as estudio,
-
-                                                            (SELECT t3.monto_restante 
-                                                                FROM pacientes_has_anticipos t3 
-                                                                WHERE t3.pacientes_idpacientes = t1.idpacientes and t3.fecha_anticipo='0000-00-00' ) as debe,
                                                             
                                                             (SELECT t5.anticipos_idanticipos 
                                                                 FROM pacientes_has_anticipos t5 
@@ -2236,7 +2449,11 @@ function anticipo_paciente($fecha_estudio){
 
                                 //búsqueda en pacientes_has_anticipos
                                 if($_SESSION['nivel_acceso'] > 2){
-                                    if($row->debe > '0.00'){    //si no debe no se muestra
+
+                                    $total_anticipo = sumatoria_de_anticipos($row->idpacientes);
+                                    $debe = $row->precio - $total_anticipo;
+                                    
+                                    if($debe > '0.00'){    //si no debe no se muestra
                                         echo'<td>
                                                 <form role="form" id="edicion'.$row->idpacientes.'" method="post" action="controlador_agregar_anticipos_por_fecha.php">
                                                 <input type="hidden" form="edicion'.$row->idpacientes.'" name = "idpaciente" value="'.$row->idpacientes.'"/>
@@ -2249,7 +2466,7 @@ function anticipo_paciente($fecha_estudio){
                                 
                                 
                                         echo'   <input type="hidden" form="edicion'.$row->idpacientes.'" name="hora" value="'.$row->hora.'"/>
-                                                <input type="hidden" form="edicion'.$row->idpacientes.'" name="debe" value="'.$row->debe.'"/>
+                                                <input type="hidden" form="edicion'.$row->idpacientes.'" name="debe" value="'.$debe.'"/>
                                                 <input type="hidden" form="edicion'.$row->idpacientes.'" name="institucion" value="'.$row->institucion.'"/>
                                         
                                                 <button type="submit" form="edicion'.$row->idpacientes.'" name="editar" class="btn btn-warning btn-default btn-block" >

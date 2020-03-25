@@ -18,17 +18,7 @@
     <div id="wrapper">
         <!-- Navigation -->
        <?php
-           
-
-            if($_SESSION['nivel_acceso'] == 4){
-                include "nav_op.php";  
-            } 
-            if($_SESSION['nivel_acceso'] == 3){
-                include "nav.php";  
-            }
-            if($_SESSION['nivel_acceso'] == 1){
-                include "nav_priv.php"; 
-            }
+           include_once 'include/nav_session.php';
        ?>
         <div id="page-wrapper">
 
