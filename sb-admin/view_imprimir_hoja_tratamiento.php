@@ -71,66 +71,66 @@ class MYPDF extends TCPDF {
 
 		$text = '1.- Su tratamiento fue indicado por su médico especialista. '.$dr;
 		$this->TextBox($text, 0,91, 180, 10, 0, 'L');
-		$text = '2.- El material radiactivo se elimina en unos días, por orina, excremento, y sudor.';
+		$text = '2.- El material radiactivo se elimina en unos días, por orina, excremento, sudor y saliva.';
 		$this->TextBox($text, 0,97, 180, 10, 0, 'L');
 		$text = '3.- Para su seguridad y de las personas que conviven con usted, se le sugiere que';
 		$this->TextBox($text, 0,103, 180, 10, 0, 'L');
 		$text = '     haga lo siguiente por lo menos los siguientes ';
-		$this->TextBox($text, 0,115, 180, 10, 0, 'L');
+		$this->TextBox($text, 0,109, 180, 10, 0, 'L');
 
 		$this->SetFont('Helvetica', 'B', 12, '', 'false');
 		$text = $dias.' días.';
-		$this->TextBox($text, 92,115, 180, 10, 0, 'L');
+		$this->TextBox($text, 92,109, 180, 10, 0, 'L');
 
 		$this->SetFont('Helvetica', '', 12, '', 'false');
 		$text = 'a) Mantenerse a una distancia mayor a un metro de bebes, niños, y mujeres embarazadas.' ;
-		$this->TextBox($text, 10,121, 170, 10, 0, 'L');
+		$this->TextBox($text, 10,115, 170, 10, 0, 'L');
 		$text = 'b) De ser posible duerma solo(a) en una cama aunque en la recámara duerman otras personas.' ;
-		$this->TextBox($text, 10,127, 170, 10, 0, 'L');
+		$this->TextBox($text, 10,121, 170, 10, 0, 'L');
 		$text = 'c) De ser posible lavar sus trastes y ropa separada  a las del resto de su familia.' ;
-		$this->TextBox($text, 10,133, 170, 10, 0, 'L');
+		$this->TextBox($text, 10,127, 170, 10, 0, 'L');
 		$text = 'd) Evite tener relaciones sexuales durante el periodo indicado.' ;
-		$this->TextBox($text, 10,139, 170, 10, 0, 'L');
+		$this->TextBox($text, 10,133, 170, 10, 0, 'L');
 		$text = 'e) Después de ir al baño jale al escusado tres veces.' ;
-		$this->TextBox($text, 10,145, 170, 10, 0, 'L');
+		$this->TextBox($text, 10,139, 170, 10, 0, 'L');
 		$text = 'f) Tome su medicina como se lo indique su médico y acuda a su cita.' ;
-		$this->TextBox($text, 10,151, 170, 10, 0, 'L');
+		$this->TextBox($text, 10,145, 170, 10, 0, 'L');
 		$text = 'g) Tome suficientes líquidos por los siguientes';
-		$this->TextBox($text, 10,157, 170, 10, 0, 'L');
+		$this->TextBox($text, 10,151, 170, 10, 0, 'L');
 		
 		$this->SetFont('Helvetica', 'B', 12, '', 'false');
 		$text = $dias.' días.';
-		$this->TextBox($text, 99,157, 170, 10, 0, 'L');
+		$this->TextBox($text, 99,151, 170, 10, 0, 'L');
 
 		$this->SetFont('Helvetica', '', 12, '', 'false');
 		$text = 'h) Si tiene dolor en el cuello, o por debajo de las orejas, acuda al departamento de' ;
-		$this->TextBox($text, 10,163, 170, 10, 0, 'L');
+		$this->TextBox($text, 10,157, 170, 10, 0, 'L');
 		$text = '    medicina nuclear en horas hábiles.' ;
-		$this->TextBox($text, 10,169, 170, 10, 0, 'L');
+		$this->TextBox($text, 10,163, 170, 10, 0, 'L');
 		$text = 'i) De ser posible evite frecuentar lugares y transportes públicos.' ;
-		$this->TextBox($text, 10,174, 170, 10, 0, 'L');
+		$this->TextBox($text, 10,169, 170, 10, 0, 'L');
 
 		$text = 'NOM-013-NUCL-1995' ;
-		$this->TextBox($text, 10,185, 170, 10, 0, 'L');
+		$this->TextBox($text, 10,174, 170, 10, 0, 'L');
 
 		if($mci >= 100){
 			$this->SetFont('Helvetica', 'B', 12, '', 'false');
 			$text = 'NOTA: Es necesario que el paciente se presente en la clínica dentro de 8 días a partir' ;
 			
-			$this->TextBox($text, 10,206, 170, 10, 0, 'L');
+			$this->TextBox($text, 10,180, 170, 10, 0, 'L');
 			
 			$text = 'de la fecha de alta para que se le realice el Rastreo Tiroideo.' ;
-			$this->TextBox($text, 10,211, 170, 10, 0, 'L');
+			$this->TextBox($text, 10,186, 170, 10, 0, 'L');
 
 			$this->SetFont('Helvetica', '', 12, '', 'false');
 		}
 		
 
-		$this->Image('images/firma/firma.png', $x = 100, $y = 210, $w = 40, $h =45, '', '', $align='center', $resize='true', $dpi=600, '', false, false, $border= 0);
+		$this->Image('images/firma/firma.png', $x = 100, $y = 190, $w = 40, $h =45, '', '', $align='center', $resize='true', $dpi=600, '', false, false, $border= 0);
 		$text = 'DR. JORGE LUIS CISNEROS ENCALADA' ;
-		$this->TextBox($text, 10,240, 170, 10, 0, 'C');
+		$this->TextBox($text, 10,210, 170, 10, 0, 'C');
 		$text = 'MÉDICO NUCLEAR' ;
-		$this->TextBox($text, 10,245, 170, 10, 0, 'C');
+		$this->TextBox($text, 10,216, 170, 10, 0, 'C');
 	}
 	public function tratamiento_copia_recepcion(){
 		
@@ -163,47 +163,47 @@ class MYPDF extends TCPDF {
 
 		$text = '1.- Su tratamiento fue indicado por su médico especialista. '.$dr;
 		$this->TextBox($text, 0,91, 180, 10, 0, 'L');
-		$text = '2.- El material radiactivo se elimina en unos días, por orina, excremento, y sudor.';
+		$text = '2.- El material radiactivo se elimina en unos días, por orina, excremento, sudor y saliva.';
 		$this->TextBox($text, 0,97, 180, 10, 0, 'L');
 		$text = '3.- Para su seguridad y de las personas que conviven con usted, se le sugiere que';
 		$this->TextBox($text, 0,103, 180, 10, 0, 'L');
 		$text = '     haga lo siguiente por lo menos los siguientes ';
-		$this->TextBox($text, 0,115, 180, 10, 0, 'L');
+		$this->TextBox($text, 0,109, 180, 10, 0, 'L');
 
 		$this->SetFont('Helvetica', 'B', 12, '', 'false');
 		$text = $dias.' días.';
-		$this->TextBox($text, 92,115, 180, 10, 0, 'L');
+		$this->TextBox($text, 92,109, 180, 10, 0, 'L');
 
 		$this->SetFont('Helvetica', '', 12, '', 'false');
 		$text = 'a) Mantenerse a una distancia mayor a un metro de bebes, niños, y mujeres embarazadas.' ;
-		$this->TextBox($text, 10,121, 170, 10, 0, 'L');
+		$this->TextBox($text, 10,115, 170, 10, 0, 'L');
 		$text = 'b) De ser posible duerma solo(a) en una cama aunque en la recámara duerman otras personas.' ;
-		$this->TextBox($text, 10,127, 170, 10, 0, 'L');
+		$this->TextBox($text, 10,121, 170, 10, 0, 'L');
 		$text = 'c) De ser posible lavar sus trastes y ropa separada  a las del resto de su familia.' ;
-		$this->TextBox($text, 10,133, 170, 10, 0, 'L');
+		$this->TextBox($text, 10,127, 170, 10, 0, 'L');
 		$text = 'd) Evite tener relaciones sexuales durante el periodo indicado.' ;
-		$this->TextBox($text, 10,139, 170, 10, 0, 'L');
+		$this->TextBox($text, 10,133, 170, 10, 0, 'L');
 		$text = 'e) Después de ir al baño jale al escusado tres veces.' ;
-		$this->TextBox($text, 10,145, 170, 10, 0, 'L');
+		$this->TextBox($text, 10,139, 170, 10, 0, 'L');
 		$text = 'f) Tome su medicina como se lo indique su médico y acuda a su cita.' ;
-		$this->TextBox($text, 10,151, 170, 10, 0, 'L');
+		$this->TextBox($text, 10,145, 170, 10, 0, 'L');
 		$text = 'g) Tome suficientes líquidos por los siguientes';
-		$this->TextBox($text, 10,157, 170, 10, 0, 'L');
+		$this->TextBox($text, 10,151, 170, 10, 0, 'L');
 		
 		$this->SetFont('Helvetica', 'B', 12, '', 'false');
 		$text = $dias.' días.';
-		$this->TextBox($text, 99,157, 170, 10, 0, 'L');
+		$this->TextBox($text, 99,151, 170, 10, 0, 'L');
 
 		$this->SetFont('Helvetica', '', 12, '', 'false');
 		$text = 'h) Si tiene dolor en el cuello, o por debajo de las orejas, acuda al departamento de' ;
-		$this->TextBox($text, 10,163, 170, 10, 0, 'L');
+		$this->TextBox($text, 10,157, 170, 10, 0, 'L');
 		$text = '    medicina nuclear en horas hábiles.' ;
-		$this->TextBox($text, 10,169, 170, 10, 0, 'L');
+		$this->TextBox($text, 10,163, 170, 10, 0, 'L');
 		$text = 'i) De ser posible evite frecuentar lugares y transportes públicos.' ;
-		$this->TextBox($text, 10,174, 170, 10, 0, 'L');
+		$this->TextBox($text, 10,169, 170, 10, 0, 'L');
 
 		$text = 'NOM-013-NUCL-1995' ;
-		$this->TextBox($text, 10,185, 170, 10, 0, 'L');
+		$this->TextBox($text, 10,174, 170, 10, 0, 'L');
 
 		if($mci >= 100){
 			$this->SetFont('Helvetica', 'B', 12, '', 'false');
