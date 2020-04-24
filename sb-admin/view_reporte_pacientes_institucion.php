@@ -16,16 +16,22 @@ if(isset($_POST))
 
    // NOMBRE DEL ARCHIVO Y CHARSET
 
-	header('Content-Type:text/csv; charset=latin1');
-	header('Content-Disposition: attachment; filename="Pacientes '.$nombre_institucion.' del periodo '.$fecha_inicio.' al '.$fecha_fin.'.csv"');
+    header("Content-Type: application/vnd.ms-excel; charset=UTF-16LE");
+    header('Content-Disposition: attachment; filename="Pacientes '.$nombre_institucion.' del periodo '.$fecha_inicio.' al '.$fecha_fin.'.csv"');
+    
+    header("Expires: 0");
+    header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+    header("Cache-Control: private", false);
 
     // SALIDA DEL ARCHIVO
     
     $salida=fopen('php://output', 'w');
     
     // ENCABEZADOS
+    $encabezado = array('Fecha de cita', 'Nombre del paciente', 'Estudio realizado', 'Precio del estudio CON IVA', 'Estatus', 'Observaciones');
+    $encabezado = mb_convert_encoding($encabezado, 'UTF-16LE', 'UTF-8');
     
-    fputcsv($salida, array('Fecha de cita', 'Nombre del paciente', 'Estudio realizado', 'Precio del estudio CON IVA', 'Estatus', 'Observaciones'));
+    fputcsv($salida, $encabezado);
     
     // QUERY PARA CREAR EL REPORTE
 
@@ -131,6 +137,15 @@ if(isset($_POST))
         {
             $row['estudio'] = $row['estudio'].' Dosis: '.$row['indicaciones_tratamiento'].' mCi';
         }
+
+        $row['fecha'] = mb_convert_encoding($row['fecha'], 'UTF-16LE', 'UTF-8');
+        $row['nombre'] = mb_convert_encoding($row['nombre'], 'UTF-16LE', 'UTF-8');
+        $row['estudio'] = mb_convert_encoding($row['estudio'], 'UTF-16LE', 'UTF-8');
+        $row['precio_estudio'] = mb_convert_encoding($row['precio_estudio'], 'UTF-16LE', 'UTF-8');
+        $row['estatus'] = mb_convert_encoding($row['estatus'], 'UTF-16LE', 'UTF-8');
+        $row['observaciones'] = mb_convert_encoding($row['observaciones'], 'UTF-16LE', 'UTF-8');
+
+
 		fputcsv($salida, array($row['fecha'], 
 								$row['nombre'],
 								$row['estudio'],
