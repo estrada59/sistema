@@ -2684,13 +2684,13 @@ function corte_caja_mensual($fecha_estudio){
             <thead>
                 <tr>
                     <th data-field="name">Fecha</th>                
-                    <th data-field="name">Nombre de la paciente</th>
-                    <th data-field="price">Nombre del estudio</th>
+                    <th data-field="name">Nombre del paciente</th>
+                    <th data-field="price">Estudio</th>
                     <th data-field="price">Costo del estudio</th>
                     <th data-field="price">Por cobrar</th>
                     <th data-field="price">Forma de pago</th>
                     <th data-field="price">Monto cobrado</th>
-                    <th data-field="price">Factura</th>
+                    <th data-field="price">Información Anticipos</th>
                     <th data-field="price">No. recibo</th>
                     <th data-field="price">¿Descuento?</th>
                 </tr>
@@ -2831,7 +2831,6 @@ function corte_caja_mensual($fecha_estudio){
                         echo '<td> 
                                     <form role="form" id="edicion'.$row->idpaciente.'" method="post" action="corte_caja_detalle_anticipos.php">
                                         <input type="hidden" form="edicion'.$row->idpaciente.'" name = "idpaciente" value="'.$row->idpaciente.'"/>
-                                        <input type="hidden" form="edicion'.$row->idpaciente.'" name = "idanticipo" value="'.$row->idpaciente.'"/>
                                         <input type="hidden" form="edicion'.$row->idpaciente.'" name = "nombre_paciente" value="'.$row->nombre.'"/>
                                         <input type="hidden" form="edicion'.$row->idpaciente.'" name = "estudio" value="'.$row->estudio.'"/>
                                         <input type="hidden" form="edicion'.$row->idpaciente.'" name = "precio" value="'.$row->precio.'"/>
