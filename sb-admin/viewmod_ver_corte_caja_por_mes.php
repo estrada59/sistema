@@ -18,16 +18,9 @@
     <div id="wrapper">
 
         <!-- Navigation -->
-       <?php  
-       		if($_SESSION['nivel_acceso'] == 3){
-                include "nav.php";  }
-
-            if($_SESSION['nivel_acceso'] == 1){
-                include "nav_priv.php"; }
-                
-            if($_SESSION['nivel_acceso'] == 2){
-                include "nav_contador.php"; }
-       ?>
+        <?php
+            include_once 'include/nav_session.php';
+        ?>
         <div id="page-wrapper">
 
             <div class="container-fluid">
