@@ -59,7 +59,7 @@ class MYPDF extends TCPDF {
 		$this->Textbox('Fecha',					$x+0,	45,	15,  7, 1, 'C');		
 		$this->Textbox('Nombre del paciente', 	$x+15,	45, 60,  7, 1, 'C');
 		$this->Textbox('Estudio', 				$x+75,	45, 60,  7, 1, 'C');
-		$this->Textbox('Precio', 				$x+135,	45, 20,  7, 1, 'C',0);
+		$this->Textbox('Costo del estudio', 				$x+135,	45, 20,  7, 1, 'C',0);
 		$this->Textbox('Por cobrar', 		    $x+155,	45, 20,  7, 1, 'C',1);
 		$this->Textbox('Forma de pago', 		$x+175,	45, 20,  7, 1, 'C');
 		$this->Textbox('Monto cobrado', 		$x+195,	45, 20,  7, 1, 'C');
@@ -109,7 +109,7 @@ class MYPDF extends TCPDF {
 				$this->Textbox('Fecha',					$x+0,	45,	15,  7, 1, 'C');		
 				$this->Textbox('Nombre del paciente', 	$x+15,	45, 60,  7, 1, 'C');
 				$this->Textbox('Estudio', 				$x+75,	45, 60,  7, 1, 'C');
-				$this->Textbox('Precio', 				$x+135,	45, 20,  7, 1, 'C',0);
+				$this->Textbox('Costos del estudio', 				$x+135,	45, 20,  7, 1, 'C',0);
 				$this->Textbox('Por pagar', 		    $x+155,	45, 20,  7, 1, 'C',1);
 				$this->Textbox('Forma de pago', 		$x+175,	45, 20,  7, 1, 'C');
 				$this->Textbox('Anticipo', 				$x+195,	45, 20,  7, 1, 'C');
@@ -186,7 +186,8 @@ class MYPDF extends TCPDF {
                                                 t7.pago_santander,
                                                 t7.anticipo_efe,
                                                 t7.transferencia,
-                                                t7.pago_cheque,
+												t7.pago_cheque,
+												t7.sr_pago,
                                                 t7.factura,
                                                 t7.no_recibo
 
@@ -243,25 +244,29 @@ class MYPDF extends TCPDF {
 			}
 			else{
 
-				if($row->dep_banamex == '0.00' && $row->pago_santander=='0.00' && $row->pago_cheque=='0.00' && $row->transferencia == '0.00'){
+				if($row->dep_banamex == '0.00' && $row->pago_santander=='0.00' && $row->pago_cheque=='0.00' && $row->transferencia == '0.00' && $row->sr_pago == '0.00'){
 					$colum_set = 'Efectivo';
 					$monto_anticipo = $row->anticipo_efe;} //es efectivo
 
-				if($row->dep_banamex == '0.00' && $row->pago_santander=='0.00' && $row->pago_cheque=='0.00' && $row->anticipo_efe == '0.00'){
+				if($row->dep_banamex == '0.00' && $row->pago_santander=='0.00' && $row->pago_cheque=='0.00' && $row->anticipo_efe == '0.00' && $row->sr_pago == '0.00'){
 					$colum_set = 'Transferencia';
 					$monto_anticipo = $row->transferencia;} //transferencia
 
-				if($row->dep_banamex == '0.00' && $row->pago_santander=='0.00' && $row->transferencia=='0.00' && $row->anticipo_efe == '0.00'){
+				if($row->dep_banamex == '0.00' && $row->pago_santander=='0.00' && $row->transferencia=='0.00' && $row->anticipo_efe == '0.00' && $row->sr_pago == '0.00'){
 					$colum_set = 'Pago con cheque';
 					$monto_anticipo = $row->pago_cheque;} //pago cheque
 
-				if($row->dep_banamex == '0.00' && $row->pago_cheque=='0.00' && $row->transferencia=='0.00' && $row->anticipo_efe == '0.00'){
+				if($row->dep_banamex == '0.00' && $row->pago_cheque=='0.00' && $row->transferencia=='0.00' && $row->anticipo_efe == '0.00' && $row->sr_pago == '0.00'){
 					$colum_set = 'Pago santander';
 					$monto_anticipo = $row->pago_santander;} //pago santander
 
-				if($row->pago_santander == '0.00' && $row->pago_cheque=='0.00' && $row->transferencia=='0.00' && $row->anticipo_efe == '0.00'){
+				if($row->pago_santander == '0.00' && $row->pago_cheque=='0.00' && $row->transferencia=='0.00' && $row->anticipo_efe == '0.00'  && $row->sr_pago == '0.00'){
 					$colum_set = 'Pago banamex';
-					$monto_anticipo = $row->dep_banamex;}
+					$monto_anticipo = $row->dep_banamex;} //pago banamex
+				
+				if($row->dep_banamex == '0.00' && $row->pago_santander=='0.00' && $row->pago_cheque=='0.00' && $row->transferencia == '0.00' && $row->anticipo_efe == '0.00'){
+					$colum_set = 'Sr pago';
+					$monto_anticipo = $row->sr_pago;} //es efectivo
 
 			}
 
