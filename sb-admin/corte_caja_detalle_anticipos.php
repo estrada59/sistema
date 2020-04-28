@@ -79,7 +79,6 @@
                                                 // echo '</pre>';
 
                                                 $idpaciente = $_POST["idpaciente"];
-                                                $idanticipo = $_POST["idanticipo"];
                                                 $paciente = $_POST["nombre_paciente"];
                                                 $nombre_estudio = $_POST["estudio"];
                                                 $precio_estudio = $_POST["precio"];
