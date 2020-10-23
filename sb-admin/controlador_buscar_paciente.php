@@ -11,10 +11,10 @@
             comprueba_url();
             
 
-            if($_SESSION['nivel_acceso'] >= 4){
-                header("Location: index.php");
-                exit();
-            }
+            // if($_SESSION['nivel_acceso'] >= 4){
+            //     header("Location: index.php");
+            //     exit();
+            // }
     ?>
 </head>
 

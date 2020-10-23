@@ -11,10 +11,10 @@
             comprueba_url();
             time_session();
 
-            if($_SESSION['nivel_acceso'] >= 5){
-                header("Location: index.php");
-                exit();
-            }
+            // if($_SESSION['nivel_acceso'] >= 5){
+            //     header("Location: index.php");
+            //     exit();
+            // }
     ?>
 </head>
 
@@ -23,19 +23,8 @@
     <div id="wrapper">
 
         <!-- Navigation -->
-       <?php  
-            if($_SESSION['nivel_acceso'] == 1){
-                include "nav_priv.php"; }
-
-            if($_SESSION['nivel_acceso'] == 2){
-                include "nav_contador.php";  }
-
-            if($_SESSION['nivel_acceso'] == 3){
-                include "nav.php";  }
-
-            if($_SESSION['nivel_acceso'] == 4){
-                include "nav_op.php";  }
-       ?>
+        <?php include_once "include/nav_session.php" ?>
+        
         <div id="page-wrapper">
             <div class="container-fluid">
 

@@ -99,29 +99,29 @@ function menu($pag){
                 <a href="controlador_ver_lista_precios.php"><span class="glyphicon glyphicon-list" aria-hidden="true"></span>   Ver lista de precios</a>
             </li>';
 
-        /*    <li class ="'.$ver_pacientes_del_dia.' ">
+    echo  
+           '<li class ="'.$ver_pacientes_del_dia.' ">
                 <a href="javascript:;" data-toggle="collapse" data-target="#demo"><i class="fa fa-fw fa-table"></i> Ver pacientes<i class="fa fa-fw fa-caret-down"></i></a>
                 <ul id="demo" class="collapse">
                     <li>
                         <a href="controlador_buscar_paciente.php"><span class="glyphicon glyphicon-search"></span>  Por nombre</a>
                     </li>
                     <li>
-                        <a href="controlador_ver_pacientes_del_dia.php"><i class="fa fa-fw fa-table"></i>Por día</a>
+                        <a href="viewmod_ver_pacientes_del_dia.php"><i class="fa fa-fw fa-table"></i>Por día</a>
                     </li>
                     <li>
                         <a href="controlador_ver_pacientes_por_fecha.php"><i class="fa fa-fw fa-table"></i>Por fecha</a>
                     </li>
                     <li>
-                        <a href="controlador_ver_pacientes_por_semana.php"><i class="fa fa-fw fa-table"></i>Por semana</a>
+                        <a href="viewmod_ver_pacientes_por_semana.php"><i class="fa fa-fw fa-table"></i>Por semana</a>
                     </li>
                     <li>
                         <a href="controlador_ver_pacientes_por_mes.php"><i class="fa fa-fw fa-table"></i>Por mes</a>
                     </li>
-                    <li>
-                        <a href="controlador_reimprimir_hoja_de_cita.php"><i class="fa fa-fw fa-table"></i>Reimprimir hoja de cita</a>
-                    </li>
+                   
                 </ul>
-            </li>
+            </li>';    
+            /*
             <li class ="'.$editar_pacientes_por_fecha.' ">
                 <a href="javascript:;" data-toggle="collapse" data-target="#demo3"><span class="glyphicon glyphicon-pencil" ></span>  Editar  <i class="fa fa-fw fa-caret-down"></i></a>
                 <ul id="demo3" class="collapse">

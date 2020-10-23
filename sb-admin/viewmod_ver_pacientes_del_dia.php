@@ -56,7 +56,10 @@
                     if($_SESSION['nivel_acceso'] <= 3 ){
                         ver_pacientes_del_dia($fecha_act,$_POST["pagina"]); //muestra con franjas de color
                     }
-                    if($_SESSION['nivel_acceso'] == 4 ){ //muestra sin franjas de color
+                    if($_SESSION['nivel_acceso'] <= 4 ){ //muestra sin franjas de color
+                        ver_pacientes_del_dia_operario($fecha_act,$_POST["pagina"]);
+                    }
+                    if($_SESSION['nivel_acceso'] >= 5 ){ //muestra sin franjas de color
                         ver_pacientes_del_dia_operario($fecha_act,$_POST["pagina"]);
                     }
                      /*	print "<pre>"; print_r($_POST); print_r($_SESSION); print "</pre>";*/    
